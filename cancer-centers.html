@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cancer Centers — CA, TX, WA | Market Intelligence</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f172a;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+a{color:#60a5fa;text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:1280px;margin:0 auto;padding:0 20px}
+
+/* Header */
+.header{padding:20px 0;border-bottom:1px solid #334155}
+.header-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.back-link{font-size:14px;color:#94a3b8}
+.back-link:hover{color:#e2e8f0}
+h1{font-size:28px;font-weight:700;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:#94a3b8;font-size:14px;margin-top:4px}
+
+/* Stats bar */
+.stats-bar{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0;padding:16px;background:#1e293b;border-radius:12px;border:1px solid #334155}
+.stat{flex:1;min-width:120px;text-align:center;padding:8px}
+.stat-value{font-size:28px;font-weight:700;color:#60a5fa}
+.stat-label{font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px}
+
+/* Tabs */
+.tabs{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}
+.tab{padding:10px 20px;border-radius:8px;background:#1e293b;border:1px solid #334155;cursor:pointer;font-size:14px;font-weight:600;color:#94a3b8;transition:all .2s}
+.tab:hover{border-color:#60a5fa;color:#e2e8f0}
+.tab.active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.tab .count{font-size:12px;opacity:.7;margin-left:4px}
+
+/* Filters */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.filter-pill{padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid #334155;background:#1e293b;color:#94a3b8;transition:all .2s;user-select:none}
+.filter-pill:hover{border-color:#60a5fa}
+.filter-pill.active{color:#fff}
+.filter-pill.active[data-cat="NCI-Designated"]{background:#ef4444;border-color:#ef4444}
+.filter-pill.active[data-cat="Academic"]{background:#8b5cf6;border-color:#8b5cf6}
+.filter-pill.active[data-cat="Community Practice"]{background:#22c55e;border-color:#22c55e}
+.filter-pill.active[data-cat="Hospital System"]{background:#3b82f6;border-color:#3b82f6}
+.filter-pill.active[data-cat="Specialty/Boutique"]{background:#f59e0b;border-color:#f59e0b}
+
+.search-box{flex:1;min-width:200px;padding:8px 14px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:14px;outline:none}
+.search-box:focus{border-color:#3b82f6}
+
+/* State summary */
+.state-summary{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:20px;animation:fadeIn .3s}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:12px}
+.summary-item strong{color:#60a5fa}
+.summary-dynamics{font-size:13px;color:#94a3b8;line-height:1.8}
+.summary-dynamics li{margin-bottom:4px}
+.summary-title{font-size:16px;font-weight:700;margin-bottom:12px;color:#e2e8f0}
+
+/* Cards */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:40px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;transition:all .25s;animation:fadeIn .3s}
+.card:hover{transform:translateY(-3px);border-color:#3b82f6;box-shadow:0 8px 24px rgba(59,130,246,.15)}
+.card-name{font-size:15px;font-weight:700;margin-bottom:6px;color:#f1f5f9}
+.card-city{font-size:13px;color:#94a3b8;margin-bottom:8px}
+.card-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}
+.badge{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;color:#fff}
+.badge-nci{background:#ef4444}.badge-academic{background:#8b5cf6}.badge-community{background:#22c55e}.badge-hospital{background:#3b82f6}.badge-specialty{background:#f59e0b}
+.card-detail{font-size:12px;color:#94a3b8;margin-bottom:2px}
+.card-link{font-size:12px;margin-top:6px;display:inline-block}
+
+.no-results{text-align:center;padding:40px;color:#64748b;font-size:16px}
+.results-count{font-size:13px;color:#64748b;margin-bottom:12px}
+
+/* Becker's section */
+.beckers-section{margin-bottom:40px}
+.speaker-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;transition:all .25s}
+.speaker-card:hover{border-color:#a78bfa;box-shadow:0 8px 24px rgba(167,139,250,.15)}
+.speaker-name{font-size:15px;font-weight:700;color:#a78bfa}
+.speaker-title{font-size:13px;color:#94a3b8}
+.speaker-org{font-size:14px;font-weight:600;color:#e2e8f0;margin:4px 0}
+.speaker-session{font-size:12px;color:#64748b;font-style:italic;margin-top:6px;padding-top:6px;border-top:1px solid #334155}
+.conference-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;background:#a78bfa33;color:#a78bfa;margin-left:6px}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:640px){
+  h1{font-size:22px}
+  .stats-bar{flex-direction:column;gap:4px}
+  .stat{min-width:auto;display:flex;justify-content:space-between;padding:4px 0}
+  .stat-value{font-size:20px}
+  .cards-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-top">
+      <a href="../" class="back-link">← Back to Hub</a>
+      <span class="subtitle">Market Intelligence Report · Feb 2026</span>
+    </div>
+    <h1>🏥 Cancer Centers — CA, TX, WA</h1>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-value">178</div><div class="stat-label">Total Centers</div></div>
+    <div class="stat"><div class="stat-value">3</div><div class="stat-label">States</div></div>
+    <div class="stat"><div class="stat-value">12</div><div class="stat-label">NCI-Designated</div></div>
+    <div class="stat"><div class="stat-value">19</div><div class="stat-label">Academic</div></div>
+    <div class="stat"><div class="stat-value">5</div><div class="stat-label">Categories</div></div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-tab="CA">California <span class="count">(72)</span></div>
+    <div class="tab" data-tab="TX">Texas <span class="count">(68)</span></div>
+    <div class="tab" data-tab="WA">Washington <span class="count">(38)</span></div>
+    <div class="tab" data-tab="beckers">🎤 Becker's Summit <span class="count">(8)</span></div>
+  </div>
+
+  <div id="center-view">
+    <div class="filters">
+      <input class="search-box" id="search" placeholder="Search by name, city, or system..." />
+    </div>
+    <div class="filters" id="cat-filters">
+      <div class="filter-pill active" data-cat="all">All</div>
+      <div class="filter-pill" data-cat="NCI-Designated">NCI-Designated</div>
+      <div class="filter-pill" data-cat="Academic">Academic</div>
+      <div class="filter-pill" data-cat="Community Practice">Community</div>
+      <div class="filter-pill" data-cat="Hospital System">Hospital System</div>
+      <div class="filter-pill" data-cat="Specialty/Boutique">Specialty</div>
+    </div>
+    <div id="state-summary"></div>
+    <div class="results-count" id="results-count"></div>
+    <div class="cards-grid" id="cards"></div>
+  </div>
+
+  <div id="beckers-view" style="display:none">
+    <div class="state-summary">
+      <div class="summary-title">Becker's Oncology Executive Summit 2026</div>
+      <p style="color:#94a3b8;font-size:14px;margin-bottom:8px"><strong style="color:#e2e8f0">Date:</strong> April 13–14, 2026 · <strong style="color:#e2e8f0">Location:</strong> Loews Chicago Hotel, Chicago, IL</p>
+      <p style="color:#94a3b8;font-size:13px">30+ speakers, 50% C-suite. Panels on precision oncology, AI, workforce, clinical trials. <strong style="color:#a78bfa">Strong AI focus — two sessions explicitly cover AI in oncology.</strong></p>
+    </div>
+    <div class="summary-title" style="margin:16px 0">Confirmed Speakers from CA, TX & WA</div>
+    <div class="cards-grid" id="speakers-grid"></div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+// CALIFORNIA — NCI (8)
+{name:"UCSF Helen Diller Family Comprehensive Cancer Center",city:"San Francisco",state:"CA",cat:"NCI-Designated",parent:"UC San Francisco",size:"300+ oncologists",url:"ucsf.edu/cancer",beckers:true},
+{name:"Stanford Cancer Institute",city:"Stanford",state:"CA",cat:"NCI-Designated",parent:"Stanford Medicine",size:"250+ oncologists",url:"cancer.stanford.edu"},
+{name:"City of Hope Comprehensive Cancer Center",city:"Duarte",state:"CA",cat:"NCI-Designated",parent:"City of Hope",size:"400+ oncologists",url:"cityofhope.org",beckers:true},
+{name:"Jonsson Comprehensive Cancer Center (UCLA)",city:"Los Angeles",state:"CA",cat:"NCI-Designated",parent:"UCLA Health",size:"300+ oncologists",url:"cancer.ucla.edu"},
+{name:"USC Norris Comprehensive Cancer Center",city:"Los Angeles",state:"CA",cat:"NCI-Designated",parent:"Keck Medicine of USC",size:"150+ oncologists",url:"uscnorriscancer.usc.edu"},
+{name:"UC San Diego Moores Cancer Center",city:"La Jolla",state:"CA",cat:"NCI-Designated",parent:"UC San Diego Health",size:"200+ oncologists",url:"cancer.ucsd.edu"},
+{name:"UC Davis Comprehensive Cancer Center",city:"Sacramento",state:"CA",cat:"NCI-Designated",parent:"UC Davis Health",size:"150+ oncologists",url:"cancer.ucdavis.edu"},
+{name:"UCI Chao Family Comprehensive Cancer Center",city:"Orange",state:"CA",cat:"NCI-Designated",parent:"UC Irvine Health",size:"120+ oncologists",url:"cancer.uci.edu"},
+// CALIFORNIA — Academic (8)
+{name:"Cedars-Sinai Cancer",city:"Los Angeles",state:"CA",cat:"Academic",parent:"Cedars-Sinai",size:"200+ oncologists",url:"cedars-sinai.org/cancer"},
+{name:"Loma Linda University Cancer Center",city:"Loma Linda",state:"CA",cat:"Academic",parent:"Loma Linda Univ. Health",size:"80+ oncologists",url:"lluh.org/cancer-center"},
+{name:"UC Riverside School of Medicine Cancer Programs",city:"Riverside",state:"CA",cat:"Academic",parent:"UC Riverside",size:"30+ oncologists",url:"medschool.ucr.edu"},
+{name:"UCSF Fresno Cancer Center",city:"Fresno",state:"CA",cat:"Academic",parent:"UCSF/Community Medical",size:"40+ oncologists",url:"fresno.ucsf.edu"},
+{name:"Harbor-UCLA Medical Center Oncology",city:"Torrance",state:"CA",cat:"Academic",parent:"LA County/UCLA",size:"30+ oncologists",url:"harbor-ucla.org"},
+{name:"Scripps MD Anderson Cancer Center",city:"San Diego",state:"CA",cat:"Academic",parent:"Scripps Health/MD Anderson",size:"60+ oncologists",url:"scripps.org/cancer"},
+{name:"California Pacific Medical Center Cancer Program",city:"San Francisco",state:"CA",cat:"Academic",parent:"Sutter Health",size:"40+ oncologists",url:"sutterhealth.org"},
+{name:"Keck Medicine of USC – Verdugo Hills",city:"Glendale",state:"CA",cat:"Academic",parent:"Keck Medicine",size:"20+ oncologists",url:"keckmedicine.org"},
+// CALIFORNIA — Community (16)
+{name:"The Oncology Institute of Hope and Innovation (TOI)",city:"Multiple (SoCal, NorCal)",state:"CA",cat:"Community Practice",parent:"Publicly traded (TOI)",size:"100+ providers, 80+ locations",url:"theoncologyinstitute.com"},
+{name:"Pacific Cancer Medical Center",city:"Anaheim",state:"CA",cat:"Community Practice",parent:"Independent",size:"15+ oncologists",url:"pacificcancer.com"},
+{name:"Compassionate Cancer Care Medical Group",city:"Corona/Fountain Valley",state:"CA",cat:"Community Practice",parent:"Independent",size:"10+ oncologists",url:"compassionatecancercare.com"},
+{name:"Central Coast Oncology",city:"San Luis Obispo",state:"CA",cat:"Community Practice",parent:"Independent",size:"8+ oncologists",url:""},
+{name:"Wilshire Oncology Medical Group",city:"La Verne/Pomona",state:"CA",cat:"Community Practice",parent:"US Oncology/McKesson",size:"15+ oncologists",url:"wilshireoncology.com"},
+{name:"California Cancer Associates for Research & Excellence (cCARE)",city:"San Diego/Fresno",state:"CA",cat:"Community Practice",parent:"OneOncology",size:"30+ oncologists, 7+ locations",url:"ccare.com"},
+{name:"Palo Alto Medical Foundation Oncology",city:"Palo Alto",state:"CA",cat:"Community Practice",parent:"Sutter Health",size:"20+ oncologists",url:"sutterhealth.org/pamf"},
+{name:"Bay Area Cancer Research Group",city:"Pleasant Hill",state:"CA",cat:"Community Practice",parent:"Independent",size:"5+ oncologists",url:""},
+{name:"Redwood Regional Medical Group – Oncology",city:"Santa Rosa",state:"CA",cat:"Community Practice",parent:"Independent",size:"10+ oncologists",url:""},
+{name:"Torrance Memorial Physician Network – Oncology",city:"Torrance",state:"CA",cat:"Community Practice",parent:"Cedars-Sinai",size:"15+ oncologists",url:"torrancememorial.org"},
+{name:"Los Angeles Cancer Network",city:"Multiple SoCal",state:"CA",cat:"Community Practice",parent:"Independent",size:"10+ oncologists",url:""},
+{name:"Hematology Oncology Medical Group (HOMG)",city:"Fresno",state:"CA",cat:"Community Practice",parent:"Independent",size:"8+ oncologists",url:""},
+{name:"Pacific Shores Medical Group",city:"Long Beach",state:"CA",cat:"Community Practice",parent:"Independent",size:"10+ oncologists",url:"pacificshoresoncology.com"},
+{name:"Alliance Cancer Care",city:"Fresno",state:"CA",cat:"Community Practice",parent:"Independent",size:"8+ oncologists",url:""},
+{name:"Ventura County Hematology-Oncology Specialists",city:"Oxnard",state:"CA",cat:"Community Practice",parent:"US Oncology",size:"8+ oncologists",url:""},
+{name:"Desert Hematology Oncology Medical Group",city:"Rancho Mirage",state:"CA",cat:"Community Practice",parent:"Independent",size:"8+ oncologists",url:""},
+// CALIFORNIA — Hospital System (30)
+{name:"Kaiser Permanente – Southern California Oncology",city:"Multiple (20+ sites)",state:"CA",cat:"Hospital System",parent:"Kaiser Permanente",size:"300+ oncologists",url:"kp.org"},
+{name:"Kaiser Permanente – Northern California Oncology",city:"Multiple (15+ sites)",state:"CA",cat:"Hospital System",parent:"Kaiser Permanente",size:"200+ oncologists",url:"kp.org"},
+{name:"Providence Southern California Cancer Programs",city:"Multiple (Torrance, Mission Hills, etc.)",state:"CA",cat:"Hospital System",parent:"Providence",size:"80+ oncologists, 8+ sites",url:"providence.org"},
+{name:"Providence Northern California – Cancer Programs",city:"Multiple (Santa Rosa, Eureka)",state:"CA",cat:"Hospital System",parent:"Providence",size:"30+ oncologists",url:"providence.org"},
+{name:"CommonSpirit Health / Dignity Health Cancer Institutes",city:"Multiple (Sacramento, SF, Bakersfield, etc.)",state:"CA",cat:"Hospital System",parent:"CommonSpirit",size:"100+ oncologists, 15+ sites",url:"dignityhealth.org"},
+{name:"Sutter Health Cancer Programs",city:"Multiple (Sacramento, Bay Area)",state:"CA",cat:"Hospital System",parent:"Sutter Health",size:"80+ oncologists, 10+ sites",url:"sutterhealth.org"},
+{name:"Adventist Health Cancer Care",city:"Multiple (Central Valley, SoCal)",state:"CA",cat:"Hospital System",parent:"Adventist Health",size:"30+ oncologists, 6+ sites",url:"adventisthealth.org"},
+{name:"John Muir Health Cancer Program",city:"Walnut Creek/Concord",state:"CA",cat:"Hospital System",parent:"John Muir Health",size:"20+ oncologists",url:"johnmuirhealth.com"},
+{name:"Sharp HealthCare Cancer Programs",city:"San Diego",state:"CA",cat:"Hospital System",parent:"Sharp HealthCare",size:"40+ oncologists, 4 sites",url:"sharp.com"},
+{name:"PIH Health Cancer Programs",city:"Whittier/Downey",state:"CA",cat:"Hospital System",parent:"PIH Health",size:"20+ oncologists",url:"pihhealth.org"},
+{name:"MemorialCare Todd Cancer Institute",city:"Long Beach/Fountain Valley",state:"CA",cat:"Hospital System",parent:"MemorialCare",size:"30+ oncologists",url:"memorialcare.org"},
+{name:"Hoag Family Cancer Institute",city:"Newport Beach/Irvine",state:"CA",cat:"Hospital System",parent:"Hoag Memorial",size:"50+ oncologists",url:"hoag.org/cancer"},
+{name:"St. Joseph Health / Providence Cancer Programs",city:"Orange/Mission Viejo",state:"CA",cat:"Hospital System",parent:"Providence",size:"30+ oncologists",url:"providence.org"},
+{name:"El Camino Health Cancer Center",city:"Mountain View",state:"CA",cat:"Hospital System",parent:"El Camino Health",size:"25+ oncologists",url:"elcaminohealth.org",beckers:true},
+{name:"MarinHealth Cancer Center",city:"Greenbrae",state:"CA",cat:"Hospital System",parent:"MarinHealth (UCSF affiliation)",size:"15+ oncologists",url:"mymarinhealth.org"},
+{name:"Pomona Valley Hospital Cancer Center",city:"Pomona",state:"CA",cat:"Hospital System",parent:"Pomona Valley Hospital",size:"15+ oncologists",url:"pvhmc.org"},
+{name:"Eisenhower Health Lucy Curci Cancer Center",city:"Rancho Mirage",state:"CA",cat:"Hospital System",parent:"Eisenhower Health",size:"20+ oncologists",url:"eisenhowerhealth.org"},
+{name:"Rady Children's Hospital Cancer Program",city:"San Diego",state:"CA",cat:"Hospital System",parent:"Rady Children's",size:"Pediatric oncology",url:"rfrady.org"},
+{name:"Children's Hospital Los Angeles Cancer & Blood Disease Institute",city:"Los Angeles",state:"CA",cat:"Hospital System",parent:"CHLA",size:"Pediatric, 50+ physicians",url:"chla.org"},
+{name:"Lucile Packard Children's Hospital Cancer Center",city:"Stanford",state:"CA",cat:"Hospital System",parent:"Stanford Children's",size:"Pediatric",url:"stanfordchildrens.org"},
+{name:"UCSF Benioff Children's Hospital Cancer Program",city:"San Francisco/Oakland",state:"CA",cat:"Hospital System",parent:"UCSF",size:"Pediatric",url:"ucsfbenioffchildrens.org"},
+{name:"Huntington Health Cancer Center",city:"Pasadena",state:"CA",cat:"Hospital System",parent:"Cedars-Sinai",size:"20+ oncologists",url:"huntingtonhealth.org"},
+{name:"Good Samaritan Hospital Cancer Center",city:"San Jose",state:"CA",cat:"Hospital System",parent:"HCA Healthcare",size:"15+ oncologists",url:"goodsamsanjose.com"},
+{name:"Los Robles Regional Medical Center Cancer Program",city:"Thousand Oaks",state:"CA",cat:"Hospital System",parent:"HCA Healthcare",size:"10+ oncologists",url:"losrobles.com"},
+{name:"Salinas Valley Health Cancer Center",city:"Salinas",state:"CA",cat:"Hospital System",parent:"Salinas Valley Health",size:"10+ oncologists",url:"svmh.com"},
+{name:"Enloe Cancer Center",city:"Chico",state:"CA",cat:"Hospital System",parent:"Enloe Medical Center",size:"10+ oncologists",url:"enloe.org"},
+{name:"San Joaquin General Hospital Oncology",city:"French Camp",state:"CA",cat:"Hospital System",parent:"San Joaquin County",size:"5+ oncologists",url:""},
+{name:"Tenet Healthcare California Cancer Programs",city:"Multiple",state:"CA",cat:"Hospital System",parent:"Tenet Healthcare",size:"Multiple sites",url:""},
+{name:"Palomar Health Cancer Center",city:"Escondido",state:"CA",cat:"Hospital System",parent:"Palomar Health",size:"15+ oncologists",url:"palomarhealth.org"},
+{name:"Kaweah Health Cancer Center",city:"Visalia",state:"CA",cat:"Hospital System",parent:"Kaweah Health",size:"10+ oncologists",url:"kaweahhealth.org"},
+// CALIFORNIA — Specialty (10)
+{name:"California Protons Cancer Therapy Center",city:"San Diego",state:"CA",cat:"Specialty/Boutique",parent:"Independent",size:"Proton therapy",url:"californiaprotons.com"},
+{name:"UCSF Proton Center (under development)",city:"San Francisco",state:"CA",cat:"Specialty/Boutique",parent:"UCSF",size:"Proton therapy",url:""},
+{name:"Sarcoma Oncology Center",city:"Santa Monica",state:"CA",cat:"Specialty/Boutique",parent:"Independent",size:"Largest sarcoma practice in US",url:"sarcomaoncology.com"},
+{name:"Angeles Clinic and Research Institute",city:"Los Angeles",state:"CA",cat:"Specialty/Boutique",parent:"Cedars-Sinai",size:"Melanoma/immunotherapy",url:"cedars-sinai.org"},
+{name:"Cedars-Sinai Brain Tumor Center",city:"Los Angeles",state:"CA",cat:"Specialty/Boutique",parent:"Cedars-Sinai",size:"Neuro-oncology",url:"cedars-sinai.org"},
+{name:"John Wayne Cancer Institute",city:"Santa Monica",state:"CA",cat:"Specialty/Boutique",parent:"Providence Saint John's",size:"Melanoma/surgical oncology",url:"providence.org"},
+{name:"Breastlink",city:"Multiple SoCal",state:"CA",cat:"Specialty/Boutique",parent:"Independent",size:"Breast cancer, 10+ locations",url:"breastlink.com"},
+{name:"Tower Hematology Oncology",city:"Beverly Hills",state:"CA",cat:"Specialty/Boutique",parent:"Independent",size:"Concierge oncology",url:"toweroncology.com"},
+{name:"UCLA Simms/Mann Center for Integrative Oncology",city:"Los Angeles",state:"CA",cat:"Specialty/Boutique",parent:"UCLA Health",size:"Integrative oncology",url:"uclahealth.org"},
+{name:"Cancer Prevention Institute of California",city:"Fremont",state:"CA",cat:"Specialty/Boutique",parent:"Independent",size:"Cancer prevention/research",url:"cpic.org"},
+
+// TEXAS — NCI (3)
+{name:"MD Anderson Cancer Center",city:"Houston",state:"TX",cat:"NCI-Designated",parent:"UT System",size:"800+ oncologists",url:"mdanderson.org",beckers:true},
+{name:"Harold C. Simmons Comprehensive Cancer Center (UT Southwestern)",city:"Dallas",state:"TX",cat:"NCI-Designated",parent:"UT Southwestern",size:"250+ oncologists",url:"utsouthwestern.edu/simmons"},
+{name:"Mays Cancer Center (UT Health San Antonio)",city:"San Antonio",state:"TX",cat:"NCI-Designated",parent:"UT Health SA",size:"120+ oncologists",url:"uthscsa.edu/cancer"},
+// TEXAS — Academic (8)
+{name:"Baylor College of Medicine – Dan L Duncan Comprehensive Cancer Center",city:"Houston",state:"TX",cat:"Academic",parent:"Baylor College of Medicine",size:"150+ faculty",url:"bcm.edu/cancer-center"},
+{name:"Texas A&M Health Cancer Programs",city:"Bryan/College Station",state:"TX",cat:"Academic",parent:"Texas A&M",size:"30+ oncologists",url:"health.tamu.edu"},
+{name:"UTMB Health Cancer Center",city:"Galveston",state:"TX",cat:"Academic",parent:"UT Medical Branch",size:"40+ oncologists",url:"utmb.edu"},
+{name:"UT Health Houston Cancer Programs",city:"Houston",state:"TX",cat:"Academic",parent:"UT Health Houston",size:"50+ oncologists",url:"uthealthhouston.edu"},
+{name:"Texas Tech University Health Sciences Center Cancer Programs",city:"Lubbock/El Paso",state:"TX",cat:"Academic",parent:"Texas Tech HSC",size:"25+ oncologists",url:"ttuhsc.edu"},
+{name:"University Medical Center of El Paso Oncology",city:"El Paso",state:"TX",cat:"Academic",parent:"UMC El Paso/Texas Tech",size:"15+ oncologists",url:"umcelpaso.org",beckers:true},
+{name:"Dell Medical School Cancer Programs",city:"Austin",state:"TX",cat:"Academic",parent:"UT Austin",size:"20+ (growing)",url:"dellmed.utexas.edu"},
+{name:"JPS Health Network Oncology",city:"Fort Worth",state:"TX",cat:"Academic",parent:"JPS (public)",size:"15+ oncologists",url:"jpshealthnet.org"},
+// TEXAS — Community (15)
+{name:"Texas Oncology",city:"Statewide (210+ sites)",state:"TX",cat:"Community Practice",parent:"US Oncology/McKesson",size:"600+ physicians",url:"texasoncology.com"},
+{name:"Oncology Consultants",city:"Houston (8+ sites)",state:"TX",cat:"Community Practice",parent:"Independent → US Oncology",size:"50+ oncologists",url:"oncologyconsultants.com"},
+{name:"Texas Center for Proton Therapy",city:"Irving",state:"TX",cat:"Community Practice",parent:"US Oncology",size:"Specialty + community",url:"texascenterforprotontherapy.com"},
+{name:"Cancer Care Northwest Texas",city:"Amarillo",state:"TX",cat:"Community Practice",parent:"Independent",size:"8+ oncologists",url:""},
+{name:"Hematology Oncology Associates of South Texas",city:"San Antonio",state:"TX",cat:"Community Practice",parent:"Independent",size:"15+ oncologists",url:""},
+{name:"Austin Cancer Centers",city:"Austin",state:"TX",cat:"Community Practice",parent:"Independent",size:"10+ oncologists",url:"austincancercenters.com"},
+{name:"Rio Grande Valley Oncology",city:"McAllen/Harlingen",state:"TX",cat:"Community Practice",parent:"Independent",size:"10+ oncologists",url:""},
+{name:"El Paso Cancer Treatment Center",city:"El Paso",state:"TX",cat:"Community Practice",parent:"Independent",size:"8+ oncologists",url:""},
+{name:"Amarillo Cancer Specialists",city:"Amarillo",state:"TX",cat:"Community Practice",parent:"Independent",size:"6+ oncologists",url:""},
+{name:"Coastal Bend Cancer Center",city:"Corpus Christi",state:"TX",cat:"Community Practice",parent:"Independent",size:"8+ oncologists",url:""},
+{name:"Tyler Hematology-Oncology",city:"Tyler",state:"TX",cat:"Community Practice",parent:"Independent",size:"8+ oncologists",url:""},
+{name:"Texan Cancer Care (McAllen Oncology)",city:"McAllen",state:"TX",cat:"Community Practice",parent:"Independent",size:"5+ oncologists",url:""},
+{name:"Premier Oncology",city:"Fort Worth/Dallas",state:"TX",cat:"Community Practice",parent:"Independent",size:"10+ oncologists",url:""},
+{name:"Texas Breast Specialists",city:"Statewide (20+ sites)",state:"TX",cat:"Community Practice",parent:"US Oncology",size:"Breast oncology",url:"texasbreastspecialists.com"},
+{name:"Alliance Cancer Care Texas",city:"Fort Worth",state:"TX",cat:"Community Practice",parent:"Independent",size:"8+ oncologists",url:""},
+// TEXAS — Hospital System (32)
+{name:"Houston Methodist Cancer Center",city:"Houston (7 sites)",state:"TX",cat:"Hospital System",parent:"Houston Methodist",size:"150+ oncologists",url:"houstonmethodist.org/cancer"},
+{name:"Baylor Scott & White Cancer Centers",city:"Multiple (Dallas, Temple, etc.)",state:"TX",cat:"Hospital System",parent:"Baylor Scott & White",size:"200+ oncologists, 15+ sites",url:"bswhealth.com/cancer"},
+{name:"Memorial Hermann Cancer Centers",city:"Houston (10+ sites)",state:"TX",cat:"Hospital System",parent:"Memorial Hermann",size:"100+ oncologists",url:"memorialhermann.org"},
+{name:"Texas Health Resources Cancer Programs",city:"DFW (multiple)",state:"TX",cat:"Hospital System",parent:"Texas Health Resources",size:"50+ oncologists",url:"texashealth.org"},
+{name:"Methodist Health System Cancer Centers",city:"Dallas/Mansfield",state:"TX",cat:"Hospital System",parent:"Methodist Health System",size:"30+ oncologists",url:"methodisthealthsystem.org"},
+{name:"CHRISTUS Health Cancer Programs",city:"Multiple (SA, Corpus Christi, Tyler)",state:"TX",cat:"Hospital System",parent:"CHRISTUS Health",size:"40+ oncologists, 8+ sites",url:"christushealth.org"},
+{name:"HCA Houston Healthcare Cancer Programs",city:"Houston (multiple)",state:"TX",cat:"Hospital System",parent:"HCA Healthcare",size:"40+ oncologists",url:"hcahoustonhealthcare.com"},
+{name:"Medical City Healthcare Cancer Programs",city:"Dallas/Plano/Denton",state:"TX",cat:"Hospital System",parent:"HCA Healthcare",size:"30+ oncologists",url:"medicalcityhealthcare.com"},
+{name:"St. David's HealthCare Cancer Programs",city:"Austin",state:"TX",cat:"Hospital System",parent:"HCA Healthcare",size:"20+ oncologists",url:"stdavids.com"},
+{name:"Covenant Health Cancer Center",city:"Lubbock",state:"TX",cat:"Hospital System",parent:"Covenant Health/Providence",size:"15+ oncologists",url:"covenanthealth.org"},
+{name:"Tenet Healthcare Texas Cancer Programs",city:"Multiple (El Paso, Dallas)",state:"TX",cat:"Hospital System",parent:"Tenet Healthcare",size:"20+ oncologists",url:""},
+{name:"University Health Cancer Programs",city:"San Antonio",state:"TX",cat:"Hospital System",parent:"University Health (public)",size:"30+ oncologists (MD Anderson affiliation)",url:"universityhealthsystem.com"},
+{name:"Parkland Health Cancer Programs",city:"Dallas",state:"TX",cat:"Hospital System",parent:"Parkland (public)",size:"30+ (UT Southwestern affiliation)",url:"parklandhealth.org"},
+{name:"Harris Health System Cancer Programs",city:"Houston",state:"TX",cat:"Hospital System",parent:"Harris Health (public)",size:"30+ oncologists (Baylor/BCM affiliation)",url:"harrishealth.org"},
+{name:"Ascension Seton Cancer Care",city:"Austin/Central TX",state:"TX",cat:"Hospital System",parent:"Ascension",size:"20+ oncologists",url:"healthcare.ascension.org"},
+{name:"Shannon Medical Center Cancer Programs",city:"San Angelo",state:"TX",cat:"Hospital System",parent:"Shannon Health",size:"5+ oncologists",url:"shannonhealth.com"},
+{name:"Hendrick Health Cancer Center",city:"Abilene",state:"TX",cat:"Hospital System",parent:"Hendrick Health",size:"5+ oncologists",url:"hendrickhealth.org"},
+{name:"Baptist Health System Cancer Programs",city:"San Antonio",state:"TX",cat:"Hospital System",parent:"Tenet Healthcare",size:"15+ oncologists",url:"baptisthealthsystem.com"},
+{name:"Valley Baptist Cancer Center",city:"Harlingen",state:"TX",cat:"Hospital System",parent:"Tenet Healthcare",size:"10+ oncologists",url:"valleybaptist.net"},
+{name:"Baylor St. Luke's Medical Center Cancer Programs",city:"Houston",state:"TX",cat:"Hospital System",parent:"CommonSpirit/Baylor",size:"50+ oncologists",url:"stlukeshealth.org"},
+{name:"Cook Children's Cancer Program",city:"Fort Worth",state:"TX",cat:"Hospital System",parent:"Cook Children's",size:"Pediatric",url:"cookchildrens.org"},
+{name:"Children's Health Cancer and Blood Disorders",city:"Dallas",state:"TX",cat:"Hospital System",parent:"Children's Health",size:"Pediatric (UT Southwestern)",url:"childrens.com"},
+{name:"Texas Children's Cancer and Hematology Centers",city:"Houston",state:"TX",cat:"Hospital System",parent:"Texas Children's/Baylor",size:"Pediatric, largest in US",url:"texaschildrens.org"},
+{name:"Northeast Baptist Hospital Cancer Center",city:"San Antonio",state:"TX",cat:"Hospital System",parent:"Tenet Healthcare",size:"10+ oncologists",url:""},
+{name:"Midland Memorial Hospital West Cancer Center",city:"Midland",state:"TX",cat:"Hospital System",parent:"Midland Health",size:"8+ oncologists",url:"midlandhealth.org"},
+{name:"Odessa Regional Medical Center Oncology",city:"Odessa",state:"TX",cat:"Hospital System",parent:"Medical City (HCA)",size:"5+ oncologists",url:""},
+{name:"Citizens Medical Center Cancer Programs",city:"Victoria",state:"TX",cat:"Hospital System",parent:"Citizens Medical Center",size:"5+ oncologists",url:"citizensmedicalcenter.org"},
+{name:"Driscoll Children's Hospital Cancer Program",city:"Corpus Christi",state:"TX",cat:"Hospital System",parent:"Driscoll Health",size:"Pediatric",url:"driscollchildrens.org"},
+{name:"AdventHealth Central Texas Cancer Care",city:"Killeen",state:"TX",cat:"Hospital System",parent:"AdventHealth",size:"8+ oncologists",url:"adventhealth.com"},
+{name:"Nacogdoches Medical Center Cancer Programs",city:"Nacogdoches",state:"TX",cat:"Hospital System",parent:"Tenet",size:"5+ oncologists",url:""},
+{name:"Good Shepherd Health System Cancer Programs",city:"Longview",state:"TX",cat:"Hospital System",parent:"Good Shepherd",size:"8+ oncologists",url:"gsmc.org"},
+{name:"Hospitals of Providence Cancer Programs",city:"El Paso",state:"TX",cat:"Hospital System",parent:"Tenet Healthcare",size:"15+ oncologists",url:"thehospitalsofprovidence.com"},
+// TEXAS — Specialty (10)
+{name:"Texas Center for Proton Therapy (Specialty)",city:"Irving",state:"TX",cat:"Specialty/Boutique",parent:"US Oncology network",size:"Proton therapy",url:"texascenterforprotontherapy.com"},
+{name:"MD Anderson Proton Therapy Center",city:"Houston",state:"TX",cat:"Specialty/Boutique",parent:"MD Anderson",size:"Largest proton center in TX",url:"mdanderson.org"},
+{name:"MD Anderson League City / Sugar Land / The Woodlands / Katy",city:"Multiple",state:"TX",cat:"Specialty/Boutique",parent:"MD Anderson",size:"Regional satellite centers",url:"mdanderson.org"},
+{name:"Cancer Treatment Centers of America (CTCA) – Now Access Hope",city:"National",state:"TX",cat:"Specialty/Boutique",parent:"Access Hope",size:"Second opinions",url:"accesshope.com"},
+{name:"Sarah Cannon Cancer Institute at Medical City",city:"Dallas",state:"TX",cat:"Specialty/Boutique",parent:"HCA Healthcare",size:"Research/clinical trials",url:"sarahcannon.com"},
+{name:"Mary Crowley Cancer Research",city:"Dallas",state:"TX",cat:"Specialty/Boutique",parent:"Independent",size:"Phase I clinical trials",url:"marycrowley.org"},
+{name:"Texas Urology Specialists – Uro-oncology",city:"Multiple",state:"TX",cat:"Specialty/Boutique",parent:"Independent",size:"GU cancers",url:""},
+{name:"START (South Texas Accelerated Research Therapeutics)",city:"San Antonio",state:"TX",cat:"Specialty/Boutique",parent:"Independent",size:"Phase I clinical trials",url:"startsa.com"},
+{name:"Baylor Charles A. Sammons Cancer Center",city:"Dallas",state:"TX",cat:"Specialty/Boutique",parent:"Baylor University Medical Center",size:"Multi-specialty",url:"bswhealth.com"},
+{name:"Texas Oncology Surgical Specialists",city:"Multiple",state:"TX",cat:"Specialty/Boutique",parent:"Texas Oncology network",size:"Surgical oncology",url:"texasoncology.com"},
+
+// WASHINGTON — NCI (1)
+{name:"Fred Hutchinson Cancer Center",city:"Seattle",state:"WA",cat:"NCI-Designated",parent:"Fred Hutch",size:"300+ oncologists",url:"fredhutch.org",beckers:true},
+// WASHINGTON — Academic (3)
+{name:"UW Medicine Cancer Programs",city:"Seattle",state:"WA",cat:"Academic",parent:"University of Washington",size:"200+ (integrated with Fred Hutch)",url:"uwmedicine.org"},
+{name:"Washington State University Health Sciences Cancer Programs",city:"Spokane",state:"WA",cat:"Academic",parent:"WSU",size:"10+ oncologists",url:"medicine.wsu.edu"},
+{name:"Pacific Northwest University of Health Sciences Cancer Programs",city:"Yakima",state:"WA",cat:"Academic",parent:"PNWU",size:"Emerging program",url:"pnwu.edu"},
+// WASHINGTON — Community (8)
+{name:"Northwest Medical Specialties (NWMS)",city:"Tacoma/Puyallup (6 sites)",state:"WA",cat:"Community Practice",parent:"OneOncology",size:"25+ oncologists",url:"nwmsonline.com"},
+{name:"Evergreen Hematology & Oncology",city:"Spokane",state:"WA",cat:"Community Practice",parent:"Independent",size:"10+ oncologists",url:""},
+{name:"Wenatchee Valley Cancer Center",city:"Wenatchee",state:"WA",cat:"Community Practice",parent:"Confluence Health",size:"5+ oncologists",url:""},
+{name:"Olympic Medical Cancer Center",city:"Sequim/Port Angeles",state:"WA",cat:"Community Practice",parent:"Olympic Medical Center",size:"5+ oncologists",url:""},
+{name:"Skagit Regional Health Cancer Care",city:"Mt. Vernon",state:"WA",cat:"Community Practice",parent:"Skagit Regional Health",size:"8+ oncologists",url:"skagitregionalhealth.org"},
+{name:"Tri-Cities Cancer Center",city:"Kennewick",state:"WA",cat:"Community Practice",parent:"Independent nonprofit",size:"12+ oncologists",url:"tccancer.org"},
+{name:"Yakima Valley Memorial Cancer Center",city:"Yakima",state:"WA",cat:"Community Practice",parent:"Virginia Mason Franciscan",size:"8+ oncologists",url:""},
+{name:"Columbia Basin Hematology & Oncology",city:"Kennewick",state:"WA",cat:"Community Practice",parent:"Independent",size:"5+ oncologists",url:""},
+// WASHINGTON — Hospital System (21)
+{name:"Providence Cancer Institute – Washington",city:"Multiple (Everett, Olympia, Walla Walla, etc.)",state:"WA",cat:"Hospital System",parent:"Providence",size:"60+ oncologists, 10+ sites",url:"providence.org"},
+{name:"Swedish Cancer Institute",city:"Seattle (4 sites)",state:"WA",cat:"Hospital System",parent:"Providence/Swedish",size:"80+ oncologists",url:"swedish.org/cancer"},
+{name:"Virginia Mason Franciscan Health Cancer Programs",city:"Multiple (Seattle, Tacoma, Federal Way)",state:"WA",cat:"Hospital System",parent:"CommonSpirit/VMFH",size:"50+ oncologists, 8+ sites",url:"virginiamason.org"},
+{name:"MultiCare Health Cancer Programs",city:"Tacoma/Auburn/Spokane",state:"WA",cat:"Hospital System",parent:"MultiCare Health",size:"40+ oncologists, 6+ sites",url:"multicare.org"},
+{name:"PeaceHealth Cancer Programs",city:"Bellingham/Longview/Vancouver",state:"WA",cat:"Hospital System",parent:"PeaceHealth",size:"20+ oncologists, 4+ sites",url:"peacehealth.org"},
+{name:"Kaiser Permanente Washington Oncology",city:"Multiple (Seattle, Bellevue, etc.)",state:"WA",cat:"Hospital System",parent:"Kaiser Permanente",size:"30+ oncologists",url:"kp.org/wa"},
+{name:"Overlake Medical Center Cancer Center",city:"Bellevue",state:"WA",cat:"Hospital System",parent:"Overlake Medical",size:"15+ oncologists",url:"overlakehospital.org"},
+{name:"EvergreenHealth Cancer Center",city:"Kirkland",state:"WA",cat:"Hospital System",parent:"EvergreenHealth",size:"15+ oncologists",url:"evergreenhealth.com"},
+{name:"Valley Medical Center Cancer Care",city:"Renton",state:"WA",cat:"Hospital System",parent:"UW Medicine",size:"10+ oncologists",url:"valleymed.org"},
+{name:"Kadlec Regional Medical Center Cancer Program",city:"Richland",state:"WA",cat:"Hospital System",parent:"Providence",size:"10+ oncologists",url:"kadlec.org"},
+{name:"St. Joseph Medical Center Cancer Programs",city:"Tacoma",state:"WA",cat:"Hospital System",parent:"CommonSpirit/VMFH",size:"10+ oncologists",url:""},
+{name:"Harrison Medical Center Cancer Programs",city:"Bremerton",state:"WA",cat:"Hospital System",parent:"CHI Franciscan/VMFH",size:"8+ oncologists",url:""},
+{name:"Confluence Health Cancer Center",city:"Wenatchee",state:"WA",cat:"Hospital System",parent:"Confluence Health",size:"8+ oncologists",url:"confluencehealth.org"},
+{name:"Island Health Cancer Care",city:"Anacortes/San Juan Islands",state:"WA",cat:"Hospital System",parent:"Island Health",size:"3+ oncologists",url:""},
+{name:"Astria Regional Medical Center Oncology",city:"Yakima",state:"WA",cat:"Hospital System",parent:"Astria Health",size:"5+ oncologists",url:"astriahealth.com"},
+{name:"Whidbey Health Cancer Care",city:"Coupeville",state:"WA",cat:"Hospital System",parent:"Whidbey Health",size:"3+ oncologists",url:"whidbeyhealth.org"},
+{name:"Kootenai Health Cancer Center",city:"Coeur d'Alene (serves E. WA)",state:"WA",cat:"Hospital System",parent:"Kootenai Health",size:"10+ oncologists",url:"kootenaihealth.org"},
+{name:"Walla Walla General Hospital Cancer Programs",city:"Walla Walla",state:"WA",cat:"Hospital System",parent:"Providence",size:"5+ oncologists",url:""},
+{name:"Seattle Children's Cancer Programs",city:"Seattle",state:"WA",cat:"Hospital System",parent:"Seattle Children's",size:"Pediatric (Fred Hutch affiliation)",url:"seattlechildrens.org"},
+{name:"Mary Bridge Children's Cancer Program",city:"Tacoma",state:"WA",cat:"Hospital System",parent:"MultiCare",size:"Pediatric",url:"multicare.org"},
+{name:"Highline Medical Center Cancer Program",city:"Burien",state:"WA",cat:"Hospital System",parent:"CHI Franciscan/VMFH",size:"5+ oncologists",url:""},
+// WASHINGTON — Specialty (5)
+{name:"SCCA Proton Therapy Center",city:"Seattle",state:"WA",cat:"Specialty/Boutique",parent:"Fred Hutch",size:"Only proton center in PNW",url:"fredhutch.org/proton"},
+{name:"Northwest Kidney Centers – Renal Oncology",city:"Seattle",state:"WA",cat:"Specialty/Boutique",parent:"Independent",size:"Renal cancer specialty",url:"nwkidney.org"},
+{name:"Breast Cancer Specialty Center of WA",city:"Bellingham",state:"WA",cat:"Specialty/Boutique",parent:"Independent",size:"Breast cancer",url:""},
+{name:"Pacific Gynecology Specialists – GYN Oncology",city:"Seattle",state:"WA",cat:"Specialty/Boutique",parent:"Independent",size:"Gynecologic cancers",url:"pacificgynecology.com"},
+{name:"Ben B. Cheney Research Institute",city:"Tacoma",state:"WA",cat:"Specialty/Boutique",parent:"MultiCare",size:"Cancer research",url:"multicare.org"},
+];
+
+const SPEAKERS = [
+{name:"Marisa Quinn, DNP, MBA, RN",title:"Director, Nursing",org:"UCSF Health",state:"CA",session:"UCSF Health's Journey in AI-Driven Infusion Operational Efficiency"},
+{name:"Natasha Carrera, MHA",title:"Associate Director, Service Line Management",org:"Fred Hutch Cancer Center",state:"WA",session:"AI in Oncology: Practical Use Cases"},
+{name:"Jennifer Litton, MD",title:"Vice President, Clinical Research",org:"UT MD Anderson Cancer Center",state:"TX",session:"The Rise of Early-Onset Cancer and What to Do Next"},
+{name:"Frantz M. Berthaud, MPH, FACHE",title:"SVP, Oncology Services",org:"University Medical Center of El Paso",state:"TX",session:"The Rise of Early-Onset Cancer and What to Do Next"},
+{name:"Edward Kim, MD",title:"Physician-in-Chief",org:"City of Hope Orange County",state:"CA",session:"Precision Oncology in Practice"},
+{name:"Jasmin Jose, PA, MBA, FACHE",title:"Executive Director, Oncology Service Line",org:"El Camino Health",state:"CA",session:"Top Ideas to Solve the Oncology Workforce Cliff"},
+{name:"Sepideh Shayani, PharmD",title:"Executive Director, Pharmacy System",org:"City of Hope National Medical Center",state:"CA",session:"Sustainably Scaling Cell and Immunotherapies"},
+{name:"Bethany Garoutte, MBA",title:"COO, Illinois Market",org:"City of Hope",state:"CA*",session:"Rethinking the Cancer Care Continuum"},
+];
+
+const SUMMARIES = {
+CA:{
+  nci:8, total:72, pop:"~39 million",
+  systems:["Kaiser Permanente — Largest integrated oncology network (~500+ oncologists)","City of Hope — Expanding aggressively (acquired CTCA sites, opened OC campus)","Providence — Major SoCal and NorCal presence","CommonSpirit/Dignity Health — 15+ cancer programs statewide","Sutter Health — Dominant in NorCal","Cedars-Sinai — Growing through acquisitions","UC System — 5 NCI-designated centers, unmatched nationally"],
+  dynamics:["Consolidation accelerating: Cedars-Sinai, Providence, CommonSpirit actively acquiring","TOI is the largest publicly traded community oncology platform — HQ'd in CA","Heavy managed care payer mix (Kaiser, Blue Shield, Health Net)","340B Program critical revenue driver for hospital outpatient oncology","Site-of-care shift: payers pushing infusion to outpatient/home settings","Precision oncology leadership: CA leads in biomarker testing & trial enrollment"]
+},
+TX:{
+  nci:3, total:68, pop:"~30 million",
+  systems:["Texas Oncology / US Oncology — 210+ locations, 600+ physicians, dominant nationally","MD Anderson — Global brand, 800+ oncologists, massive satellite network","Houston Methodist — Aggressive expansion (7 locations)","Baylor Scott & White — Largest nonprofit system, 15+ cancer sites","Memorial Hermann — Houston's largest nonprofit, 10+ cancer sites","HCA Healthcare — Medical City (Dallas), St. David's (Austin), HCA Houston","CHRISTUS Health — Strong in South TX and East TX"],
+  dynamics:["Texas Oncology dominance: largest community share, facing hospital employment pressures","Uninsured rate highest in US (~17%): safety-net oncology critical","Rapid population growth: Austin, DFW, Houston suburbs driving new construction","MD Anderson network effect: satellites + AccessHope extend reach","South TX/border underserved: growing Hispanic population, late-stage presentations","Clinical trials powerhouse: MD Anderson, START SA, Mary Crowley","Conservative regulatory environment: less payer restriction, less Medicaid coverage"]
+},
+WA:{
+  nci:1, total:38, pop:"~7.8 million",
+  systems:["Fred Hutch / UW Medicine — Dominant academic/NCI center (merged SCCA 2022)","Providence / Swedish — Largest system footprint (10+ cancer sites)","Virginia Mason Franciscan (CommonSpirit) — Major Puget Sound presence","MultiCare Health — Growing in Tacoma, Auburn, Spokane","Kaiser Permanente Washington — Significant managed care","PeaceHealth — Dominant in NW and SW Washington"],
+  dynamics:["Fred Hutch 2022 merger creates regional powerhouse","Providence extends from Seattle suburbs to rural eastern WA","NW Medical Specialties one of few remaining large independents (OneOncology)","Tech-forward market: Seattle's ecosystem drives AI/digital health adoption","Managed care dominant: Premera, Regence, Molina","Eastern WA significantly underserved; Tri-Cities Cancer Center is critical","SCCA Proton Center: only proton center in PNW, regional draw"]
+}
+};
+
+const BADGE_CLASS = {"NCI-Designated":"badge-nci","Academic":"badge-academic","Community Practice":"badge-community","Hospital System":"badge-hospital","Specialty/Boutique":"badge-specialty"};
+
+let activeTab = "CA";
+let activeCat = "all";
+let searchTerm = "";
+
+function render() {
+  const isBeckers = activeTab === "beckers";
+  document.getElementById("center-view").style.display = isBeckers ? "none" : "";
+  document.getElementById("beckers-view").style.display = isBeckers ? "" : "none";
+  if (isBeckers) return;
+
+  const summary = SUMMARIES[activeTab];
+  document.getElementById("state-summary").innerHTML = `
+    <div class="state-summary">
+      <div class="summary-title">${activeTab==="CA"?"California":activeTab==="TX"?"Texas":"Washington"} Market Overview</div>
+      <div class="summary-grid">
+        <div class="summary-item"><strong>${summary.total}</strong> centers listed</div>
+        <div class="summary-item"><strong>${summary.nci}</strong> NCI-Designated</div>
+        <div class="summary-item">Population: <strong>${summary.pop}</strong></div>
+      </div>
+      <div style="margin-bottom:8px;font-size:13px;font-weight:600;color:#60a5fa">Dominant Systems</div>
+      <div class="summary-dynamics"><ul>${summary.systems.map(s=>`<li>${s}</li>`).join("")}</ul></div>
+      <div style="margin:8px 0;font-size:13px;font-weight:600;color:#f59e0b">Key Market Dynamics</div>
+      <div class="summary-dynamics"><ul>${summary.dynamics.map(d=>`<li>${d}</li>`).join("")}</ul></div>
+    </div>`;
+
+  let filtered = DATA.filter(c=>c.state===activeTab);
+  if(activeCat!=="all") filtered = filtered.filter(c=>c.cat===activeCat);
+  if(searchTerm){
+    const q=searchTerm.toLowerCase();
+    filtered = filtered.filter(c=>(c.name+c.city+c.parent).toLowerCase().includes(q));
+  }
+  document.getElementById("results-count").textContent=`Showing ${filtered.length} center${filtered.length!==1?"s":""}`;
+  document.getElementById("cards").innerHTML = filtered.length ? filtered.map(c=>`
+    <div class="card">
+      <div class="card-name">${c.name}${c.beckers?'<span class="conference-badge">🎤 Becker\'s</span>':''}</div>
+      <div class="card-city">📍 ${c.city}</div>
+      <div class="card-meta"><span class="badge ${BADGE_CLASS[c.cat]}">${c.cat}</span></div>
+      <div class="card-detail"><strong>Parent/Affiliation:</strong> ${c.parent}</div>
+      <div class="card-detail"><strong>Est. Size:</strong> ${c.size}</div>
+      ${c.url?`<a class="card-link" href="https://${c.url}" target="_blank" rel="noopener">${c.url} ↗</a>`:''}
+    </div>`).join("") : '<div class="no-results">No centers match your filters.</div>';
+}
+
+function renderSpeakers(){
+  document.getElementById("speakers-grid").innerHTML = SPEAKERS.map(s=>`
+    <div class="speaker-card">
+      <div class="speaker-name">${s.name}</div>
+      <div class="speaker-title">${s.title}</div>
+      <div class="speaker-org">${s.org} <span class="badge badge-academic" style="font-size:10px;vertical-align:middle">${s.state}</span></div>
+      <div class="speaker-session">🎙️ ${s.session}</div>
+    </div>`).join("");
+}
+
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  activeTab=t.dataset.tab;
+  render();
+}));
+
+document.querySelectorAll(".filter-pill").forEach(p=>p.addEventListener("click",()=>{
+  document.querySelectorAll(".filter-pill").forEach(x=>x.classList.remove("active"));
+  p.classList.add("active");
+  activeCat=p.dataset.cat;
+  render();
+}));
+
+document.getElementById("search").addEventListener("input",e=>{searchTerm=e.target.value;render()});
+
+render();
+renderSpeakers();
+</script>
+</body>
+</html>
