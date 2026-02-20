@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>US Oncology Market Map — RISA Labs</title>
+<style>
+  body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  #mindmap { width: 100vw; height: 100vh; }
+  .markmap-node-text { font-size: 14px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view@0.15.4"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.15.4/dist/browser/index.js"></script>
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script>
+const md = `
+# US Oncology Ecosystem
+
+## 🏥 Care Delivery
+### NCI Comprehensive Cancer Centers
+- MD Anderson
+- Memorial Sloan Kettering
+- Dana-Farber
+- Fred Hutch
+- Moffitt, City of Hope
+- ~72 NCI-designated (53 comprehensive)
+- Role: Research + clinical, trials, complex cases
+- ⭐ RISA: Complex claim adjudication, denial mgmt
+
+### Academic Medical Centers
+- Stanford Cancer Center
+- UCSF
+- Johns Hopkins
+- Mayo Clinic
+- Cleveland Clinic
+- Role: Teaching + research + tertiary referrals
+- ⭐ RISA: Multi-dept charge capture, referral auth
+
+### Community Oncology ⭐ PRIMARY TARGET
+- Texas Oncology (550+ docs, 250+ sites)
+- Florida Cancer Specialists
+- Regional Cancer Care Associates
+- **Delivers 60%+ of US cancer care**
+- Ownership: Physician / PE / Health system
+- Pain: Margins, denials, staffing, pathways
+- ⭐ RISA: Prior auth, denial prevention, coding
+
+### Hospital System Cancer Programs
+- HCA Healthcare
+- Providence
+- Intermountain
+- Northwell, CommonSpirit, Atrium
+- Role: Integrated delivery, employed oncologists
+- ⭐ RISA: Service line revenue, 340B compliance
+
+### Oncology Networks / Management
+- US Oncology (McKesson) — 1,400+ physicians
+- OneOncology (TPG) — 600+ providers
+- American Oncology Network (AON)
+- Flatiron Health (Roche) — EHR + RWD
+- Role: GPO, practice mgmt, pathways, data
+- ⭐ RISA: Platform deal = 100s of practices
+
+## 💰 Payers & Reimbursement
+### Medicare / CMS
+- Largest oncology payer (median age 66)
+- Medicare FFS — per service
+- Medicare Advantage — ~52% beneficiaries
+- EOM (Enhancing Oncology Model) — episodes
+- ⭐ RISA: Denial reduction, EOM reporting, MA prior auth
+
+### Commercial Payers
+- UnitedHealthcare (owns Optum)
+- Elevance / Anthem / BCBS
+- Aetna (CVS Health)
+- Cigna (Express Scripts)
+- Mechanisms: Prior auth, step therapy, pathways
+- ⭐ RISA: Prior auth automation, claims accuracy
+
+### Medicaid
+- 50 state programs + DC
+- Managed Medicaid dominant
+- Low reimbursement, complex eligibility
+- ⭐ RISA: Eligibility verification, dual-eligible
+
+### Specialty Pharmacy / PBMs
+- CVS Caremark (#1)
+- Express Scripts / Cigna (#2)
+- Optum Rx / UHG (#3)
+- Magellan Rx — oncology focus
+- Role: Oral oncolytics (~40% of pipeline)
+- ⭐ RISA: Oral oncolytic prior auth, benefits
+
+### Value-Based Care
+- EOM (successor to OCM) — CMS episodes
+- Clinical Pathways: Via Oncology, NCCN, Elsevier
+- Bundled Payments
+- ⭐ RISA: EOM tracking, pathway adherence
+
+## 💊 Pharma & Biotech
+### Large Pharma (~$220B+ global)
+- Merck — Keytruda ($25B, #1 drug)
+- Roche/Genentech — Tecentriq, Herceptin
+- BMS — Opdivo, Revlimid, Abecma
+- AstraZeneca — Tagrisso, Enhertu
+- Pfizer — Ibrance, Seagen (ADCs)
+- Novartis — Kisqali, Kymriah, Pluvicto
+- Eli Lilly — Verzenio, Retevmo
+- J&J — Darzalex, Carvykti
+- AbbVie — Imbruvica, Venclexta
+
+### Emerging Biotech
+- CAR-T: Kite/Gilead, Novartis, BMS, Legend ($300-500K)
+- ADCs: Seagen/Pfizer, Daiichi Sankyo/AZ
+- Bispecifics: Amgen, Roche, AbbVie
+- Radiopharmaceuticals: Novartis, RayzeBio
+- ⭐ RISA: Novel therapy billing, J-code mgmt
+
+### Biosimilars
+- Sandoz, Amgen, Teva, Coherus, Fresenius
+- 15-40% savings on reference biologics
+- ⭐ RISA: Biosimilar vs reference billing accuracy
+
+### Specialty Distributors (Big 3)
+- McKesson (#1 + US Oncology + GPO)
+- Cencora / AmerisourceBergen (#2)
+- Cardinal Health (#3 + nuclear)
+- ⭐ RISA: Inventory-billing reconciliation, JW modifiers
+
+## 🧬 Diagnostics & Precision Medicine
+### Genomic Testing / CDx
+- Foundation Medicine (Roche) — FoundationOne
+- Tempus — xT, xF + AI insights
+- Guardant Health — liquid biopsy, Shield
+- Myriad, NeoGenomics, Natera (Signatera)
+- ⭐ RISA: Genomic test prior auth, LCD/NCD matching
+
+### Pathology / Lab
+- Quest Diagnostics
+- Labcorp (+ Invitae)
+- Hospital-based pathology
+- Pain: Pathologist shortage, digitization
+
+### Imaging
+- Radiology Partners, RadNet, SimonMed
+- PET/CT — critical for staging
+- ⭐ RISA: Imaging prior auth automation
+
+### AI Diagnostics
+- Paige AI — FDA-cleared pathology
+- Lunit — radiology + pathology
+- PathAI — biopharma partnerships
+
+## 🔬 Clinical Trials & Research
+### NCI / NIH (~$7B annual)
+- SWOG, ECOG-ACRIN, Alliance, NRG, COG
+- ⭐ RISA: Trial billing compliance
+
+### CROs
+- IQVIA (largest)
+- PPD / Thermo Fisher
+- Parexel, Syneos Health
+
+### Trial Matching
+- Tempus — AI from genomic + clinical
+- TrialJectory, Massive Bio
+
+### Real-World Data / Evidence
+- Flatiron Health (Roche) — 280+ clinics
+- Tempus, ASCO CancerLinQ, Optum Labs
+- Komodo Health
+- ⭐ RISA: Claims enrichment for RWE
+
+### Philanthropic Accelerators
+- Parker Institute (PICI) — $250M, immunotherapy
+- Stand Up to Cancer, V Foundation, LLS
+
+## 💻 Technology & Data
+### Oncology EHRs
+- Flatiron OncoEMR — community practices
+- Varian ARIA — radiation oncology
+- Elekta MOSAIQ — radiation oncology
+- iKnowMed (McKesson) — US Oncology
+- Epic Beacon — oncology module
+- ⭐ RISA: EHR integration, automated charge capture
+
+### RCM / Billing ⭐⭐ CORE MARKET
+- Waystar — claims, prior auth (IPO 2024)
+- Availity — payer connectivity
+- Change Healthcare (Optum) — ~50% US claims
+- R1 RCM, Coronis Health
+- **Pain: 10-15%+ denial rates, 2-14 day auth delays**
+- ⭐ RISA: Denial prevention, prior auth, coding, underpayment
+
+### AI Companies in Oncology
+- Clinical AI: Tempus, Flatiron, Paige, Lunit
+- RCM AI: RISA Labs ⭐, Waystar, Akasa, Infinx
+- Patient Access: Notable Health, Qventus, Cedar
+- ⚠️ Olive AI (shut down) — cautionary tale
+
+### Radiation Oncology Tech
+- Varian/Siemens — linacs, ARIA, Ethos
+- Elekta — Unity MR-Linac, MOSAIQ
+- Accuray — CyberKnife, TomoTherapy
+- ⭐ RISA: Rad onc billing (most complex)
+
+### Data Aggregators
+- Definitive Healthcare, IQVIA
+- Komodo Health, Truveta
+
+## ⚖️ Regulators & Guidelines
+### FDA
+- Drug approvals, breakthrough designations
+- RTOR, Project Orbis
+- New approvals → new billing codes
+
+### CMS
+- Coverage: NCD/LCD
+- Payment: OPPS, PFS, EOM, RO Model
+- Quality: MIPS, APMs
+- ⭐ CMS rules = billing complexity driver
+
+### NCCN
+- Gold-standard treatment guidelines
+- Compendia → off-label coverage basis
+- Key for medical necessity / appeals
+
+### ASCO / ESMO
+- QOPI certification
+- CancerLinQ data platform
+- Guidelines, quality programs
+
+### State Regulators
+- Certificate of Need, oral parity (43+ states)
+- Scope of practice, pharmacy compounding
+
+### Accreditation
+- Commission on Cancer (CoC/ACS)
+- QOPI (ASCO), ACR, FACT (CAR-T)
+
+## 🎗️ Patients & Advocacy
+### Patient Advocacy Orgs
+- American Cancer Society (largest)
+- LLS, Susan G. Komen, PanCAN
+- LUNGevity, CRC Alliance, PCF
+
+### Patient Navigation
+- Nurse navigators (CoC requirement)
+- Social workers, financial counselors
+- ⭐ RISA: Automated financial counseling, benefits
+
+### Patient Support Programs
+- Manufacturer copay assistance
+- Foundations: PAN, HealthWell, CancerCare
+- Free drug / PAP programs
+- ⭐ RISA: PSP enrollment, copay accumulator tracking
+
+### Survivorship
+- ~18M cancer survivors in US
+- Long-term follow-up, late effects
+
+## 📈 Financial / Investment
+### Private Equity
+- TPG → OneOncology
+- Webster Equity, General Atlantic, GenStar
+- Trend: Aggressive consolidation 2020-2025
+- ⭐ PE platforms = sophisticated tech buyers
+
+### Venture Capital
+- Tempus ($6.1B IPO), Guardant ($3B+)
+- Shift: Hype → proof of ROI
+
+### Public Markets
+- Tempus AI (TEM), Guardant (GH)
+- Exact Sciences (EXAS), Natera (NTRA)
+- Waystar (WAY) — RCM tech
+
+## 🔄 Key Flows
+### Money Flows
+- Patient → Provider (copay)
+- Payer → Provider (reimbursement)
+- Provider → Distributor → Pharma (drugs)
+- Pharma → Payer (rebates)
+- PE/VC → Practices/Tech (investment)
+
+### Data Flows
+- Provider → Clearinghouse → Payer (claims)
+- Provider → EHR → Aggregator (clinical)
+- Diagnostics → Provider (genomic reports)
+- NCCN/FDA/CMS → All (guidelines, policies)
+
+### Prior Auth Flow (RISA Core)
+- Identify need → Check policy → Submit auth
+- Payer reviews → Approve/Deny → Appeal
+- Treat → Claim → Adjudicate
+- ⭐ RISA at: Policy, submission, appeal, coding
+
+### Buy-and-Bill (Infused Drugs)
+- Purchase drug → Administer → Bill J-code
+- Reimburse ASP+6% → Margin = Reimburse−Cost
+- ⭐ RISA: J-code accuracy, waste (JW), NDC mapping
+`;
+
+const { Transformer } = window.markmap;
+const transformer = new Transformer();
+const { root } = transformer.transform(md);
+const { Markmap } = window.markmap;
+Markmap.create('#mindmap', {
+  colorFreezeLevel: 2,
+  duration: 300,
+  maxWidth: 300,
+  initialExpandLevel: 2,
+  zoom: true,
+  pan: true,
+  fitRatio: 0.85
+}, root);
+</script>
+</body>
+</html>
