@@ -55,6 +55,7 @@
   <div class="tabs">
     <button class="tab active" onclick="go('texas')">Texas Oncology (Community)</button>
     <button class="tab" onclick="go('stanford')">Stanford Cancer Center (Academic)</button>
+    <button class="tab" onclick="go('fredhutch')">Fred Hutch (Research + Clinical)</button>
   </div>
 </div>
 
@@ -120,6 +121,33 @@ const D = {
       { id:"trn", label:"Training / Education", val:35, pct:"2%", desc:"Heme-onc fellowship (3yr, 6-8 fellows), CME, conferences, visiting professorships. Teaching mission cost.", tip:"Faculty teaching time = not billed clinically. GME funding from CMS partially offsets. Fellowship pipeline is strategic." },
       { id:"ins", label:"Insurance & Compliance", val:25, pct:"2%", desc:"Self-insured malpractice, liability, HIPAA, Joint Commission, research compliance (IRB, COI).", tip:"Research compliance adds cost layer that community practices don't have. IRB, conflict of interest management." },
     ]
+  },
+  fredhutch: {
+    name: "Fred Hutch Cancer Center", sub: "NCI Comprehensive · Research Institute + Clinical (merged with SCCA 2022) · 6,000+ employees · 3 Nobel laureates · Birthplace of BMT · Seattle, WA",
+    color: "#06b6d4",
+    inflows: [
+      { id:"nci3", label:"NCI / NIH Grants", val:380, pct:"26%", desc:"Fred Hutch is one of the top NCI-funded cancer centers. CCSG + individual R01/U01/P50 grants. Funds ~3,000 researchers, labs, cores, clinical trials infra.", tip:"NCI CCSG: ~$10-15M/yr. Individual investigator grants total $300M+. NIH is the #1 revenue source — unlike community practices where it's payers. This fundamentally shapes the institution." },
+      { id:"com3", label:"Commercial Payers", val:280, pct:"19%", desc:"Clinical revenue from SCCA (now Fred Hutch clinical network). Premera BCBS, Regence, Aetna, UHC. Negotiated at academic rates (200-300% of Medicare).", tip:"Post-merger with SCCA: clinical revenue now flows directly to Fred Hutch. WA state commercial market dominated by Premera/Regence BCBS. Prior auth required for most regimens." },
+      { id:"mffs3", label:"Medicare FFS", val:200, pct:"14%", desc:"Medicare for clinical care (BMT, immunotherapy, complex hematologic cancers). Dual billing (professional + facility) like Stanford. BMT cases = very high per-patient revenue.", tip:"Bone marrow transplant: $150K-500K per case (inpatient). Fred Hutch pioneered BMT — still does ~500/year. Medicare DRG payments for inpatient, ASP+6% for outpatient drugs." },
+      { id:"tri3", label:"Pharma (Trials + Partnerships)", val:200, pct:"14%", desc:"Industry-sponsored trials, pharma research collaborations, data licensing partnerships. Fred Hutch data is gold for pharma — deep longitudinal outcomes data.", tip:"Spun out Juno Therapeutics ($579M VC+IPO, acquired by Celgene/BMS for $9B). Adaptive Biotech also spun from Hutch. Pharma pays premium for access to this research ecosystem." },
+      { id:"mma3", label:"Medicare Advantage", val:100, pct:"7%", desc:"MA plans for clinical patients. WA state MA penetration ~40%. Humana, UHC MA, Premera MA. Referral center for complex cases across Pacific NW.", tip:"Complex cases (BMT, CAR-T, rare cancers) often referred from community oncology. MA plans authorize these as they have no in-network alternative." },
+      { id:"phi3", label:"Philanthropy / Donors", val:150, pct:"10%", desc:"Major donors, Obliteride fundraising ($30M+ raised to date), planned gifts, endowments. Fred Hutch is beloved in Seattle — strong local philanthropy culture.", tip:"Bezos family, Paul Allen estate, Bill Gates have supported Hutch. Tech wealth in Seattle = unique philanthropy pipeline. Annual gala is a major event." },
+      { id:"pat3", label:"Patient Out-of-Pocket", val:50, pct:"3%", desc:"Patient copays, coinsurance for clinical services. Many patients travel from across US/internationally — financial navigation is critical.", tip:"Fred Hutch has robust financial counseling. Many patients are out-of-state referrals for BMT/CAR-T — insurance complexity is extreme. Housing assistance program for traveling patients." },
+      { id:"ipl3", label:"IP / Spinout Revenue", val:80, pct:"5%", desc:"Technology licensing, spinout equity. Juno Therapeutics ($9B acquisition), Adaptive Biotechnologies ($4B+ IPO), Presage Biosciences, and more.", tip:"Fred Hutch is arguably the most commercially successful cancer research institute. IP portfolio includes CAR-T, immune profiling, infectious disease (HIV vaccine research). Royalty streams significant." },
+      { id:"mcd3", label:"Medicaid (Apple Health)", val:30, pct:"2%", desc:"Washington Apple Health (Medicaid). Low reimbursement but mission-driven care. Disproportionate share hospital payments help offset.", tip:"WA Medicaid managed by Molina, Coordinated Care, UHC Community Plan. Low volume but Fred Hutch treats all comers for referred complex cases." },
+    ],
+    outflows: [
+      { id:"res3", label:"Research Operations", val:450, pct:"32%", desc:"LARGEST EXPENSE (unlike community practices). 3,000+ researchers, 100+ labs, core facilities (flow cytometry, genomics, imaging), biostatistics, data science, clinical trials ops.", tip:"This is what makes Fred Hutch unique — research is THE mission, not ancillary. Labs run on grants but infrastructure gap is real. Cancer biology, immunology, virology (HIV), public health sciences divisions." },
+      { id:"stf3", label:"Clinical Staff", val:300, pct:"21%", desc:"Oncologists, BMT physicians, NPs, RNs (BMT nursing is highly specialized), pharmacists, coordinators. Post-SCCA merger: full clinical workforce now under Hutch.", tip:"BMT nurses require specialized training (~6 month onboarding). Physician comp: $400-700K (BMT/cell therapy specialists command premium). Staffing shortages in specialized roles." },
+      { id:"drg3", label:"Drug / Pharmacy", val:250, pct:"18%", desc:"Drugs for clinical care + investigational agents. CAR-T manufacturing costs ($100-300K per patient for commercial products). BMT conditioning regimens.", tip:"CAR-T: Kymriah, Yescarta, Breyanzi, Abecma, Carvykti — each $373K-475K. Fred Hutch also has in-house CAR-T manufacturing for trials. Drug costs per patient extremely high for transplant/cell therapy." },
+      { id:"fac4", label:"Facilities & Equipment", val:120, pct:"8%", desc:"Research buildings (Robert Day Center, Thomas Building), clinical center, BSL-3 labs, clean rooms (CAR-T manufacturing), data centers, vivarium.", tip:"BSL-3 labs for infectious disease research (HIV, COVID). GMP-grade clean rooms for cell therapy manufacturing. Capital-intensive research infrastructure." },
+      { id:"ovh3", label:"University Overhead / IDC", val:80, pct:"6%", desc:"Indirect cost rate on federal grants (~55-60%). Covers admin, facilities, libraries, compliance. On $380M in grants, ~$200M+ is overhead.", tip:"Fred Hutch is independent (not university-affiliated) so negotiates its own IDC rate directly with DHHS. Lower than Stanford but still significant." },
+      { id:"ehr3", label:"Epic & Tech / Data Infra", val:60, pct:"4%", desc:"Epic EHR (clinical), REDCap (research), LIMS, genomics pipelines, HPC cluster, data warehousing, cybersecurity. Research data platform is critical.", tip:"Fred Hutch has world-class biostatistics and data science. Data infrastructure for genomics, proteomics, and clinical trials is a competitive advantage. ⭐ RISA: data integration opportunity." },
+      { id:"rcm3", label:"RCM / Billing", val:55, pct:"4%", desc:"Revenue cycle for clinical operations. BMT billing is extraordinarily complex — 30-60 day inpatient stays, multiple drug regimens, daily labs, complications.", tip:"BMT billing: DRG payments may not cover actual costs. Frequent denials for stem cell transplant (payer medical necessity disputes). ⭐⭐ RISA: BMT/cell therapy billing is a niche with massive pain." },
+      { id:"trn3", label:"Training / Fellows", val:40, pct:"3%", desc:"Clinical research training programs, post-doctoral fellows, visiting scientists, summer student programs (SURP), conferences.", tip:"Fred Hutch trains the next generation of cancer researchers. Post-doc stipends: $55-70K. Visiting scientist programs attract global talent." },
+      { id:"rfl3", label:"Reference Labs / Diagnostics", val:35, pct:"2%", desc:"External genomic testing, HLA typing for transplant, specialized diagnostics. Hutch has strong internal labs but some specialized tests sent out.", tip:"HLA typing (critical for transplant matching) partially in-house. Genomic panels: mix of internal + external (FMI, Tempus). MRD testing increasingly important for transplant outcomes." },
+      { id:"ins3", label:"Insurance & Compliance", val:30, pct:"2%", desc:"Malpractice, general liability, research compliance (IRB for 1000+ active protocols), HIPAA, FDA IND compliance, biosafety.", tip:"Research compliance is massive at Fred Hutch scale — 1000+ active IRB protocols, IND applications, biosafety for BSL-3, radioactive materials. Dedicated compliance teams." },
+    ]
   }
 };
 
@@ -128,7 +156,7 @@ const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 const tipEl = document.getElementById('tip');
 
-function go(v) { cur = v; document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&v==='texas')||(i===1&&v==='stanford'))); draw(); renderSB(); }
+function go(v) { cur = v; document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&v==='texas')||(i===1&&v==='stanford')||(i===2&&v==='fredhutch'))); draw(); renderSB(); }
 
 function draw() {
   const dpr = window.devicePixelRatio || 1;
