@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cancer Center Research — RISA Labs Strategic Analysis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --blue: #2563EB;
+    --blue-light: #E8F0FE;
+    --blue-mid: #DBEAFE;
+    --black: #000000;
+    --white: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #555555;
+    --text-light: #888888;
+    --divider: #CCCCCC;
+    --rose-bg: #FDEAEA;
+    --rose: #E53935;
+    --panel-bg: #F5F7FA;
+    --teal: #0D9488;
+    --amber: #D97706;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    background: var(--white);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .deck { position: relative; width: 100vw; height: 100vh; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 90px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+    overflow-y: auto;
+    background: var(--white);
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  .slide.exit-right {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  /* Title Slide */
+  .slide-title {
+    background: linear-gradient(135deg, #1a1210 0%, #2d221c 40%, #1a1510 100%);
+    color: var(--white);
+    justify-content: flex-end;
+    padding-bottom: 100px;
+  }
+
+  .slide-title .logo-bar {
+    position: absolute;
+    top: 40px;
+    left: 90px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .slide-title .logo-text {
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.85);
+  }
+
+  .slide-title .confidential {
+    position: absolute;
+    top: 44px;
+    right: 90px;
+    font-size: 0.75rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--blue);
+    color: var(--white);
+    padding: 6px 18px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+
+  .slide-title h1 {
+    font-size: 3.2rem;
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    color: var(--white);
+  }
+
+  .slide-title .subtitle-line {
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    margin-top: 12px;
+  }
+
+  /* Section Label */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .section-label .bar {
+    width: 4px;
+    height: 24px;
+    background: var(--blue);
+    border-radius: 2px;
+  }
+
+  .section-label span {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+
+  h2 {
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.15;
+  }
+
+  .blue-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--blue);
+    border-radius: 2px;
+    margin: 14px 0 24px 0;
+  }
+
+  h3 {
+    font-size: 1.0rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+
+  .h3-dark { color: var(--text-primary); }
+
+  p, li { font-size: 0.88rem; line-height: 1.6; color: var(--text-secondary); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  .card {
+    background: var(--panel-bg);
+    border-radius: 10px;
+    padding: 22px 24px;
+  }
+
+  .card-blue { background: var(--blue-light); }
+  .card-blue-border { background: var(--blue-light); border-left: 3px solid var(--blue); }
+  .card-black { background: var(--black); color: var(--white); }
+  .card-black h3 { color: rgba(255,255,255,0.6); }
+  .card-black p, .card-black li { color: rgba(255,255,255,0.85); }
+  .card-rose { background: var(--rose-bg); }
+  .card-rose h3 { color: var(--rose); }
+  .card-teal { background: #CCFBF1; }
+  .card-teal h3 { color: var(--teal); }
+  .card-amber { background: #FEF3C7; }
+  .card-amber h3 { color: var(--amber); }
+
+  .stat {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--blue);
+    line-height: 1;
+  }
+
+  .stat-teal { color: var(--teal); }
+  .stat-amber { color: var(--amber); }
+  .stat-rose { color: var(--rose); }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    margin-top: 6px;
+  }
+
+  ul { list-style: none; padding: 0; }
+
+  ul li {
+    padding: 4px 0 4px 20px;
+    position: relative;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+
+  ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+
+  .check-list li::before {
+    content: '✓';
+    background: none;
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.85rem;
+    top: 4px;
+    left: 0;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  .pill-blue { background: var(--blue-light); color: var(--blue); }
+  .pill-teal { background: #CCFBF1; color: var(--teal); }
+  .pill-amber { background: #FEF3C7; color: var(--amber); }
+  .pill-rose { background: #FFE4E6; color: #E11D48; }
+
+  /* Data bars */
+  .data-bar-container { margin: 6px 0; }
+  .data-bar-label {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .data-bar-track {
+    height: 22px;
+    background: #E5E7EB;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .data-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+  }
+
+  /* Table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+
+  .data-table th {
+    background: var(--black);
+    color: var(--white);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .data-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #E5E7EB;
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+
+  .data-table tr:nth-child(even) td { background: var(--panel-bg); }
+
+  .data-table th:first-child { border-radius: 6px 0 0 0; }
+  .data-table th:last-child { border-radius: 0 6px 0 0; }
+
+  /* Callout */
+  .callout {
+    background: var(--blue-light);
+    border-radius: 10px;
+    padding: 16px 24px;
+    margin-top: 16px;
+  }
+
+  .callout p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+  .callout strong { color: var(--blue); }
+
+  /* Chevron flow */
+  .chevron-flow { display: flex; gap: 0; margin-top: 14px; }
+  .chevron {
+    flex: 1;
+    background: var(--black);
+    color: var(--white);
+    padding: 12px 18px 12px 26px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    position: relative;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 16px 50%);
+  }
+  .chevron:first-child {
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%);
+    padding-left: 18px;
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--panel-bg);
+    border-left: 3px solid var(--blue);
+    padding: 12px 20px;
+    margin-bottom: 8px;
+    border-radius: 0 8px 8px 0;
+  }
+  .question-card .q-num { color: var(--blue); font-weight: 700; font-size: 0.72rem; letter-spacing: 1px; margin-bottom: 2px; }
+  .question-card p { font-size: 0.85rem; color: var(--text-primary); }
+
+  /* Nav */
+  .nav {
+    position: fixed;
+    bottom: 60px;
+    right: 36px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+  }
+
+  .nav button {
+    background: var(--panel-bg);
+    border: 1px solid var(--divider);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .nav button:hover { background: var(--blue-light); }
+  .nav button:disabled { opacity: 0.3; cursor: default; }
+
+  .counter {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 500;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--blue);
+    transition: width 0.45s ease;
+    z-index: 100;
+  }
+
+  .logo {
+    position: fixed;
+    top: 28px;
+    left: 40px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    z-index: 100;
+  }
+
+  body:has(.slide-title.active) > .logo { display: none; }
+
+  .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 44px;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 90;
+  }
+
+  .footer-bar .f-logo {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--white);
+    letter-spacing: 1.5px;
+  }
+
+  .footer-bar .f-contact {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .footer-bar .f-contact strong { color: var(--white); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+
+  .small-text { font-size: 0.75rem; color: var(--text-light); margin-top: 8px; }
+
+  /* Animations for data bars */
+  @keyframes slideIn { from { width: 0; } }
+  .slide.active .data-bar-fill { animation: slideIn 1.2s ease forwards; }
+
+  @media (max-width: 900px) {
+    .slide { padding: 40px 32px; }
+    h2 { font-size: 1.6rem; }
+    .grid-2, .grid-3, .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="logo">RISA LABS</div>
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 0: Title -->
+  <div class="slide slide-title active" data-slide="0">
+    <div class="logo-bar"><span class="logo-text">RISA</span></div>
+    <div class="confidential">CONFIDENTIAL</div>
+    <div class="badge">Market Intelligence — Cancer Center Research 2026</div>
+    <h1>Strategic Market Analysis:<br>Premier US Cancer Centers</h1>
+    <p class="subtitle-line">Operational Infrastructure, Workforce Composition &amp; EMR Ecosystems · RISA Labs · February 2026</p>
+  </div>
+
+  <!-- SLIDE 1: Executive Summary -->
+  <div class="slide" data-slide="1">
+    <div class="section-label"><div class="bar"></div><span>Executive Summary</span></div>
+    <h2>Strategic Overview</h2>
+    <div class="blue-divider"></div>
+    <div class="grid-3" style="margin-bottom: 20px;">
+      <div class="card card-blue" style="text-align:center;">
+        <div class="stat">3</div>
+        <div class="stat-label">Distinct Cancer Center Archetypes</div>
+      </div>
+      <div class="card card-blue" style="text-align:center;">
+        <div class="stat stat-teal">143K+</div>
+        <div class="stat-label">Combined Annual New Patients</div>
+      </div>
+      <div class="card card-blue" style="text-align:center;">
+        <div class="stat stat-amber">1,500+</div>
+        <div class="stat-label">Combined Physicians</div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h3 style="color:var(--blue);">Texas Oncology</h3>
+        <p><strong>Community Network</strong> — 550+ physicians, 280+ sites, vertically integrated with McKesson. EMR: iKnowMed.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--teal);">Stanford Cancer Center</h3>
+        <p><strong>Academic Medical Center</strong> — NCI Comprehensive, ~500 faculty, 350+ clinical trials. EMR: Epic Beacon.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--amber);">Fred Hutch</h3>
+        <p><strong>Hybrid Research-Clinical</strong> — 6,100+ staff, Nobel Prize legacy, 2022 SCCA merger. EMR: Epic.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <p><strong>Core Insight:</strong> EMR selection is never a UI preference — it's a structural necessity dictated by business model. Texas Oncology's EMR is the backbone of drug economics. Stanford/Hutch's EMR is the connective tissue of multi-modal hospital care.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Texas Oncology — Overview -->
+  <div class="slide" data-slide="2">
+    <div class="section-label"><div class="bar"></div><span>Texas Oncology</span></div>
+    <h2>The Community Network Powerhouse</h2>
+    <div class="blue-divider"></div>
+    <div class="two-col">
+      <div>
+        <h3 class="h3-dark">History &amp; Positioning</h3>
+        <ul>
+          <li>Founded <strong>1986</strong> at Baylor University Medical Center, Dallas</li>
+          <li>Largest independent oncology practice in the US</li>
+          <li>Affiliated with <strong>The US Oncology Network</strong> (McKesson)</li>
+          <li>Contributed to <strong>100+ FDA-approved cancer therapies</strong></li>
+          <li>Maintained independence while many practices were absorbed by hospital systems</li>
+        </ul>
+        <div style="margin-top: 16px;">
+          <h3 class="h3-dark">Strategic Model</h3>
+          <p>Functions as a <strong>"virtual hospital system"</strong> — distributed community care with centralized purchasing power. The McKesson relationship provides capital, technology, and GPO contracting leverage.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card card-blue" style="text-align:center; margin-bottom: 16px;">
+          <div class="stat">71,000+</div>
+          <div class="stat-label">New Cancer Patients Annually</div>
+        </div>
+        <div class="grid-2" style="gap: 12px;">
+          <div class="card" style="text-align:center;">
+            <div class="stat" style="font-size: 2rem;">550+</div>
+            <div class="stat-label">Physicians</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div class="stat stat-teal" style="font-size: 2rem;">280+</div>
+            <div class="stat-label">Sites of Service</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div class="stat stat-amber" style="font-size: 2rem;">140+</div>
+            <div class="stat-label">APPs</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div class="stat stat-rose" style="font-size: 2rem;">50</div>
+            <div class="stat-label">Comprehensive Centers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Texas Oncology — Physician Mix & iKnowMed -->
+  <div class="slide" data-slide="3">
+    <div class="section-label"><div class="bar"></div><span>Texas Oncology</span></div>
+    <h2>Physician Composition &amp; iKnowMed Ecosystem</h2>
+    <div class="blue-divider"></div>
+    <div class="two-col">
+      <div>
+        <h3 class="h3-dark">Physician Breakdown (550+)</h3>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Medical Oncologists</span><span><strong>320</strong></span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:58%; background: var(--blue);">58%</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Surgeons</span><span><strong>157</strong></span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:29%; background: var(--teal);">29%</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Radiation Oncologists</span><span><strong>64</strong></span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:12%; background: var(--amber);">12%</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Gynecologic Oncologists</span><span><strong>30</strong></span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:5.5%; background: var(--rose);">5%</div></div>
+        </div>
+        <p class="small-text">Ratio is optimized for high-throughput "buy-and-bill" infusion delivery</p>
+      </div>
+      <div>
+        <h3 class="h3-dark">The iKnowMed Walled Garden</h3>
+        <div class="card card-black" style="margin-bottom: 12px;">
+          <h3>iKnowMed Gen 2</h3>
+          <p>Proprietary oncology EMR by McKesson/Ontada — not a standalone charting tool but the <strong>central node</strong> of a closed, integrated suite.</p>
+        </div>
+        <div class="card" style="margin-bottom: 8px;">
+          <h3 style="color:var(--blue);">🔗 Lynx Mobile</h3>
+          <p>Inventory management — tracks every mg of oncolytics, manages waste &amp; billing</p>
+        </div>
+        <div class="card" style="margin-bottom: 8px;">
+          <h3 style="color:var(--teal);">📋 Clear Value Plus</h3>
+          <p>NCCN guideline integration — evidence-based regimens with financial/payer compliance view</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--amber);">📡 Canopy</h3>
+          <p>Remote monitoring platform — PROs &amp; symptoms between visits, integrated into iKnowMed</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Stanford — Overview -->
+  <div class="slide" data-slide="4">
+    <div class="section-label"><div class="bar"></div><span>Stanford Cancer Center</span></div>
+    <h2>The Academic Destination Center</h2>
+    <div class="blue-divider"></div>
+    <div class="two-col">
+      <div>
+        <h3 class="h3-dark">History &amp; Prestige</h3>
+        <ul>
+          <li><strong>1955:</strong> First medical linear accelerator used to treat a patient — at Stanford</li>
+          <li><strong>2004:</strong> Cancer Institute formally established</li>
+          <li><strong>2007:</strong> NCI designation received</li>
+          <li><strong>2016:</strong> Achieved NCI <strong>Comprehensive Cancer Center</strong> status</li>
+          <li><strong>2022:</strong> Successful renewal of comprehensive status</li>
+        </ul>
+        <div style="margin-top: 14px;">
+          <h3 class="h3-dark">Strategic Model</h3>
+          <p>Built to handle the <strong>"long tail" of cancer complexity</strong> — cases too rare or resistant for community centers. Includes BMT, CAR-T cell therapy, and Phase I trials.</p>
+        </div>
+      </div>
+      <div>
+        <div class="grid-2" style="gap: 12px; margin-bottom: 14px;">
+          <div class="card card-teal" style="text-align:center;">
+            <div class="stat stat-teal" style="font-size: 2rem;">~500</div>
+            <div class="stat-label">Physicians &amp; Researchers</div>
+          </div>
+          <div class="card card-blue" style="text-align:center;">
+            <div class="stat" style="font-size: 2rem;">350+</div>
+            <div class="stat-label">Active Clinical Trials</div>
+          </div>
+          <div class="card card-amber" style="text-align:center;">
+            <div class="stat stat-amber" style="font-size: 2rem;">80K+</div>
+            <div class="stat-label">Patient Visits / Year</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div class="stat stat-rose" style="font-size: 2rem;">2,755</div>
+            <div class="stat-label">System Active Medical Staff</div>
+          </div>
+        </div>
+        <div class="card card-blue-border">
+          <h3>Explosive Growth</h3>
+          <p>Stanford Cancer Center South Bay volumes grew from <strong>544 patients (2021)</strong> to <strong>3,446 (2024)</strong> — a <strong>6.3× increase</strong> in 3 years.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Stanford — Epic Enterprise -->
+  <div class="slide" data-slide="5">
+    <div class="section-label"><div class="bar"></div><span>Stanford Cancer Center</span></div>
+    <h2>The Epic Enterprise Ecosystem</h2>
+    <div class="blue-divider"></div>
+    <div class="two-col">
+      <div>
+        <h3 class="h3-dark">Epic as Central Nervous System</h3>
+        <p style="margin-bottom: 14px;">The EMR must function across a massive university hospital. Epic Beacon is not an island — it sits on the <strong>same database</strong> as every other department.</p>
+        <div class="chevron-flow" style="margin-bottom: 16px;">
+          <div class="chevron" style="background:#7C3AED;">Beacon<br><span style="font-size:0.65rem; opacity:0.7;">Oncology</span></div>
+          <div class="chevron" style="background:#4F46E5;">OpTime<br><span style="font-size:0.65rem; opacity:0.7;">Surgery</span></div>
+          <div class="chevron" style="background:var(--blue);">Willow<br><span style="font-size:0.65rem; opacity:0.7;">Pharmacy</span></div>
+          <div class="chevron" style="background:var(--teal);">Beaker<br><span style="font-size:0.65rem; opacity:0.7;">Pathology</span></div>
+          <div class="chevron" style="background:var(--amber);">ClinDoc<br><span style="font-size:0.65rem; opacity:0.7;">Inpatient</span></div>
+        </div>
+        <div class="card card-blue-border">
+          <h3>STARR Research Repository</h3>
+          <p>Extracts data from Epic Clarity for "Real World Evidence" studies and cohort identification — enabling the vast clinical data to power research.</p>
+        </div>
+      </div>
+      <div>
+        <h3 class="h3-dark">Why Enterprise Integration Matters</h3>
+        <div class="card" style="margin-bottom: 10px;">
+          <h3 style="color:var(--blue);">🔒 Safety in Complexity</h3>
+          <p>Closed-loop chemo: doctor orders → pharmacist verifies (Willow) → nurse administers with barcode scanning — all in one database.</p>
+        </div>
+        <div class="card" style="margin-bottom: 10px;">
+          <h3 style="color:var(--teal);">🔍 Cross-Specialty Querying</h3>
+          <p>SlicerDicer: "Show me all lung cancer patients who also had a cardiology consult for heart failure." Impossible with oncology-only EMR.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--amber);">📊 Registry &amp; Staging</h3>
+          <p>Beacon handles AJCC staging, radiation tracking, and cancer registry submission natively — alongside OncHx treatment summaries.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Fred Hutch — Overview -->
+  <div class="slide" data-slide="6">
+    <div class="section-label"><div class="bar"></div><span>Fred Hutchinson Cancer Center</span></div>
+    <h2>The Hybrid Research-Clinical Institute</h2>
+    <div class="blue-divider"></div>
+    <div class="two-col">
+      <div>
+        <h3 class="h3-dark">History &amp; Transformation</h3>
+        <ul>
+          <li>Founded <strong>1975</strong> — world-renowned for pioneering <strong>Bone Marrow Transplantation</strong></li>
+          <li>Dr. E. Donnall Thomas won <strong>Nobel Prize</strong> for BMT research</li>
+          <li><strong>April 2022:</strong> Historic merger of SCCA + Fred Hutch into single unified non-profit</li>
+          <li>Now serves as the clinically integrated cancer program for <strong>UW Medicine</strong></li>
+          <li>Goal: reduce friction between <strong>bench discovery → bedside application</strong></li>
+        </ul>
+        <div class="card card-teal" style="margin-top: 14px;">
+          <h3 style="color:var(--teal);">The 2022 Merger Rationale</h3>
+          <p>Previously fragmented: Fred Hutch (bench science) + SCCA (clinical care consortium of Hutch, UW Medicine, Seattle Children's). Merger unified research and clinical delivery under one roof.</p>
+        </div>
+      </div>
+      <div>
+        <div class="grid-2" style="gap: 12px; margin-bottom: 14px;">
+          <div class="card card-blue" style="text-align:center;">
+            <div class="stat" style="font-size: 2rem;">72K+</div>
+            <div class="stat-label">Patients Served / Year</div>
+          </div>
+          <div class="card card-amber" style="text-align:center;">
+            <div class="stat stat-amber" style="font-size: 2rem;">123K+</div>
+            <div class="stat-label">Outpatient Visits / Year</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div class="stat stat-teal" style="font-size: 2rem;">6,100+</div>
+            <div class="stat-label">Total Employees</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div class="stat stat-rose" style="font-size: 2rem;">362</div>
+            <div class="stat-label">Adult BMTs (FY2025)</div>
+          </div>
+        </div>
+        <div class="card card-black">
+          <h3>Epic Standardization</h3>
+          <p>March 2021: SCCA moved to <strong>Epic as singular EHR</strong> across all alliance sites. MyChart patient portal + Care Everywhere data sharing with UW Medicine network.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Fred Hutch — Research Depth + OnCore -->
+  <div class="slide" data-slide="7">
+    <div class="section-label"><div class="bar"></div><span>Fred Hutchinson Cancer Center</span></div>
+    <h2>Research Engine &amp; Workforce Structure</h2>
+    <div class="blue-divider"></div>
+    <div class="two-col">
+      <div>
+        <h3 class="h3-dark">Research Density</h3>
+        <ul>
+          <li><strong>460 faculty</strong> members leading independent labs</li>
+          <li><strong>1,200+ healthcare providers</strong> (physicians, APPs, fellows)</li>
+          <li>Global destination for <strong>cellular therapy</strong> — BMT, CAR-T</li>
+          <li>Uses <strong>OnCore CTMS</strong> for clinical trial management (integrated with Epic)</li>
+          <li>Studies must be entered into OnCore <strong>before IRB submission</strong></li>
+        </ul>
+        <div class="card card-blue-border" style="margin-top: 14px;">
+          <h3>Post-Merger Integration</h3>
+          <p>Blending of SCCA clinical roles (nurses, schedulers) with Hutch research roles (PIs, lab techs) — creating a hybrid culture where <strong>research staff outnumber clinical staff</strong>.</p>
+        </div>
+      </div>
+      <div>
+        <h3 class="h3-dark">Workforce Composition (~6,100)</h3>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Healthcare Providers</span><span><strong>1,200+</strong></span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:20%; background: var(--blue);">20%</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Faculty / Researchers</span><span><strong>460</strong></span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:7.5%; background: var(--teal);">8%</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Research & Support Staff</span><span><strong>~4,440</strong></span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:72%; background: var(--amber);">72%</div></div>
+        </div>
+        <p class="small-text" style="margin-top: 12px;">~72% of workforce is non-clinical — reflects a research university more than a hospital</p>
+
+        <div class="card" style="margin-top: 14px;">
+          <h3 class="h3-dark">Key Titles at Fred Hutch</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <span class="pill pill-teal">Virologist</span>
+            <span class="pill pill-blue">Computational Biologist</span>
+            <span class="pill pill-amber">Grant Writer</span>
+            <span class="pill pill-rose">Lab Manager</span>
+            <span class="pill pill-teal">Research Technician</span>
+            <span class="pill pill-blue">Philanthropy Officer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: EMR War — Why OncoEMR is Excluded -->
+  <div class="slide" data-slide="8">
+    <div class="section-label"><div class="bar"></div><span>EMR Analysis</span></div>
+    <h2>The OncoEMR Exclusion: Why It Can't Win Here</h2>
+    <div class="blue-divider"></div>
+    <div class="grid-2">
+      <div class="card card-rose">
+        <h3 style="color:var(--rose);">🚫 Strategic Barrier: Texas Oncology</h3>
+        <p style="margin-bottom: 8px;"><strong>OncoEMR = Flatiron Health = Roche.</strong><br>iKnowMed = McKesson. These are direct competitors.</p>
+        <ul>
+          <li>Adopting OncoEMR would <strong>share sensitive utilization data with a competitor</strong></li>
+          <li>Would break the iKnowMed → Lynx → Unity GPO <strong>walled garden</strong></li>
+          <li>Loss of "buy-and-bill" spread optimization — economically irrational</li>
+          <li>It's a <strong>business-strategic</strong> exclusion, not technical</li>
+        </ul>
+      </div>
+      <div class="card card-amber">
+        <h3 style="color:var(--amber);">⚠️ Functional Barrier: Stanford &amp; Fred Hutch</h3>
+        <p style="margin-bottom: 8px;"><strong>OncoEMR is ambulatory-only.</strong> No inpatient capabilities whatsoever.</p>
+        <ul>
+          <li>Cancer care at AMCs involves <strong>ICU, surgery, weeks-long transplant stays</strong></li>
+          <li>Separate oncology EMR = fragmented records = <strong>medication reconciliation risk</strong></li>
+          <li>No support for <strong>hospital billing</strong> (HB) + professional billing (PB) split</li>
+          <li>No native integration with Pathology (Beaker) or Pharmacy (Willow)</li>
+          <li>Would require fragile <strong>HL7 interfaces</strong> instead of native database unity</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">
+      <p><strong>Bottom line:</strong> OncoEMR excels at workflow efficiency for standalone infusion centers. But it faces <strong>insurmountable barriers</strong> — strategic at Texas Oncology (competitor ownership) and functional at Stanford/Fred Hutch (no inpatient module). The EMR choice is a consequence of business model, not feature comparison.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: EMR Feature Comparison -->
+  <div class="slide" data-slide="9">
+    <div class="section-label"><div class="bar"></div><span>EMR Analysis</span></div>
+    <h2>EMR Feature Comparison: Enterprise vs Best-of-Breed</h2>
+    <div class="blue-divider"></div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Feature Domain</th>
+          <th>Epic Beacon (Stanford/Hutch)</th>
+          <th>iKnowMed (Texas Oncology)</th>
+          <th>OncoEMR (Excluded)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Primary User Base</strong></td>
+          <td>Academic Medical Centers, Health Systems</td>
+          <td>US Oncology Network, Community Practices</td>
+          <td>Independent Community Practices</td>
+        </tr>
+        <tr>
+          <td><strong>Inpatient Integration</strong></td>
+          <td>✅ Native — ICU, ER, Surgery</td>
+          <td>❌ Strictly outpatient</td>
+          <td>❌ Strictly outpatient</td>
+        </tr>
+        <tr>
+          <td><strong>Inventory Management</strong></td>
+          <td>Willow (Pharmacy)</td>
+          <td>✅ Superior — Lynx (McKesson GPO)</td>
+          <td>Good, but no GPO dominance</td>
+        </tr>
+        <tr>
+          <td><strong>Business Model</strong></td>
+          <td>Software License (Enterprise)</td>
+          <td>Value-add to Drug Distribution</td>
+          <td>SaaS subscription</td>
+        </tr>
+        <tr>
+          <td><strong>Research Tools</strong></td>
+          <td>Cosmos / SlicerDicer / STARR</td>
+          <td>Sarah Cannon Research</td>
+          <td>Flatiron Real-World Evidence</td>
+        </tr>
+        <tr>
+          <td><strong>Radiation Therapy</strong></td>
+          <td>✅ Native tracking in Beacon</td>
+          <td>Site-specific systems</td>
+          <td>❌ Not included</td>
+        </tr>
+        <tr>
+          <td><strong>Registry Submission</strong></td>
+          <td>✅ AJCC staging + auto-reporting</td>
+          <td>Via Clear Value Plus</td>
+          <td>AJCC content only</td>
+        </tr>
+        <tr>
+          <td><strong>Why Selected</strong></td>
+          <td><strong>Continuity:</strong> Unifies complex care</td>
+          <td><strong>Economics:</strong> Maximizes drug margins</td>
+          <td>N/A: Structurally unfit</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SLIDE 10: Workforce Composition Comparison -->
+  <div class="slide" data-slide="10">
+    <div class="section-label"><div class="bar"></div><span>Human Capital</span></div>
+    <h2>Workforce Composition: Three Models</h2>
+    <div class="blue-divider"></div>
+    <div class="grid-3">
+      <div class="card">
+        <h3 style="color:var(--blue);">Texas Oncology<br><span style="font-size:0.7rem; color:var(--text-light);">~7,000 employees</span></h3>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Physicians</span><span>550+</span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:8%; background:var(--blue);">8%</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>APPs</span><span>140+</span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:2%; background:var(--teal);"></div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Clinical/Admin</span><span>~6,300</span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:90%; background:var(--amber);">90%</div></div>
+        </div>
+        <p class="small-text"><strong>Key roles:</strong> Financial Counselors, Prior Auth Specialists, Infusion Nurses, Patient Access Reps</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--teal);">Stanford Cancer Center<br><span style="font-size:0.7rem; color:var(--text-light);">~500+ members (matrixed)</span></h3>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Faculty (MD + PhD)</span><span>~500</span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:40%; background:var(--teal);">Dual-titled</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Research Staff</span><span>Dominant</span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:45%; background:var(--blue);">CRCs, Biostats</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Clinical Support</span><span>Shared</span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:15%; background:var(--amber);">15%</div></div>
+        </div>
+        <p class="small-text"><strong>Key roles:</strong> Clinical Research Coordinators, Biostatisticians, Genetic Counselors, Postdocs</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--amber);">Fred Hutch<br><span style="font-size:0.7rem; color:var(--text-light);">~6,100 employees</span></h3>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Providers</span><span>1,200+</span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:20%; background:var(--amber);">20%</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Faculty / PIs</span><span>460</span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:7.5%; background:var(--teal);">8%</div></div>
+        </div>
+        <div class="data-bar-container">
+          <div class="data-bar-label"><span>Research & Ops</span><span>~4,440</span></div>
+          <div class="data-bar-track"><div class="data-bar-fill" style="width:72%; background:var(--rose);">72%</div></div>
+        </div>
+        <p class="small-text"><strong>Key roles:</strong> Virologists, Comp. Biologists, Grant Writers, Lab Managers, Philanthropy Officers</p>
+      </div>
+    </div>
+    <div class="callout">
+      <p><strong>Insight:</strong> Texas Oncology builds a <strong>"Clinical Army"</strong> (volume + revenue cycle). Stanford builds a <strong>"Physician-Scientist Army"</strong> (data generation + trials). Fred Hutch builds a <strong>"Scientific Army"</strong> (discovery + bench research). The workforce IS the strategy.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Workforce Role Comparison Table -->
+  <div class="slide" data-slide="11">
+    <div class="section-label"><div class="bar"></div><span>Human Capital</span></div>
+    <h2>Workforce Model Comparison</h2>
+    <div class="blue-divider"></div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Role Category</th>
+          <th>Texas Oncology (Efficiency)</th>
+          <th>Stanford / Hutch (Academic / Research)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Physician Compensation</strong></td>
+          <td>Productivity-based (RVU / Collections)</td>
+          <td>Salary + Academic / Grant funding</td>
+        </tr>
+        <tr>
+          <td><strong>Dominant Nursing Role</strong></td>
+          <td>Infusion Nurse — throughput &amp; safety</td>
+          <td>Research Nurse — protocol adherence</td>
+        </tr>
+        <tr>
+          <td><strong>Dominant Admin Role</strong></td>
+          <td>Revenue Cycle: Billing, Auth, Collections</td>
+          <td>Grant Admin: NIH compliance, Trial data</td>
+        </tr>
+        <tr>
+          <td><strong>Research Staff</strong></td>
+          <td>Centralized / Lean (site coordinators)</td>
+          <td>Massive (PIs, Post-docs, Lab Techs)</td>
+        </tr>
+        <tr>
+          <td><strong>Executive Titles</strong></td>
+          <td>"Practice Manager," "Regional Director"</td>
+          <td>"Department Chair," "Institute Director"</td>
+        </tr>
+        <tr>
+          <td><strong>Revenue Model</strong></td>
+          <td>Drug margins (buy-and-bill spread)</td>
+          <td>NIH grants + endowments + hospital revenue</td>
+        </tr>
+        <tr>
+          <td><strong>LinkedIn Company Size</strong></td>
+          <td>5,001–10,000</td>
+          <td>Stanford: 1,001–5,000 · Fred Hutch: 5,001–10,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SLIDE 12: Stakeholder Ecosystem -->
+  <div class="slide" data-slide="12">
+    <div class="section-label"><div class="bar"></div><span>Ecosystem</span></div>
+    <h2>Stakeholder Ecosystem &amp; Value Chains</h2>
+    <div class="blue-divider"></div>
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom: 12px;">
+          <h3 style="color:var(--blue);">💰 Payers &amp; CMS</h3>
+          <ul>
+            <li><strong>Commercial payers</strong> exert pressure via Prior Authorization</li>
+            <li>Texas Oncology: armies of staff fight for drug approvals</li>
+            <li>Stanford/Hutch: negotiate <strong>"Centers of Excellence"</strong> bundled payments</li>
+            <li>All participate in <strong>CMS value-based models</strong> (EOM — through 2030)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--teal);">💊 Pharma &amp; Drug Distribution</h3>
+          <ul>
+            <li>Stanford/Hutch: run <strong>Phase I/II trials</strong> — pharma pays for patient access</li>
+            <li>Texas Oncology: Phase III/IV via Sarah Cannon — <strong>volume for real-world proof</strong></li>
+            <li>Texas Oncology: <strong>Unity GPO</strong> (McKesson) — drug procurement discounts</li>
+            <li>Stanford/Hutch: <strong>340B Drug Pricing Program</strong> — government-mandated discounts</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom: 12px;">
+          <h3 style="color:var(--amber);">📋 Regulatory &amp; Quality</h3>
+          <ul>
+            <li><strong>NCCN:</strong> Stanford &amp; Fred Hutch are founding members — they <em>write</em> guidelines. Texas Oncology <em>consumes</em> them.</li>
+            <li><strong>Commission on Cancer:</strong> All maintain accreditation → NCDB reporting</li>
+            <li><strong>FDA:</strong> Accelerated Approval, RTOR, Project Orbis for oncology</li>
+            <li><strong>State registries:</strong> NPCR (CDC) + SEER (NCI) surveillance</li>
+          </ul>
+        </div>
+        <div class="card card-black">
+          <h3>5 Overlapping Value Chains</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;">
+            <span class="pill pill-blue">Care Delivery</span>
+            <span class="pill pill-teal">Diagnostics &amp; Precision Medicine</span>
+            <span class="pill pill-amber">Drug Channel &amp; Distribution</span>
+            <span class="pill pill-rose">Payment &amp; Value-Based Care</span>
+            <span class="pill" style="background: #EDE9FE; color: #7C3AED;">Research &amp; Education</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Patient Journey & Workflow Map -->
+  <div class="slide" data-slide="13">
+    <div class="section-label"><div class="bar"></div><span>Workflows</span></div>
+    <h2>The Oncology Care Journey: End-to-End</h2>
+    <div class="blue-divider"></div>
+    <div class="chevron-flow" style="margin-bottom: 20px;">
+      <div class="chevron" style="background:#7C3AED; font-size:0.72rem;">Referral<br>&amp; Intake</div>
+      <div class="chevron" style="background:#4F46E5; font-size:0.72rem;">Insurance<br>&amp; Auth</div>
+      <div class="chevron" style="background:var(--blue); font-size:0.72rem;">Diagnosis<br>&amp; Staging</div>
+      <div class="chevron" style="background:var(--teal); font-size:0.72rem;">Tumor<br>Board</div>
+      <div class="chevron" style="background:#059669; font-size:0.72rem;">Treatment<br>Plan</div>
+      <div class="chevron" style="background:var(--amber); font-size:0.72rem;">Infusion /<br>Radiation</div>
+      <div class="chevron" style="background:#E11D48; font-size:0.72rem;">Monitoring<br>&amp; Survivorship</div>
+    </div>
+    <div class="grid-2">
+      <div>
+        <h3 class="h3-dark">Top Workflow Breakpoints</h3>
+        <div class="question-card">
+          <div class="q-num">BREAKPOINT 1</div>
+          <p><strong>Referral intake + records ingestion</strong> — missing pathology, duplicate tests, delayed consults</p>
+        </div>
+        <div class="question-card">
+          <div class="q-num">BREAKPOINT 2</div>
+          <p><strong>Prior authorization delays</strong> — treatment can't start until financial clearance works</p>
+        </div>
+        <div class="question-card">
+          <div class="q-num">BREAKPOINT 3</div>
+          <p><strong>Infusion capacity orchestration</strong> — chair time is the "factory constraint"</p>
+        </div>
+        <div class="question-card">
+          <div class="q-num">BREAKPOINT 4</div>
+          <p><strong>Between-visit symptom monitoring</strong> — where preventable ED visits are born</p>
+        </div>
+      </div>
+      <div>
+        <h3 class="h3-dark">Backstage Operations Engine</h3>
+        <div class="card" style="margin-bottom: 10px;">
+          <h3 style="color:var(--blue);">⚙️ Pharmacy &amp; Compounding</h3>
+          <p>USP &lt;800&gt; compliance, drug procurement (wholesalers/GPO), buy-and-bill economics, cold chain, waste control</p>
+        </div>
+        <div class="card" style="margin-bottom: 10px;">
+          <h3 style="color:var(--teal);">💵 Revenue Cycle</h3>
+          <p>Eligibility → Prior auth → Coding (J-codes) → Claims → Denials → Appeals → Patient billing. Oncology RCM is care enablement.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--amber);">📊 Quality &amp; Registry</h3>
+          <p>Tumor registry abstraction, AJCC staging, CoC accreditation, NCDB benchmarking — labor-intensive but accreditation-critical.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: Comparative Data Summary -->
+  <div class="slide" data-slide="14">
+    <div class="section-label"><div class="bar"></div><span>Comparison</span></div>
+    <h2>Key Comparative Data Summary</h2>
+    <div class="blue-divider"></div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Texas Oncology</th>
+          <th>Stanford Cancer Center</th>
+          <th>Fred Hutch (Seattle)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Archetype</strong></td>
+          <td>Independent Community Network</td>
+          <td>Academic Medical Center</td>
+          <td>Hybrid Research-Clinical</td>
+        </tr>
+        <tr>
+          <td><strong>Primary Affiliation</strong></td>
+          <td>US Oncology / McKesson</td>
+          <td>Stanford Health Care</td>
+          <td>UW Medicine / SCCA</td>
+        </tr>
+        <tr>
+          <td><strong>Annual Volume</strong></td>
+          <td>71,000+ new patients</td>
+          <td>80K+ patient visits</td>
+          <td>72,000+ patients served</td>
+        </tr>
+        <tr>
+          <td><strong>Physicians</strong></td>
+          <td>550+</td>
+          <td>~500 faculty</td>
+          <td>460 faculty / 1,200 providers</td>
+        </tr>
+        <tr>
+          <td><strong>Total Employees</strong></td>
+          <td>~7,000</td>
+          <td>Matrixed across Stanford system</td>
+          <td>6,100+</td>
+        </tr>
+        <tr>
+          <td><strong>EMR System</strong></td>
+          <td>iKnowMed (McKesson)</td>
+          <td>Epic Beacon</td>
+          <td>Epic</td>
+        </tr>
+        <tr>
+          <td><strong>Why This EMR?</strong></td>
+          <td>Vertical integration (drug $)</td>
+          <td>Enterprise integration (hospital)</td>
+          <td>Clinical/research unification</td>
+        </tr>
+        <tr>
+          <td><strong>Why No OncoEMR?</strong></td>
+          <td>Competitor product (Roche)</td>
+          <td>No inpatient module</td>
+          <td>No inpatient module</td>
+        </tr>
+        <tr>
+          <td><strong>Research Focus</strong></td>
+          <td>Phase III/IV (volume)</td>
+          <td>Phase I/II (discovery)</td>
+          <td>Phase I/II + basic science</td>
+        </tr>
+        <tr>
+          <td><strong>Drug Economics</strong></td>
+          <td>Buy-and-bill (Unity GPO)</td>
+          <td>Hospital billing + 340B</td>
+          <td>Hospital billing + 340B</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SLIDE 15: System-of-Record Map -->
+  <div class="slide" data-slide="15">
+    <div class="section-label"><div class="bar"></div><span>Technology Stack</span></div>
+    <h2>System-of-Record by Workflow</h2>
+    <div class="blue-divider"></div>
+    <table class="data-table" style="font-size: 0.74rem;">
+      <thead>
+        <tr>
+          <th>Workflow</th>
+          <th>Texas Oncology</th>
+          <th>Stanford</th>
+          <th>Fred Hutch</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Clinical EMR</strong></td>
+          <td>iKnowMed (confirmed)</td>
+          <td>Epic + Beacon (confirmed)</td>
+          <td>Epic (confirmed)</td>
+        </tr>
+        <tr>
+          <td><strong>Between-Visit Care</strong></td>
+          <td>Canopy + iKnowMed (confirmed)</td>
+          <td>Epic-native + add-ons</td>
+          <td>Epic-native + add-ons</td>
+        </tr>
+        <tr>
+          <td><strong>Patient Portal</strong></td>
+          <td>iKnowMed portal</td>
+          <td>MyChart</td>
+          <td>MyChart (confirmed)</td>
+        </tr>
+        <tr>
+          <td><strong>Referring Provider Access</strong></td>
+          <td>Multi-system</td>
+          <td>EpicCare Link</td>
+          <td>EpicCare Link (confirmed)</td>
+        </tr>
+        <tr>
+          <td><strong>CTMS</strong></td>
+          <td>proXimity (EMR→EDC automation)</td>
+          <td>OnCore (confirmed)</td>
+          <td>OnCore (confirmed)</td>
+        </tr>
+        <tr>
+          <td><strong>Radiation Oncology</strong></td>
+          <td>Varies by site</td>
+          <td>ARIA (confirmed)</td>
+          <td>Not confirmed</td>
+        </tr>
+        <tr>
+          <td><strong>Research Data</strong></td>
+          <td>iKnowMed analytics</td>
+          <td>STARR (Epic Clarity + Registry)</td>
+          <td>Research warehouses</td>
+        </tr>
+        <tr>
+          <td><strong>Integration Platform</strong></td>
+          <td>Ontada Marketplace (confirmed)</td>
+          <td>Epic governance</td>
+          <td>Epic governance</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top: 14px;">
+      <p><strong>Key takeaway:</strong> At Epic sites, "become a Beacon-embedded tool" is the go-to-market. At Texas Oncology, "become an Ontada Marketplace partner" is the realistic path. Replacing the core EMR is <strong>not a credible ask</strong> at any of these accounts.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 16: Top Workflow Breakpoints for Wedge Opportunities -->
+  <div class="slide" data-slide="16">
+    <div class="section-label"><div class="bar"></div><span>Opportunities</span></div>
+    <h2>Top Funded Workflow Breakpoints</h2>
+    <div class="blue-divider"></div>
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom: 10px;">
+          <h3 style="color:var(--blue);">1. Prior Auth Automation</h3>
+          <p>Auto-assemble documentation, payer rules engines, denial prediction. <strong>Delays treatment start at every center.</strong></p>
+        </div>
+        <div class="card" style="margin-bottom: 10px;">
+          <h3 style="color:var(--teal);">2. Infusion Capacity Optimization</h3>
+          <p>Predictive scheduling (regimen duration + labs + nurse mix). Chair time is the factory constraint.</p>
+        </div>
+        <div class="card" style="margin-bottom: 10px;">
+          <h3 style="color:var(--amber);">3. Remote Symptom Monitoring</h3>
+          <p>ePRO + triage pathways + auto-documentation. Texas Oncology already investing via Canopy.</p>
+        </div>
+        <div class="card" style="margin-bottom: 10px;">
+          <h3 style="color:var(--rose);">4. Clinical Trial Matching</h3>
+          <p>EHR↔CTMS linkage, EMR→EDC automation. Stanford &amp; Hutch use OnCore; Texas Oncology uses proXimity.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:#7C3AED;">5. Registry Auto-Abstraction</h3>
+          <p>NLP-driven staging capture, auto-export to NCDB. Labor-intensive at every center. Stanford has Cancer Registry + ARIA data sources.</p>
+        </div>
+      </div>
+      <div>
+        <h3 class="h3-dark">Fastest-Funded Wedges by Center</h3>
+        <div class="card card-blue" style="margin-bottom: 10px;">
+          <h3>Texas Oncology</h3>
+          <ul class="check-list">
+            <li>Between-visit care automation + RTM billing</li>
+            <li>Infusion capacity optimization at 280+ sites</li>
+            <li>Prior auth automation at scale</li>
+            <li>Trial ops automation (already funded: proXimity)</li>
+          </ul>
+        </div>
+        <div class="card card-teal" style="margin-bottom: 10px;">
+          <h3 style="color:var(--teal);">Stanford</h3>
+          <ul class="check-list">
+            <li>Trial matching + coordinator workflow</li>
+            <li>Registry abstraction automation</li>
+            <li>Radiation/EHR data reconciliation</li>
+            <li>Clinician burden reduction inside Epic</li>
+          </ul>
+        </div>
+        <div class="card card-amber">
+          <h3 style="color:var(--amber);">Fred Hutch</h3>
+          <ul class="check-list">
+            <li>Referring access workflows (EpicCare Link)</li>
+            <li>OnCore/IRB pipeline throughput</li>
+            <li>Data liquidity across UW ecosystem</li>
+            <li>Registry/surveillance-grade data ops</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17: Strategic Implications for RISA -->
+  <div class="slide" data-slide="17">
+    <div class="section-label"><div class="bar"></div><span>Strategic Implications</span></div>
+    <h2>What This Means for RISA</h2>
+    <div class="blue-divider"></div>
+    <div class="grid-2">
+      <div>
+        <div class="card card-rose" style="margin-bottom: 14px;">
+          <h3 style="color:var(--rose);">❌ What Won't Work</h3>
+          <ul>
+            <li>Selling an "oncology EMR replacement" at any of these centers</li>
+            <li>Pitching to Epic enterprises without native Epic integration</li>
+            <li>Underestimating McKesson's "walled garden" at US Oncology</li>
+            <li>Targeting IT leadership alone — clinical + operations consensus is required</li>
+          </ul>
+        </div>
+        <div class="card card-blue-border">
+          <h3>The Gravity Wells</h3>
+          <ul>
+            <li><strong>Epic sites:</strong> "Do it inside Epic or integrate tightly"</li>
+            <li><strong>iKnowMed sites:</strong> "Become an Ontada Marketplace partner"</li>
+            <li>Replacing the core record is dead on arrival at all three</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card card-blue" style="margin-bottom: 14px;">
+          <h3>✅ The Winning Motion</h3>
+          <p style="margin-bottom: 10px;"><strong>Don't replace the EMR — augment it.</strong> Sell adjacent workflow products:</p>
+          <ul class="check-list">
+            <li>Pathway decision support embedded in Beacon workflows</li>
+            <li>Analytics + documentation automation</li>
+            <li>Patient engagement &amp; remote monitoring</li>
+            <li>Registry automation &amp; research data capture</li>
+            <li>Trial matching + coordinator tools</li>
+          </ul>
+        </div>
+        <div class="card card-black">
+          <h3>Buying Coalitions to Target</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+            <span class="pill pill-blue">Service Line Leadership</span>
+            <span class="pill pill-teal">Physician Governance</span>
+            <span class="pill pill-amber">Nursing / Navigation</span>
+            <span class="pill pill-rose">Pharmacy Leadership</span>
+            <span class="pill" style="background: #EDE9FE; color: #7C3AED;">IT / Informatics</span>
+            <span class="pill pill-blue">Revenue Cycle</span>
+            <span class="pill pill-teal">Research Ops</span>
+            <span class="pill pill-amber">Quality / Registry</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 18: Closing -->
+  <div class="slide slide-title" data-slide="18" style="justify-content: center; padding-bottom: 60px;">
+    <div class="logo-bar"><span class="logo-text">RISA</span></div>
+    <div class="confidential">CONFIDENTIAL</div>
+    <div class="badge">Summary</div>
+    <h1 style="font-size: 2.6rem;">The Business of Oncology<br>Is Not Monolithic</h1>
+    <p class="subtitle-line" style="max-width: 700px; margin-top: 20px;">
+      Texas Oncology is a marvel of <strong style="color:var(--white);">distributed efficiency</strong> — its heart is McKesson's supply chain.<br><br>
+      Stanford &amp; Fred Hutch are cathedrals of <strong style="color:var(--white);">complexity</strong> — their heart is Epic's enterprise ecosystem.<br><br>
+      One builds a Clinical Army to fight the battle of <strong style="color:var(--white);">access and volume</strong>.<br>
+      The others build a Scientific Army to fight the battle of <strong style="color:var(--white);">discovery and complexity</strong>.<br><br>
+      Together, they provide both the <strong style="color:var(--white);">reach</strong> to treat the many and the <strong style="color:var(--white);">depth</strong> to cure the few.
+    </p>
+    <p class="subtitle-line" style="margin-top: 30px; font-size: 0.9rem; color: rgba(255,255,255,0.4);">RISA Labs · nilesh@risalabs.ai · February 2026</p>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer-bar">
+  <span class="f-logo">RISA</span>
+  <span class="f-contact">Reach out at <strong>nilesh@risalabs.ai</strong></span>
+</div>
+
+<!-- Nav -->
+<div class="nav">
+  <button id="prev" onclick="navigate(-1)" disabled>←</button>
+  <span class="counter" id="counter">1 / 19</span>
+  <button id="next" onclick="navigate(1)">→</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+
+  function navigate(dir) {
+    const next = current + dir;
+    if (next < 0 || next >= total) return;
+    const exitClass = dir > 0 ? 'exit-left' : 'exit-right';
+    slides[current].classList.remove('active');
+    slides[current].classList.add(exitClass);
+    setTimeout(() => { slides.forEach(s => { s.classList.remove('exit-left', 'exit-right'); }); }, 500);
+    current = next;
+    slides[current].classList.add('active');
+    update();
+  }
+
+  function update() {
+    counter.textContent = (current + 1) + ' / ' + total;
+    progress.style.width = ((current + 1) / total * 100) + '%';
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
+  });
+
+  update();
+</script>
+
+</body>
+</html>
