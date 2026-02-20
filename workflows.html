@@ -294,7 +294,7 @@ function render() {
     html += `<div class="wf-grid">`;
     items.forEach(w => {
       const hasAI = w.a && w.a.includes('⭐');
-      html += `<div class="wf" data-ai="${w.a?'1':''}" data-centers="${w.c.join(',')}" onclick="this.classList.toggle('expanded')">
+      html += `<div class="wf" data-ai="${w.a&&w.a.includes('⭐')?'1':''}" data-centers="${w.c.join(',')}" onclick="this.classList.toggle('expanded')">
         <div class="top"><span class="id">${w.id}</span><span class="name">${w.n}</span></div>
         <div class="tags">
           ${w.c.includes('tx')?'<span class="tag tx">TX</span>':''}
