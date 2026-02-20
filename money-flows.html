@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>US Oncology Money Flows — Provider at Center</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; overflow: hidden; }
+  .header { padding: 20px 32px; background: #1e293b; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 22px; font-weight: 700; color: #f8fafc; }
+  .header p { font-size: 13px; color: #94a3b8; margin-top: 2px; }
+  .tabs { display: flex; gap: 8px; }
+  .tab { padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; 
+         background: #334155; color: #94a3b8; border: none; transition: all 0.2s; }
+  .tab:hover { background: #475569; color: #e2e8f0; }
+  .tab.active { background: #3b82f6; color: white; }
+  .wrap { display: flex; height: calc(100vh - 72px); }
+  .chart-area { flex: 1; overflow: hidden; position: relative; }
+  .sidebar { width: 360px; background: #1e293b; border-left: 1px solid #334155; overflow-y: auto; padding: 20px; }
+  .sidebar h2 { font-size: 15px; font-weight: 700; color: #f8fafc; margin-bottom: 4px; }
+  .sidebar .sub { font-size: 11px; color: #64748b; margin-bottom: 16px; line-height: 1.4; }
+  .sidebar h3 { font-size: 12px; font-weight: 700; color: #3b82f6; margin: 14px 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .totals { background: #334155; border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+  .tr { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .tr .l { color: #94a3b8; }
+  .tr .v { font-weight: 700; }
+  .tr .v.g { color: #22c55e; } .tr .v.r { color: #ef4444; } .tr .v.b { color: #3b82f6; }
+  .tr.div { border-top: 1px solid #475569; margin-top: 4px; padding-top: 8px; }
+  .fi { padding: 8px 10px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; }
+  .fi:hover { border-color: #475569; }
+  .fi.in { background: rgba(34,197,94,0.06); } .fi.in:hover { background: rgba(34,197,94,0.12); }
+  .fi.out { background: rgba(239,68,68,0.06); } .fi.out:hover { background: rgba(239,68,68,0.12); }
+  .fi .fl { font-size: 12px; font-weight: 600; color: #e2e8f0; }
+  .fi .fa { font-size: 13px; font-weight: 700; margin-top: 1px; }
+  .fi .fa.g { color: #22c55e; } .fi .fa.r { color: #ef4444; }
+  .fi .fd { font-size: 10px; color: #94a3b8; margin-top: 3px; line-height: 1.4; }
+  .fi.active { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59,130,246,0.25); }
+  
+  .tooltip { position: fixed; background: #1e293b; border: 1px solid #475569; border-radius: 10px; 
+             padding: 14px 16px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.15s;
+             box-shadow: 0 8px 24px rgba(0,0,0,0.5); max-width: 340px; z-index: 100; }
+  .tooltip .tt { font-weight: 700; font-size: 13px; color: #f8fafc; }
+  .tooltip .ta { font-weight: 700; font-size: 15px; margin: 4px 0 6px; }
+  .tooltip .td { color: #94a3b8; line-height: 1.5; }
+  .tooltip .ti { color: #60a5fa; margin-top: 6px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>💰 US Oncology Money Flows</h1>
+    <p>Every financial interaction with a cancer care provider — hover for details</p>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="go('texas')">Texas Oncology (Community)</button>
+    <button class="tab" onclick="go('stanford')">Stanford Cancer Center (Academic)</button>
+    <button class="tab" onclick="go('fredhutch')">Fred Hutch (Research + Clinical)</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="chart-area"><canvas id="c"></canvas></div>
+  <div class="sidebar" id="sb"></div>
+</div>
+<div class="tooltip" id="tip"></div>
+
+<script>
+const D = {
+  texas: {
+    name: "Texas Oncology", sub: "Community Oncology · US Oncology Network (McKesson) · 550+ physicians · 250+ sites",
+    color: "#f59e0b",
+    inflows: [
+      { id:"mffs", label:"Medicare FFS", val:650, pct:"30%", desc:"Traditional Medicare fee-for-service. Pays per claim: drug reimbursement (ASP+6%), E&M visits, chemo administration (96413-96417), radiation therapy. Largest single revenue source.", tip:"Billing: CMS-1500 + UB-04. Payment: ~14-30 days. Key: 96413 (chemo 1st hr), J-codes for drugs. ASP+6% is THE margin driver." },
+      { id:"com", label:"Commercial Payers", val:550, pct:"25%", desc:"UnitedHealthcare, Anthem/BCBS, Aetna, Cigna. Negotiated rates 120-200% of Medicare. Prior auth required for most chemo. Pathway compliance mandated.", tip:"Buy-and-bill margin higher (ASP+15-25% commercial vs ASP+6% Medicare). But more complex auth + pathway requirements. Site-of-care steering growing." },
+      { id:"mma", label:"Medicare Advantage", val:450, pct:"21%", desc:"Managed Medicare (UHC, Humana, Aetna MA). Growing to ~52% of Medicare. Requires prior auth for most regimens. Often pays less than FFS.", tip:"Pain: Prior auth delays avg 5-14 days. Denial rates 15-20% higher than FFS. ⭐ RISA: Automated prior auth + denial prevention." },
+      { id:"pat", label:"Patient Out-of-Pocket", val:180, pct:"8%", desc:"Copays, coinsurance, deductibles. Average cancer patient OOP: $5,000-12,000/year. Collections rate ~60-70%. Financial toxicity is real.", tip:"Copay assistance programs help. Bad debt write-offs significant. Rising HDHP plans = more patient responsibility." },
+      { id:"tri", label:"Pharma (Trial Payments)", val:120, pct:"6%", desc:"Clinical trial site payments from pharma/CROs. Per-patient: $5K-50K depending on trial. Covers investigator time, procedures.", tip:"~250+ active trials across Texas Oncology. Supplemental revenue but significant. Keeps patients accessing latest treatments." },
+      { id:"gpo", label:"GPO / Rebates", val:85, pct:"4%", desc:"Group Purchasing Organization rebates via McKesson. Volume-based drug discounts. Also 340B-like savings where applicable.", tip:"McKesson GPO negotiates bulk pricing. Rebates quarterly. ~3-5% of drug spend. Critical for buy-and-bill margins." },
+      { id:"mcd", label:"Medicaid", val:80, pct:"4%", desc:"State Medicaid programs. Lowest rates (~60-70% of Medicare). Complex eligibility. Many practices limit Medicaid patients.", tip:"Often managed Medicaid (Centene, Molina). Eligibility verification critical — retroactive denials common." },
+      { id:"lab", label:"Lab / Pathology Fees", val:50, pct:"2%", desc:"In-house lab: CBC, CMP, tumor markers per encounter. Some in-house pathology. Steady ancillary revenue.", tip:"Complex testing (genomics, flow cytometry) sent out. In-house labs are reliable revenue generators." },
+      { id:"eom", label:"EOM Bonuses (CMS)", val:35, pct:"2%", desc:"Enhancing Oncology Model performance bonuses. Episode-based: keep total cost below benchmark + meet quality metrics.", tip:"Risk: May owe money BACK if costs exceed benchmark. MEOS monthly payments + year-end reconciliation." },
+    ],
+    outflows: [
+      { id:"drg", label:"Drug Purchases", val:950, pct:"49%", desc:"LARGEST EXPENSE. IV chemo drugs from distributors (McKesson, Cencora). Buy-and-bill: buy at ASP/GPO, administer, bill payer.", tip:"Key: Keytruda $12K/dose, Opdivo, Avastin, Herceptin biosimilars. 40-50% of revenue. Margin = payer rate minus acquisition cost. JW modifier for waste." },
+      { id:"stf", label:"Staff & Physicians", val:480, pct:"25%", desc:"Physicians ($450-600K), NPs/PAs ($130-180K), RN nurses ($75-95K), MAs, schedulers, billing, navigators. 25-30% of revenue.", tip:"Physician comp often wRVU-based. Acute shortages: infusion nurses, prior auth staff, coders. Burnout is real." },
+      { id:"mck", label:"McKesson / US Oncology Fees", val:180, pct:"9%", desc:"Management fees (5-8% of revenue): practice management, iKnowMed EHR, pathways, compliance, payer contracting, analytics.", tip:"Trade-off: Autonomy vs support. McKesson provides GPO, EHR, payer leverage, benchmarking. Most Texas Oncology docs see it as net positive." },
+      { id:"fac", label:"Facilities & Equipment", val:150, pct:"8%", desc:"250+ clinic sites: rent, infusion buildout, linear accelerators ($3-5M each), CT/PET, pharmacy clean rooms, IT.", tip:"Linacs replaced every 10-15 years. Infusion chair expansion driven by volume. Capital-intensive business." },
+      { id:"rcm", label:"RCM / Billing Services", val:65, pct:"3%", desc:"Coding, charge capture, claims, denials, appeals, collections, prior auth staff. Mix of in-house + outsourced.", tip:"⭐⭐ RISA CORE OPPORTUNITY: AI coding, denial prevention, prior auth automation could save 30-50% of this spend." },
+      { id:"ehr", label:"EHR & Tech", val:45, pct:"2%", desc:"iKnowMed (McKesson), practice management, patient portal, telehealth, cybersecurity. Partially in management fees.", tip:"Additional spend on ancillary systems, integrations, analytics. Tech modernization is ongoing." },
+      { id:"rfl", label:"Reference Labs", val:40, pct:"2%", desc:"Genomic testing send-outs (Foundation Medicine, Tempus, Guardant), complex pathology not done in-house.", tip:"Coverage inconsistent — LCD varies by MAC. Provider often manages billing complexity. Genomic prior auth = ⭐ RISA opportunity." },
+      { id:"mal", label:"Malpractice / Insurance", val:30, pct:"2%", desc:"Malpractice ($15-30K/physician/year), general liability, property, cyber insurance. Moderate risk specialty.", tip:"Cyber insurance increasingly important. Ransomware attacks on healthcare growing 300%+." },
+      { id:"cmp", label:"Compliance / Accreditation", val:20, pct:"1%", desc:"QOPI, state licensing, DEA, OSHA (hazardous drugs), MIPS reporting, accreditation fees, legal counsel.", tip:"Non-compliance can hit reimbursement. MIPS reporting burden significant. External audits costly." },
+      { id:"clr", label:"Clearinghouses", val:15, pct:"1%", desc:"Change Healthcare/Optum, Availity, Waystar. Per-claim fees ($0.25-1.00) for claims, eligibility, ERA/EFT.", tip:"At Texas Oncology volume = millions of transactions/year. Also payer connectivity fees." },
+    ]
+  },
+  stanford: {
+    name: "Stanford Cancer Center", sub: "Academic Medical Center · NCI Comprehensive · 300+ faculty · Part of Stanford Health Care ($14B system)",
+    color: "#a855f7",
+    inflows: [
+      { id:"com", label:"Commercial Payers", val:400, pct:"25%", desc:"Premium rates for Stanford brand: 200-350% of Medicare. Patients pay higher copays willingly. Centers-of-excellence contracts with employers.", tip:"Key payers: Anthem BCBS, UHC, Aetna. Some self-insured employers contract directly for cancer care. Brand = pricing power." },
+      { id:"mffs", label:"Medicare FFS", val:280, pct:"17%", desc:"Academic centers bill BOTH professional + facility fees = higher total reimbursement than community. Facility fee differential significant.", tip:"Stanford charges facility + professional separately. Medicare pays ~30-50% more total than freestanding clinic for same service." },
+      { id:"nci", label:"NCI / NIH Grants", val:200, pct:"12%", desc:"NCI CCSG grant ($5-10M/yr) + investigator R01/U01/P01 grants. Funds research staff, equipment, trials, core facilities.", tip:"Total NIH to Stanford Medicine: $500M+/year (not all cancer). CCSG = NCI Comprehensive designation requirement." },
+      { id:"mma", label:"Medicare Advantage", val:180, pct:"11%", desc:"MA plans growing but some exclude academic centers from narrow networks. Stanford's brand helps maintain access. Prior auth increasing.", tip:"MA plans often steer to lower-cost community sites. Stanford must demonstrate value: complex cases, trials, outcomes." },
+      { id:"tri", label:"Pharma (Trials + Gifts)", val:180, pct:"11%", desc:"Industry trial payments ($15-50K/patient), research collaborations, unrestricted educational grants, faculty consulting.", tip:"250+ active cancer trials. Industry $$$ significant for research. Sunshine Act reporting required for faculty payments." },
+      { id:"phi", label:"Philanthropy / Donors", val:150, pct:"9%", desc:"Major gifts, endowments, naming rights. Funds endowed chairs, buildings, research programs, patient support.", tip:"Stanford Medicine Campaign raised $2B+. Cancer center gets named gifts. Endowment income supports unfunded research." },
+      { id:"pat", label:"Patient Out-of-Pocket", val:120, pct:"7%", desc:"Copays, coinsurance, deductibles. Stanford rates higher = patient OOP can be significant. Financial assistance below 400% FPL.", tip:"Financial counselors help navigate copay programs. Charity care policy exists but Stanford patients skew higher income." },
+      { id:"ipl", label:"IP / Tech Licensing", val:60, pct:"4%", desc:"Patent licensing, spinout equity via Stanford OTL. Cancer immunotherapy, CAR-T, diagnostic IP licensed to biotech/pharma.", tip:"Stanford OTL has historically generated huge IP revenue. Equity in spinouts (e.g. early Google) can be massive." },
+      { id:"mcd", label:"Medi-Cal (Medicaid)", val:50, pct:"3%", desc:"California Medicaid. Low reimbursement but mission obligation. DSH payments + GME funding help offset losses.", tip:"DSH + GME partially compensate below-cost Medicaid. Managed Medi-Cal plans: HealthNet, LA Care, etc." },
+      { id:"stf", label:"State / University", val:40, pct:"2%", desc:"Limited state funding (private university). Cross-subsidization from profitable service lines (cardiology, ortho).", tip:"Stanford is private — less state $ than UC system. Health system profits from other lines subsidize cancer research." },
+    ],
+    outflows: [
+      { id:"fac2", label:"Faculty & Staff", val:500, pct:"32%", desc:"Faculty ($350-600K, lower base but research time), fellows/residents (GME-funded), nurses, research staff, lab techs, admin.", tip:"Academic comp: lower base than community but protected research time. Plus: fellows, post-docs, coordinators. GME offsets trainee costs." },
+      { id:"drg2", label:"Drug / Pharmacy", val:380, pct:"24%", desc:"IV drugs + inpatient pharmacy. 340B pricing = buy at 25-50% discount, bill full rate. Major margin enhancer.", tip:"340B: Stanford qualifies as DSH hospital. Under regulatory scrutiny but generates significant drug margin. Both outpatient infusion + inpatient." },
+      { id:"fac3", label:"Facilities & Equipment", val:200, pct:"13%", desc:"Cancer center building, infusion suites, proton therapy ($200M+), OR, imaging, research labs, clean rooms.", tip:"Proton therapy = massive capex. Lab space for translational research. Ongoing capital for state-of-art facilities." },
+      { id:"res", label:"Research Operations", val:180, pct:"11%", desc:"Trial ops (coordinators, IRB, data), basic science labs, biobanking, data infra. Not fully covered by grants.", tip:"F&A rate doesn't cover everything. Clinical revenue cross-subsidizes research. This is the academic center's core tension." },
+      { id:"ovh", label:"University Overhead / IDC", val:90, pct:"6%", desc:"Indirect cost rate ~60% on grants. University admin, libraries, facilities depreciation. On $1M grant, ~$600K = overhead.", tip:"Controversial but covers real infrastructure. Stanford's IDC rate is among the highest. Negotiated with federal government." },
+      { id:"rcm2", label:"RCM / Billing (Central)", val:80, pct:"5%", desc:"Centralized through Stanford Health Care. Professional + facility billing, coding, denials. More complex than community.", tip:"Academic billing: dual fees, teaching physician rules, split/shared visits, modifier 25. ⭐ RISA: Complexity = opportunity." },
+      { id:"ehr2", label:"Epic & Tech", val:55, pct:"3%", desc:"Epic EHR (Beacon), STARR research data warehouse, CTMS, AI/ML infra, cybersecurity. Enterprise license $100M+.", tip:"Cancer-specific: Beacon module, research data platforms, genomics pipeline. Tech investment is significant." },
+      { id:"rfl2", label:"Reference Labs / Genomics", val:50, pct:"3%", desc:"External genomic testing (FMI, Tempus). Stanford has strong internal molecular path but cutting-edge tests still sent out.", tip:"Strong internal capabilities reduce send-outs vs community. But liquid biopsy, MRD still go to Guardant/Natera." },
+      { id:"trn", label:"Training / Education", val:35, pct:"2%", desc:"Heme-onc fellowship (3yr, 6-8 fellows), CME, conferences, visiting professorships. Teaching mission cost.", tip:"Faculty teaching time = not billed clinically. GME funding from CMS partially offsets. Fellowship pipeline is strategic." },
+      { id:"ins", label:"Insurance & Compliance", val:25, pct:"2%", desc:"Self-insured malpractice, liability, HIPAA, Joint Commission, research compliance (IRB, COI).", tip:"Research compliance adds cost layer that community practices don't have. IRB, conflict of interest management." },
+    ]
+  },
+  fredhutch: {
+    name: "Fred Hutch Cancer Center", sub: "NCI Comprehensive · Research Institute + Clinical (merged with SCCA 2022) · 6,000+ employees · 3 Nobel laureates · Birthplace of BMT · Seattle, WA",
+    color: "#06b6d4",
+    inflows: [
+      { id:"nci3", label:"NCI / NIH Grants", val:380, pct:"26%", desc:"Fred Hutch is one of the top NCI-funded cancer centers. CCSG + individual R01/U01/P50 grants. Funds ~3,000 researchers, labs, cores, clinical trials infra.", tip:"NCI CCSG: ~$10-15M/yr. Individual investigator grants total $300M+. NIH is the #1 revenue source — unlike community practices where it's payers. This fundamentally shapes the institution." },
+      { id:"com3", label:"Commercial Payers", val:280, pct:"19%", desc:"Clinical revenue from SCCA (now Fred Hutch clinical network). Premera BCBS, Regence, Aetna, UHC. Negotiated at academic rates (200-300% of Medicare).", tip:"Post-merger with SCCA: clinical revenue now flows directly to Fred Hutch. WA state commercial market dominated by Premera/Regence BCBS. Prior auth required for most regimens." },
+      { id:"mffs3", label:"Medicare FFS", val:200, pct:"14%", desc:"Medicare for clinical care (BMT, immunotherapy, complex hematologic cancers). Dual billing (professional + facility) like Stanford. BMT cases = very high per-patient revenue.", tip:"Bone marrow transplant: $150K-500K per case (inpatient). Fred Hutch pioneered BMT — still does ~500/year. Medicare DRG payments for inpatient, ASP+6% for outpatient drugs." },
+      { id:"tri3", label:"Pharma (Trials + Partnerships)", val:200, pct:"14%", desc:"Industry-sponsored trials, pharma research collaborations, data licensing partnerships. Fred Hutch data is gold for pharma — deep longitudinal outcomes data.", tip:"Spun out Juno Therapeutics ($579M VC+IPO, acquired by Celgene/BMS for $9B). Adaptive Biotech also spun from Hutch. Pharma pays premium for access to this research ecosystem." },
+      { id:"mma3", label:"Medicare Advantage", val:100, pct:"7%", desc:"MA plans for clinical patients. WA state MA penetration ~40%. Humana, UHC MA, Premera MA. Referral center for complex cases across Pacific NW.", tip:"Complex cases (BMT, CAR-T, rare cancers) often referred from community oncology. MA plans authorize these as they have no in-network alternative." },
+      { id:"phi3", label:"Philanthropy / Donors", val:150, pct:"10%", desc:"Major donors, Obliteride fundraising ($30M+ raised to date), planned gifts, endowments. Fred Hutch is beloved in Seattle — strong local philanthropy culture.", tip:"Bezos family, Paul Allen estate, Bill Gates have supported Hutch. Tech wealth in Seattle = unique philanthropy pipeline. Annual gala is a major event." },
+      { id:"pat3", label:"Patient Out-of-Pocket", val:50, pct:"3%", desc:"Patient copays, coinsurance for clinical services. Many patients travel from across US/internationally — financial navigation is critical.", tip:"Fred Hutch has robust financial counseling. Many patients are out-of-state referrals for BMT/CAR-T — insurance complexity is extreme. Housing assistance program for traveling patients." },
+      { id:"ipl3", label:"IP / Spinout Revenue", val:80, pct:"5%", desc:"Technology licensing, spinout equity. Juno Therapeutics ($9B acquisition), Adaptive Biotechnologies ($4B+ IPO), Presage Biosciences, and more.", tip:"Fred Hutch is arguably the most commercially successful cancer research institute. IP portfolio includes CAR-T, immune profiling, infectious disease (HIV vaccine research). Royalty streams significant." },
+      { id:"mcd3", label:"Medicaid (Apple Health)", val:30, pct:"2%", desc:"Washington Apple Health (Medicaid). Low reimbursement but mission-driven care. Disproportionate share hospital payments help offset.", tip:"WA Medicaid managed by Molina, Coordinated Care, UHC Community Plan. Low volume but Fred Hutch treats all comers for referred complex cases." },
+    ],
+    outflows: [
+      { id:"res3", label:"Research Operations", val:450, pct:"32%", desc:"LARGEST EXPENSE (unlike community practices). 3,000+ researchers, 100+ labs, core facilities (flow cytometry, genomics, imaging), biostatistics, data science, clinical trials ops.", tip:"This is what makes Fred Hutch unique — research is THE mission, not ancillary. Labs run on grants but infrastructure gap is real. Cancer biology, immunology, virology (HIV), public health sciences divisions." },
+      { id:"stf3", label:"Clinical Staff", val:300, pct:"21%", desc:"Oncologists, BMT physicians, NPs, RNs (BMT nursing is highly specialized), pharmacists, coordinators. Post-SCCA merger: full clinical workforce now under Hutch.", tip:"BMT nurses require specialized training (~6 month onboarding). Physician comp: $400-700K (BMT/cell therapy specialists command premium). Staffing shortages in specialized roles." },
+      { id:"drg3", label:"Drug / Pharmacy", val:250, pct:"18%", desc:"Drugs for clinical care + investigational agents. CAR-T manufacturing costs ($100-300K per patient for commercial products). BMT conditioning regimens.", tip:"CAR-T: Kymriah, Yescarta, Breyanzi, Abecma, Carvykti — each $373K-475K. Fred Hutch also has in-house CAR-T manufacturing for trials. Drug costs per patient extremely high for transplant/cell therapy." },
+      { id:"fac4", label:"Facilities & Equipment", val:120, pct:"8%", desc:"Research buildings (Robert Day Center, Thomas Building), clinical center, BSL-3 labs, clean rooms (CAR-T manufacturing), data centers, vivarium.", tip:"BSL-3 labs for infectious disease research (HIV, COVID). GMP-grade clean rooms for cell therapy manufacturing. Capital-intensive research infrastructure." },
+      { id:"ovh3", label:"University Overhead / IDC", val:80, pct:"6%", desc:"Indirect cost rate on federal grants (~55-60%). Covers admin, facilities, libraries, compliance. On $380M in grants, ~$200M+ is overhead.", tip:"Fred Hutch is independent (not university-affiliated) so negotiates its own IDC rate directly with DHHS. Lower than Stanford but still significant." },
+      { id:"ehr3", label:"Epic & Tech / Data Infra", val:60, pct:"4%", desc:"Epic EHR (clinical), REDCap (research), LIMS, genomics pipelines, HPC cluster, data warehousing, cybersecurity. Research data platform is critical.", tip:"Fred Hutch has world-class biostatistics and data science. Data infrastructure for genomics, proteomics, and clinical trials is a competitive advantage. ⭐ RISA: data integration opportunity." },
+      { id:"rcm3", label:"RCM / Billing", val:55, pct:"4%", desc:"Revenue cycle for clinical operations. BMT billing is extraordinarily complex — 30-60 day inpatient stays, multiple drug regimens, daily labs, complications.", tip:"BMT billing: DRG payments may not cover actual costs. Frequent denials for stem cell transplant (payer medical necessity disputes). ⭐⭐ RISA: BMT/cell therapy billing is a niche with massive pain." },
+      { id:"trn3", label:"Training / Fellows", val:40, pct:"3%", desc:"Clinical research training programs, post-doctoral fellows, visiting scientists, summer student programs (SURP), conferences.", tip:"Fred Hutch trains the next generation of cancer researchers. Post-doc stipends: $55-70K. Visiting scientist programs attract global talent." },
+      { id:"rfl3", label:"Reference Labs / Diagnostics", val:35, pct:"2%", desc:"External genomic testing, HLA typing for transplant, specialized diagnostics. Hutch has strong internal labs but some specialized tests sent out.", tip:"HLA typing (critical for transplant matching) partially in-house. Genomic panels: mix of internal + external (FMI, Tempus). MRD testing increasingly important for transplant outcomes." },
+      { id:"ins3", label:"Insurance & Compliance", val:30, pct:"2%", desc:"Malpractice, general liability, research compliance (IRB for 1000+ active protocols), HIPAA, FDA IND compliance, biosafety.", tip:"Research compliance is massive at Fred Hutch scale — 1000+ active IRB protocols, IND applications, biosafety for BSL-3, radioactive materials. Dedicated compliance teams." },
+    ]
+  }
+};
+
+let cur = 'texas', hov = null;
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const tipEl = document.getElementById('tip');
+
+function go(v) { cur = v; document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&v==='texas')||(i===1&&v==='stanford')||(i===2&&v==='fredhutch'))); draw(); renderSB(); }
+
+function draw() {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  
+  const w = rect.width, h = rect.height;
+  const d = D[cur];
+  const inN = d.inflows.length, outN = d.outflows.length;
+  const totalIn = d.inflows.reduce((s,f)=>s+f.val,0);
+  const totalOut = d.outflows.reduce((s,f)=>s+f.val,0);
+  
+  // Center provider node
+  const cx = w * 0.42, cy = h / 2;
+  const provW = 160, provH = 50;
+  
+  // Layout inflow nodes on left
+  const leftX = 30, leftW = 14;
+  const inGap = Math.min(40, (h - 60) / inN);
+  const inStartY = cy - (inN * inGap) / 2;
+  
+  // Layout outflow nodes on right
+  const rightX = w - 30 - leftW;
+  const outGap = Math.min(40, (h - 60) / outN);
+  const outStartY = cy - (outN * outGap) / 2;
+  
+  ctx.clearRect(0, 0, w, h);
+  
+  // Store positions for hit detection
+  window._flows = [];
+  
+  // Draw inflow curves
+  d.inflows.forEach((f, i) => {
+    const y = inStartY + i * inGap + inGap/2;
+    const barH = Math.max(4, (f.val / totalIn) * (h * 0.5));
+    const targetY = cy - provH/3 + (i / inN) * provH * 0.7;
+    
+    ctx.beginPath();
+    ctx.moveTo(leftX + leftW, y);
+    ctx.bezierCurveTo(cx * 0.5, y, cx * 0.5, targetY, cx - provW/2, targetY);
+    ctx.strokeStyle = hov === f.id ? 'rgba(34,197,94,0.7)' : 'rgba(34,197,94,0.2)';
+    ctx.lineWidth = Math.max(2, barH * 0.15);
+    ctx.stroke();
+    
+    // Left bar
+    ctx.fillStyle = hov === f.id ? '#22c55e' : '#166534';
+    ctx.beginPath(); ctx.roundRect(leftX, y - barH/2, leftW, barH, 3); ctx.fill();
+    
+    // Label
+    ctx.fillStyle = hov === f.id ? '#22c55e' : '#94a3b8';
+    ctx.font = `${hov === f.id ? '600' : '400'} 11px -apple-system, sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.fillText(`${f.label}`, leftX + leftW + 8, y - 2);
+    ctx.fillStyle = '#22c55e';
+    ctx.font = '700 11px -apple-system, sans-serif';
+    ctx.fillText(`$${f.val}M`, leftX + leftW + 8, y + 12);
+    
+    window._flows.push({ id: f.id, type: 'in', x: leftX, y: y - inGap/2, w: cx - provW/2 - leftX, h: inGap, data: f });
+  });
+  
+  // Draw outflow curves
+  d.outflows.forEach((f, i) => {
+    const y = outStartY + i * outGap + outGap/2;
+    const barH = Math.max(4, (f.val / totalOut) * (h * 0.5));
+    const sourceY = cy - provH/3 + (i / outN) * provH * 0.7;
+    
+    ctx.beginPath();
+    ctx.moveTo(cx + provW/2, sourceY);
+    ctx.bezierCurveTo(cx + provW/2 + (rightX - cx - provW/2) * 0.5, sourceY, cx + provW/2 + (rightX - cx - provW/2) * 0.5, y, rightX, y);
+    ctx.strokeStyle = hov === f.id ? 'rgba(239,68,68,0.7)' : 'rgba(239,68,68,0.2)';
+    ctx.lineWidth = Math.max(2, barH * 0.15);
+    ctx.stroke();
+    
+    // Right bar
+    ctx.fillStyle = hov === f.id ? '#ef4444' : '#7f1d1d';
+    ctx.beginPath(); ctx.roundRect(rightX, y - barH/2, leftW, barH, 3); ctx.fill();
+    
+    // Label
+    ctx.fillStyle = hov === f.id ? '#ef4444' : '#94a3b8';
+    ctx.font = `${hov === f.id ? '600' : '400'} 11px -apple-system, sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.fillText(`${f.label}`, rightX - 8, y - 2);
+    ctx.fillStyle = '#ef4444';
+    ctx.font = '700 11px -apple-system, sans-serif';
+    ctx.fillText(`$${f.val}M`, rightX - 8, y + 12);
+    
+    window._flows.push({ id: f.id, type: 'out', x: cx + provW/2, y: y - outGap/2, w: rightX - cx - provW/2, h: outGap, data: f });
+  });
+  
+  // Center provider box
+  ctx.fillStyle = d.color;
+  ctx.beginPath(); ctx.roundRect(cx - provW/2, cy - provH/2, provW, provH, 12); ctx.fill();
+  ctx.fillStyle = '#0f172a';
+  ctx.font = '700 13px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(d.name.toUpperCase(), cx, cy + 1);
+  
+  // IN/OUT arrows
+  ctx.fillStyle = '#22c55e';
+  ctx.font = '600 12px -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`← $${totalIn.toLocaleString()}M IN`, cx - provW/2 - 60, cy - provH/2 - 10);
+  ctx.fillStyle = '#ef4444';
+  ctx.fillText(`$${totalOut.toLocaleString()}M OUT →`, cx + provW/2 + 60, cy - provH/2 - 10);
+  ctx.fillStyle = '#3b82f6';
+  ctx.font = '700 12px -apple-system, sans-serif';
+  ctx.fillText(`Net: $${(totalIn - totalOut)}M (${((totalIn-totalOut)/totalIn*100).toFixed(1)}%)`, cx, cy + provH/2 + 22);
+}
+
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  let found = null;
+  for (const f of (window._flows || [])) {
+    if (mx >= f.x && mx <= f.x + f.w && my >= f.y && my <= f.y + f.h) { found = f; break; }
+  }
+  if (found && hov !== found.id) {
+    hov = found.id;
+    const fd = found.data;
+    tipEl.innerHTML = `<div class="tt">${fd.label}</div><div class="ta" style="color:${found.type==='in'?'#22c55e':'#ef4444'}">$${fd.val}M/yr (${fd.pct} of ${found.type==='in'?'revenue':'expenses'})</div><div class="td">${fd.desc}</div>${fd.tip?'<div class="ti">💡 '+fd.tip+'</div>':''}`;
+    tipEl.style.opacity = '1';
+    draw();
+  } else if (!found && hov) {
+    hov = null; tipEl.style.opacity = '0'; draw();
+  }
+  if (found) {
+    tipEl.style.left = Math.min(e.clientX + 16, window.innerWidth - 360) + 'px';
+    tipEl.style.top = Math.min(e.clientY - 10, window.innerHeight - 200) + 'px';
+  }
+  canvas.style.cursor = found ? 'pointer' : 'default';
+});
+
+canvas.addEventListener('mouseleave', () => { hov = null; tipEl.style.opacity = '0'; draw(); });
+
+function renderSB() {
+  const d = D[cur];
+  const totalIn = d.inflows.reduce((s,f)=>s+f.val,0);
+  const totalOut = d.outflows.reduce((s,f)=>s+f.val,0);
+  let h = `<h2>${d.name}</h2><p class="sub">${d.sub}</p>`;
+  h += `<div class="totals"><div class="tr"><span class="l">Revenue (IN)</span><span class="v g">$${totalIn.toLocaleString()}M</span></div><div class="tr"><span class="l">Expenses (OUT)</span><span class="v r">$${totalOut.toLocaleString()}M</span></div><div class="tr div"><span class="l">Net Operating</span><span class="v b">$${(totalIn-totalOut).toLocaleString()}M (${((totalIn-totalOut)/totalIn*100).toFixed(1)}%)</span></div></div>`;
+  h += '<h3>💚 Revenue Sources</h3>';
+  d.inflows.forEach(f => {
+    h += `<div class="fi in" onmouseenter="hov='${f.id}';draw()" onmouseleave="hov=null;draw()"><div class="fl">${f.label}</div><div class="fa g">+$${f.val}M/yr · ${f.pct}</div><div class="fd">${f.desc.substring(0,100)}...</div></div>`;
+  });
+  h += '<h3>🔴 Expenses</h3>';
+  d.outflows.forEach(f => {
+    h += `<div class="fi out" onmouseenter="hov='${f.id}';draw()" onmouseleave="hov=null;draw()"><div class="fl">${f.label}</div><div class="fa r">-$${f.val}M/yr · ${f.pct}</div><div class="fd">${f.desc.substring(0,100)}...</div></div>`;
+  });
+  document.getElementById('sb').innerHTML = h;
+}
+
+draw(); renderSB();
+window.addEventListener('resize', draw);
+</script>
+</body>
+</html>
