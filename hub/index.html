@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RISA Labs - Market Intelligence Hub</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root {
   --bg: #0f1117; --bg2: #161822; --bg3: #1e2030; --bg4: #262940;
@@ -83,6 +85,92 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
 .search-result .heading { font-size:13px; color:var(--text); font-weight:500; }
 .search-result .snippet { font-size:12px; color:var(--text2); margin-top:6px; line-height:1.5; }
 
+/* Market Map - Category Groups */
+.category-group { margin-bottom:20px; border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--bg2); }
+.category-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; background:var(--bg3); cursor:pointer; user-select:none; transition:background .15s; }
+.category-header:hover { background:var(--bg4); }
+.category-header h3 { font-size:15px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:8px; }
+.category-header .count { font-size:12px; color:var(--text2); background:var(--bg); padding:2px 8px; border-radius:10px; }
+.category-header .chevron { color:var(--text2); font-size:12px; transition:transform .2s; }
+.category-header.open .chevron { transform:rotate(90deg); }
+.category-body { display:none; padding:16px 20px; }
+.category-body.open { display:block; }
+.segment-card { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin-bottom:12px; transition:border-color .15s; }
+.segment-card:last-child { margin-bottom:0; }
+.segment-card:hover { border-color:var(--accent); }
+.segment-card h4 { color:var(--accent2); font-size:14px; margin-bottom:10px; }
+.segment-card .seg-row { display:flex; gap:12px; margin-bottom:6px; font-size:12px; line-height:1.6; }
+.segment-card .seg-row:last-child { margin-bottom:0; }
+.segment-card .seg-label { color:var(--text2); font-weight:600; min-width:110px; flex-shrink:0; }
+.segment-card .seg-value { color:var(--text2); }
+.segment-card .seg-value.opportunity { color:var(--green); font-weight:500; }
+.segment-card .seg-description { font-size:12px; color:var(--text2); margin-bottom:10px; font-style:italic; }
+.segment-card .seg-pills { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.segment-card .seg-pill { font-size:10px; padding:3px 8px; border-radius:10px; background:var(--bg4); color:var(--text2); }
+.segment-card .seg-pill.pain { background:rgba(255,118,117,0.15); color:var(--red); }
+.segment-card .seg-pill.opp { background:rgba(0,206,201,0.15); color:var(--green); }
+
+/* Center Detail Modal */
+.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:1000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.modal { background:var(--bg2); border:1px solid var(--border); border-radius:12px; width:90%; max-width:800px; max-height:90vh; overflow-y:auto; }
+.modal-header { display:flex; justify-content:space-between; align-items:flex-start; padding:24px 28px 16px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg2); z-index:1; border-radius:12px 12px 0 0; }
+.modal-header h2 { font-size:20px; color:var(--text); font-weight:600; }
+.modal-header .sub { font-size:13px; color:var(--text2); margin-top:4px; }
+.modal-close { background:none; border:none; color:var(--text2); font-size:24px; cursor:pointer; padding:0 4px; line-height:1; }
+.modal-close:hover { color:var(--text); }
+.modal-body { padding:24px 28px; }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px 24px; margin-bottom:24px; }
+.detail-item { }
+.detail-item .label { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+.detail-item .value { font-size:14px; color:var(--text); }
+.detail-item .value a { color:var(--accent2); text-decoration:none; }
+.detail-item .value a:hover { text-decoration:underline; }
+.detail-item .value.empty { color:var(--text2); font-style:italic; font-size:13px; }
+.detail-item.full { grid-column:1 / -1; }
+.detail-section { margin-top:24px; padding-top:20px; border-top:1px solid var(--border); }
+.detail-section h3 { font-size:14px; color:var(--accent2); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.notes-textarea { width:100%; min-height:120px; background:var(--bg3); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:12px; font-size:13px; font-family:inherit; line-height:1.6; resize:vertical; outline:none; }
+.notes-textarea:focus { border-color:var(--accent); }
+.notes-actions { display:flex; gap:8px; margin-top:10px; align-items:center; }
+.notes-actions button { padding:8px 16px; border-radius:6px; font-size:13px; cursor:pointer; border:none; }
+.btn-save { background:var(--accent); color:#fff; }
+.btn-save:hover { background:var(--accent2); }
+.btn-save:disabled { opacity:0.5; cursor:not-allowed; }
+.notes-status { font-size:12px; color:var(--green); }
+.badge-340b { display:inline-block; background:rgba(0,206,201,0.15); color:var(--green); padding:2px 8px; border-radius:10px; font-size:12px; }
+.badge-no { display:inline-block; background:rgba(255,118,117,0.15); color:var(--red); padding:2px 8px; border-radius:10px; font-size:12px; }
+
+/* Clickable rows */
+.data-table tbody tr { cursor:pointer; }
+
+/* Map View */
+#view-map { padding:0 !important; position:relative; }
+#mapContainer { width:100%; height:100%; }
+.map-panel { position:absolute; top:12px; right:12px; z-index:1000; width:280px; background:rgba(22,24,34,0.92); border:1px solid var(--border); border-radius:10px; backdrop-filter:blur(8px); max-height:calc(100% - 24px); overflow-y:auto; transition:transform .2s; }
+.map-panel.collapsed .map-panel-body { display:none; }
+.map-panel-header { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid var(--border); cursor:pointer; }
+.map-panel-header h3 { font-size:13px; color:var(--accent2); }
+.map-panel-body { padding:12px 14px; }
+.map-section { margin-bottom:14px; }
+.map-section h4 { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+.map-bar { display:flex; align-items:center; gap:8px; margin-bottom:4px; font-size:12px; }
+.map-bar .bar-fill { height:8px; border-radius:4px; min-width:4px; }
+.map-bar .bar-label { color:var(--text2); flex:1; }
+.map-bar .bar-count { color:var(--text); font-weight:600; min-width:24px; text-align:right; }
+.map-filter-group { margin-bottom:10px; }
+.map-filter-group label { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text2); cursor:pointer; margin-bottom:4px; }
+.map-filter-group label input { accent-color:var(--accent); }
+.map-filter-group select { width:100%; background:var(--bg3); border:1px solid var(--border); color:var(--text); padding:6px 8px; border-radius:6px; font-size:12px; }
+.map-stat-big { text-align:center; padding:8px; background:var(--bg3); border-radius:8px; margin-bottom:8px; }
+.map-stat-big .num { font-size:24px; font-weight:700; color:var(--accent2); }
+.map-stat-big .lbl { font-size:11px; color:var(--text2); }
+.leaflet-popup-content-wrapper { background:var(--bg2) !important; color:var(--text) !important; border:1px solid var(--border) !important; border-radius:8px !important; }
+.leaflet-popup-tip { background:var(--bg2) !important; }
+.leaflet-popup-content { font-size:12px; line-height:1.6; margin:10px 14px !important; }
+.leaflet-popup-content a { color:var(--accent2); }
+.leaflet-popup-content strong { color:var(--accent2); }
+.leaflet-container { background:var(--bg) !important; }
+
 .hidden { display:none; }
 .badge { background:var(--accent); color:#fff; font-size:10px; padding:2px 6px; border-radius:8px; margin-left:6px; }
 </style>
@@ -96,6 +184,7 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
   </div>
   <div class="nav">
     <a class="active" data-view="centers"><span class="icon">🏥</span>Cancer Centers</a>
+    <a data-view="map"><span class="icon">📍</span>Map</a>
     <a data-view="segments"><span class="icon">🗺️</span>Market Map</a>
     <a data-view="orgs"><span class="icon">🏢</span>Organizations</a>
     <div class="nav-divider"></div>
@@ -148,8 +237,10 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
   <div class="content hidden" id="view-segments">
     <div class="filters">
       <input type="text" id="segSearch" placeholder="Search segments..." oninput="loadSegments()">
+      <button onclick="expandAll()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:8px 12px;border-radius:6px;cursor:pointer;font-size:13px;">Expand All</button>
+      <button onclick="collapseAll()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:8px 12px;border-radius:6px;cursor:pointer;font-size:13px;">Collapse All</button>
     </div>
-    <div class="card-grid" id="segmentsGrid"></div>
+    <div id="segmentsGrid"></div>
   </div>
 
   <!-- Organizations View -->
@@ -192,6 +283,51 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
     </div>
   </div>
 
+  <!-- Map View -->
+  <div class="content hidden" id="view-map">
+    <div id="mapContainer"></div>
+    <div class="map-panel" id="mapPanel">
+      <div class="map-panel-header" onclick="document.getElementById('mapPanel').classList.toggle('collapsed')">
+        <h3>Analytics</h3>
+        <span style="color:var(--text2);font-size:12px;">&#9660;</span>
+      </div>
+      <div class="map-panel-body">
+        <div class="map-stat-big">
+          <div class="num" id="mapTotal">-</div>
+          <div class="lbl">Cancer Centers</div>
+        </div>
+        <div class="map-section">
+          <h4>Filters</h4>
+          <div class="map-filter-group">
+            <select id="mapStateFilter" onchange="applyMapFilters()">
+              <option value="">All States</option>
+              <option value="CA">California</option>
+              <option value="TX">Texas</option>
+              <option value="WA">Washington</option>
+            </select>
+          </div>
+          <div class="map-filter-group" id="mapCategoryFilters"></div>
+        </div>
+        <div class="map-section">
+          <h4>By State</h4>
+          <div id="mapStateBreakdown"></div>
+        </div>
+        <div class="map-section">
+          <h4>By Category</h4>
+          <div id="mapCatBreakdown"></div>
+        </div>
+        <div class="map-section">
+          <h4>EHR Vendors</h4>
+          <div id="mapEhrBreakdown"></div>
+        </div>
+        <div class="map-section">
+          <h4>340B Participation</h4>
+          <div id="map340b"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Search View -->
   <div class="content hidden" id="view-search">
     <div class="filters">
@@ -200,6 +336,20 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
       <button onclick="doSearch()" style="background:var(--accent);border:none;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer;">Search</button>
     </div>
     <div id="searchResults"></div>
+  </div>
+</div>
+
+<!-- Center Detail Modal -->
+<div class="modal-overlay hidden" id="centerModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="modalName"></h2>
+        <div class="sub" id="modalSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
@@ -230,6 +380,12 @@ document.querySelectorAll('.nav a').forEach(a => {
     document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
     document.getElementById('view-' + view).classList.remove('hidden');
     document.getElementById('viewTitle').textContent = a.textContent.trim();
+    if (view === 'map') {
+      setTimeout(function() {
+        initMap();
+        if (mapInstance) mapInstance.invalidateSize();
+      }, 100);
+    }
   });
 });
 
@@ -245,15 +401,15 @@ async function loadCenters() {
   const res = await fetch(API + '/api/centers?' + params);
   const data = await res.json();
   const tbody = document.getElementById('centersBody');
-  tbody.innerHTML = data.centers.map(c => `<tr>
-    <td><strong>${esc(c.name)}</strong></td>
+  tbody.innerHTML = data.centers.map(c => `<tr onclick="openCenter(${c.id})">
+    <td><strong style="color:var(--accent2)">${esc(c.name)}</strong></td>
     <td>${esc(c.city)}</td>
     <td>${esc(c.state)}</td>
     <td>${esc(c.category)}</td>
     <td>${esc(c.parent_org)}</td>
     <td>${esc(c.ehr_vendor)}</td>
     <td>${esc(c.est_oncologists)}</td>
-    <td>${c.website && c.website !== '—' ? '<a href="https://'+esc(c.website)+'" target="_blank" style="color:var(--accent2)">'+esc(c.website)+'</a>' : '—'}</td>
+    <td>${c.website && c.website !== '-' ? '<a href="https://'+esc(c.website)+'" target="_blank" style="color:var(--accent2)" onclick="event.stopPropagation()">'+esc(c.website)+'</a>' : '-'}</td>
   </tr>`).join('');
 }
 
@@ -265,14 +421,69 @@ async function loadSegments() {
   const res = await fetch(API + '/api/segments?' + params);
   const data = await res.json();
   const grid = document.getElementById('segmentsGrid');
-  grid.innerHTML = data.segments.map(s => `<div class="card">
-    <h4>${esc(s.segment_name)}</h4>
-    <p class="tag">${esc(s.category)}</p>
-    ${s.role ? '<p style="margin-top:8px"><strong>Role:</strong> '+esc(s.role)+'</p>' : ''}
-    ${s.pain_points ? '<p style="margin-top:4px"><strong>Pain Points:</strong> '+esc(s.pain_points)+'</p>' : ''}
-    ${s.risa_opportunity ? '<p style="margin-top:4px;color:var(--green)"><strong>RISA Opportunity:</strong> '+esc(s.risa_opportunity)+'</p>' : ''}
-    ${s.money_flow ? '<p style="margin-top:4px"><strong>Money Flow:</strong> '+esc(s.money_flow)+'</p>' : ''}
-  </div>`).join('');
+
+  // Group by category
+  const groups = {};
+  data.segments.forEach(s => {
+    const cat = s.category || 'Uncategorized';
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(s);
+  });
+
+  const catColors = {
+    'CARE DELIVERY': '#6c5ce7',
+    'PAYERS': '#00cec9',
+    'PHARMA': '#fd79a8',
+    'DIAGNOSTICS': '#00b894',
+    'CLINICAL TRIALS': '#e17055',
+    'TECHNOLOGY': '#0984e3',
+    'REGULATORS': '#636e72',
+    'PATIENTS': '#fdcb6e',
+    'FINANCIAL': '#d63031'
+  };
+
+  function getCatColor(cat) {
+    for (const [key, color] of Object.entries(catColors)) {
+      if (cat.toUpperCase().includes(key)) return color;
+    }
+    return '#6c5ce7';
+  }
+
+  grid.innerHTML = Object.entries(groups).map(([cat, segments]) => {
+    const color = getCatColor(cat);
+    const cards = segments.map(s => `
+      <div class="segment-card">
+        <h4>${esc(s.segment_name)}</h4>
+        ${s.description ? '<div class="seg-description">'+esc(s.description).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')+'</div>' : ''}
+        ${s.role ? '<div class="seg-row"><span class="seg-label">Role</span><span class="seg-value">'+esc(s.role)+'</span></div>' : ''}
+        ${s.pain_points ? '<div class="seg-row"><span class="seg-label">Pain Points</span><span class="seg-value pain">'+esc(s.pain_points)+'</span></div>' : ''}
+        ${s.risa_opportunity ? '<div class="seg-row"><span class="seg-label">RISA Opportunity</span><span class="seg-value opportunity">'+esc(s.risa_opportunity)+'</span></div>' : ''}
+        ${s.money_flow ? '<div class="seg-row"><span class="seg-label">Money Flow</span><span class="seg-value">'+esc(s.money_flow)+'</span></div>' : ''}
+        ${s.data_flow ? '<div class="seg-row"><span class="seg-label">Data Flow</span><span class="seg-value">'+esc(s.data_flow)+'</span></div>' : ''}
+      </div>
+    `).join('');
+
+    return `
+      <div class="category-group">
+        <div class="category-header" onclick="toggleCategory(this)" style="border-left:4px solid ${color}">
+          <h3>${esc(cat)} <span class="count">${segments.length}</span></h3>
+          <span class="chevron">&#9654;</span>
+        </div>
+        <div class="category-body">${cards}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleCategory(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+function expandAll() {
+  document.querySelectorAll('.category-header').forEach(h => { h.classList.add('open'); h.nextElementSibling.classList.add('open'); });
+}
+function collapseAll() {
+  document.querySelectorAll('.category-header').forEach(h => { h.classList.remove('open'); h.nextElementSibling.classList.remove('open'); });
 }
 
 // Load Organizations
@@ -347,6 +558,118 @@ async function sendChat() {
   msgs.scrollTop = msgs.scrollHeight;
 }
 
+// Center Detail Modal
+let currentCenterId = null;
+
+async function openCenter(id) {
+  const res = await fetch(API + '/api/centers/' + id);
+  const c = await res.json();
+  currentCenterId = id;
+
+  document.getElementById('modalName').textContent = c.name;
+  document.getElementById('modalSub').textContent = [c.city, c.state, c.category].filter(Boolean).join(' · ');
+
+  const v = (val, fallback) => val ? esc(String(val)) : '<span class="empty">' + (fallback || 'Not available') + '</span>';
+  const badge340b = c.is_340b === 1 ? '<span class="badge-340b">Yes</span>' : c.is_340b === 0 ? '<span class="badge-no">No</span>' : '<span class="empty">Unknown</span>';
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="label">Parent Organization</div>
+        <div class="value">${v(c.parent_org)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Health System</div>
+        <div class="value">${v(c.health_system)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">NCI Designation</div>
+        <div class="value">${v(c.nci_type)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Category</div>
+        <div class="value">${v(c.category)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">EHR System</div>
+        <div class="value">${v(c.ehr_vendor)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Est. Oncologists</div>
+        <div class="value">${v(c.est_oncologists)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Bed Count</div>
+        <div class="value">${c.bed_count ? c.bed_count.toLocaleString() : '<span class="empty">Not available</span>'}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">340B Program</div>
+        <div class="value">${badge340b}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Annual Cancer Cases</div>
+        <div class="value">${c.annual_cancer_cases ? c.annual_cancer_cases.toLocaleString() + '/year' : '<span class="empty">Not available</span>'}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Website</div>
+        <div class="value">${c.website ? '<a href="https://'+esc(c.website)+'" target="_blank">'+esc(c.website)+'</a>' : '<span class="empty">Not available</span>'}</div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>📝 Notes</h3>
+      <textarea class="notes-textarea" id="notesArea" placeholder="Add notes about this center - meeting notes, contacts, intel, opportunities...">${esc(c.notes || '')}</textarea>
+      <div class="notes-actions">
+        <button class="btn-save" id="saveNotesBtn" onclick="saveNotes()">Save Notes</button>
+        <span class="notes-status" id="notesStatus"></span>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('centerModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('centerModal').classList.add('hidden');
+  document.body.style.overflow = '';
+  currentCenterId = null;
+}
+
+async function saveNotes() {
+  const btn = document.getElementById('saveNotesBtn');
+  const status = document.getElementById('notesStatus');
+  const notes = document.getElementById('notesArea').value;
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  status.textContent = '';
+
+  try {
+    const res = await fetch(API + '/api/centers/' + currentCenterId + '/notes', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({notes: notes})
+    });
+    const data = await res.json();
+    if (data.ok) {
+      status.textContent = '✓ Saved';
+      status.style.color = 'var(--green)';
+    } else {
+      status.textContent = 'Error saving';
+      status.style.color = 'var(--red)';
+    }
+  } catch(e) {
+    status.textContent = 'Error: ' + e.message;
+    status.style.color = 'var(--red)';
+  }
+  btn.disabled = false;
+  btn.textContent = 'Save Notes';
+  setTimeout(() => { status.textContent = ''; }, 3000);
+}
+
+// Close modal on Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
 // Stats
 async function loadStats() {
   try {
@@ -364,6 +687,175 @@ async function loadStats() {
 }
 
 function esc(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Map
+var mapInstance = null;
+var mapMarkers = [];
+var mapData = [];
+var mapCategoryColors = {
+  'NCI-Designated Cancer Centers': '#e74c3c',
+  'Academic Medical Center Cancer Programs': '#6c5ce7',
+  'Large Community Oncology Practices': '#00cec9',
+  'Hospital System Cancer Programs': '#fdcb6e',
+  'Specialty/Boutique Cancer Centers': '#fd79a8'
+};
+var mapCategoryShort = {
+  'NCI-Designated Cancer Centers': 'NCI-Designated',
+  'Academic Medical Center Cancer Programs': 'Academic',
+  'Large Community Oncology Practices': 'Community',
+  'Hospital System Cancer Programs': 'Hospital System',
+  'Specialty/Boutique Cancer Centers': 'Specialty/Boutique'
+};
+var mapCategoryEnabled = {};
+
+function getCatColor(cat) {
+  return mapCategoryColors[cat] || '#636e72';
+}
+
+function getMarkerRadius(onc) {
+  if (!onc) return 5;
+  var n = parseInt(String(onc).replace(/[^0-9]/g, ''), 10);
+  if (isNaN(n) || n === 0) return 5;
+  if (n < 10) return 5;
+  if (n < 30) return 7;
+  if (n < 80) return 9;
+  if (n < 200) return 12;
+  return 15;
+}
+
+function initMap() {
+  if (mapInstance) return;
+  mapInstance = L.map('mapContainer', { zoomControl: true }).setView([37.5, -96], 4);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    maxZoom: 18
+  }).addTo(mapInstance);
+  loadMapData();
+}
+
+async function loadMapData() {
+  var res = await fetch(API + '/api/centers/geo');
+  var data = await res.json();
+  mapData = data.centers;
+
+  // Init category filters
+  var cats = {};
+  mapData.forEach(function(c) { cats[c.category] = true; });
+  mapCategoryEnabled = cats;
+  var filterDiv = document.getElementById('mapCategoryFilters');
+  filterDiv.innerHTML = Object.keys(cats).map(function(cat) {
+    var short = mapCategoryShort[cat] || cat;
+    var color = getCatColor(cat);
+    return '<label><input type="checkbox" checked onchange="toggleMapCategory(this,\'' + cat.replace(/'/g, "\\'") + '\')">' +
+      '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + color + '"></span> ' + esc(short) + '</label>';
+  }).join('');
+
+  applyMapFilters();
+}
+
+function toggleMapCategory(el, cat) {
+  mapCategoryEnabled[cat] = el.checked;
+  applyMapFilters();
+}
+
+function applyMapFilters() {
+  if (!mapInstance) return;
+  var stateFilter = document.getElementById('mapStateFilter').value;
+
+  // Clear existing markers
+  mapMarkers.forEach(function(m) { mapInstance.removeLayer(m); });
+  mapMarkers = [];
+
+  var filtered = mapData.filter(function(c) {
+    if (!mapCategoryEnabled[c.category]) return false;
+    if (stateFilter && c.state !== stateFilter) return false;
+    return true;
+  });
+
+  filtered.forEach(function(c) {
+    if (!c.latitude || !c.longitude) return;
+    var marker = L.circleMarker([c.latitude, c.longitude], {
+      radius: getMarkerRadius(c.est_oncologists),
+      fillColor: getCatColor(c.category),
+      color: '#fff',
+      weight: 1,
+      fillOpacity: 0.8
+    });
+    marker.bindTooltip(c.name, { direction: 'top', offset: [0, -6] });
+    var popupHtml = '<strong>' + esc(c.name) + '</strong><br>' +
+      esc(c.city) + ', ' + esc(c.state) + '<br>' +
+      '<span style="color:' + getCatColor(c.category) + '">' + esc(mapCategoryShort[c.category] || c.category) + '</span><br>' +
+      (c.ehr_vendor ? 'EHR: ' + esc(c.ehr_vendor) + '<br>' : '') +
+      (c.est_oncologists ? 'Oncologists: ' + esc(c.est_oncologists) + '<br>' : '') +
+      '<a href="#" onclick="closeMapPopup();openCenter(' + c.id + ');return false;">View Details</a>';
+    marker.bindPopup(popupHtml);
+    marker.addTo(mapInstance);
+    mapMarkers.push(marker);
+  });
+
+  document.getElementById('mapTotal').textContent = filtered.length;
+  updateMapAnalytics(filtered);
+}
+
+function closeMapPopup() {
+  if (mapInstance) mapInstance.closePopup();
+}
+
+function updateMapAnalytics(data) {
+  // State breakdown
+  var states = {};
+  data.forEach(function(c) { states[c.state] = (states[c.state] || 0) + 1; });
+  var maxState = Math.max.apply(null, Object.values(states).concat([1]));
+  document.getElementById('mapStateBreakdown').innerHTML = Object.entries(states)
+    .sort(function(a, b) { return b[1] - a[1]; })
+    .map(function(e) {
+      return '<div class="map-bar"><span class="bar-label">' + esc(e[0]) + '</span>' +
+        '<div class="bar-fill" style="width:' + Math.round(e[1] / maxState * 80) + 'px;background:var(--accent)"></div>' +
+        '<span class="bar-count">' + e[1] + '</span></div>';
+    }).join('');
+
+  // Category breakdown
+  var cats = {};
+  data.forEach(function(c) { cats[c.category] = (cats[c.category] || 0) + 1; });
+  var maxCat = Math.max.apply(null, Object.values(cats).concat([1]));
+  document.getElementById('mapCatBreakdown').innerHTML = Object.entries(cats)
+    .sort(function(a, b) { return b[1] - a[1]; })
+    .map(function(e) {
+      var short = mapCategoryShort[e[0]] || e[0];
+      return '<div class="map-bar"><span class="bar-label">' + esc(short) + '</span>' +
+        '<div class="bar-fill" style="width:' + Math.round(e[1] / maxCat * 60) + 'px;background:' + getCatColor(e[0]) + '"></div>' +
+        '<span class="bar-count">' + e[1] + '</span></div>';
+    }).join('');
+
+  // EHR breakdown
+  var ehrs = {};
+  data.forEach(function(c) {
+    var v = c.ehr_vendor || 'Unknown';
+    // Normalize
+    if (v.toLowerCase().indexOf('epic') >= 0) v = 'Epic';
+    else if (v.toLowerCase().indexOf('cerner') >= 0) v = 'Cerner';
+    else if (v.toLowerCase().indexOf('meditech') >= 0) v = 'MEDITECH';
+    else if (v === '-' || v === '') v = 'Unknown';
+    ehrs[v] = (ehrs[v] || 0) + 1;
+  });
+  var ehrSorted = Object.entries(ehrs).sort(function(a, b) { return b[1] - a[1]; }).slice(0, 6);
+  var maxEhr = ehrSorted.length > 0 ? ehrSorted[0][1] : 1;
+  document.getElementById('mapEhrBreakdown').innerHTML = ehrSorted.map(function(e) {
+    return '<div class="map-bar"><span class="bar-label">' + esc(e[0]) + '</span>' +
+      '<div class="bar-fill" style="width:' + Math.round(e[1] / maxEhr * 60) + 'px;background:var(--green)"></div>' +
+      '<span class="bar-count">' + e[1] + '</span></div>';
+  }).join('');
+
+  // 340B
+  var total340 = data.length;
+  var yes340 = data.filter(function(c) { return c.is_340b === 1; }).length;
+  var pct = total340 > 0 ? Math.round(yes340 / total340 * 100) : 0;
+  document.getElementById('map340b').innerHTML =
+    '<div class="map-bar"><span class="bar-label">340B Enrolled</span>' +
+    '<div class="bar-fill" style="width:' + pct + 'px;background:var(--green)"></div>' +
+    '<span class="bar-count">' + pct + '%</span></div>' +
+    '<div style="font-size:11px;color:var(--text2);margin-top:4px;">' + yes340 + ' of ' + total340 + ' centers</div>';
+}
 
 // Init
 loadCenters();
