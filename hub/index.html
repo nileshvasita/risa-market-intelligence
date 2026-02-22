@@ -293,6 +293,7 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
     <div class="filters">
       <select id="orgType" onchange="loadOrgs()">
         <option value="">All Types</option>
+        <option value="Health System">Health System</option>
         <option value="Pharma">Pharma</option>
         <option value="Technology">Technology</option>
         <option value="Payer">Payer</option>
@@ -477,7 +478,16 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
     <div id="wfTableView" style="overflow-x:auto;">
       <table class="data-table">
         <thead>
-          <tr><th>ID</th><th>Workflow</th><th>Department</th><th>Stage</th><th>Centers</th><th>Complexity</th><th>Bottleneck</th><th>Time (min)</th></tr>
+          <tr>
+            <th style="cursor:pointer" onclick="sortWorkflows('workflow_id')">ID <span id="wfSort_workflow_id"></span></th>
+            <th style="cursor:pointer" onclick="sortWorkflows('name')">Workflow <span id="wfSort_name"></span></th>
+            <th style="cursor:pointer" onclick="sortWorkflows('department')">Department <span id="wfSort_department"></span></th>
+            <th style="cursor:pointer" onclick="sortWorkflows('patient_journey_stage')">Stage <span id="wfSort_patient_journey_stage"></span></th>
+            <th style="cursor:pointer" onclick="sortWorkflows('centers_applicable')">Centers <span id="wfSort_centers_applicable"></span></th>
+            <th style="cursor:pointer" onclick="sortWorkflows('complexity')">Complexity <span id="wfSort_complexity"></span></th>
+            <th style="cursor:pointer" onclick="sortWorkflows('bottleneck_severity')">Bottleneck <span id="wfSort_bottleneck_severity"></span></th>
+            <th style="cursor:pointer" onclick="sortWorkflows('avg_time_minutes')">Time (min) <span id="wfSort_avg_time_minutes"></span></th>
+          </tr>
         </thead>
         <tbody id="wfBody"></tbody>
       </table>
@@ -507,7 +517,7 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
   <!-- Search View -->
   <div class="content hidden" id="view-search">
     <div class="filters">
-      <input type="text" id="fullSearch" placeholder="Search across all content..." style="flex:1;min-width:300px;"
+      <input type="text" id="fullSearch" placeholder="Search centers, people, orgs, content... (use Chat for questions)" style="flex:1;min-width:300px;"
              onkeydown="if(event.key==='Enter')doSearch()">
       <button onclick="doSearch()" style="background:var(--accent);border:none;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer;">Search</button>
     </div>
@@ -617,24 +627,41 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
 const API = '';
 
 // Navigation
-document.querySelectorAll('.nav a').forEach(a => {
-  a.addEventListener('click', () => {
-    document.querySelectorAll('.nav a').forEach(x => x.classList.remove('active'));
-    a.classList.add('active');
-    const view = a.dataset.view;
-    document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
-    document.getElementById('view-' + view).classList.remove('hidden');
-    document.getElementById('viewTitle').textContent = a.textContent.trim();
-    if (view === 'people') { loadPeople(); }
-    if (view === 'workflows') { loadWorkflowStats(); loadWorkflows(); }
-    if (view === 'map') {
-      setTimeout(function() {
-        initMap();
-        if (mapInstance) mapInstance.invalidateSize();
-      }, 100);
-    }
+function switchView(view) {
+  var navLink = document.querySelector('.nav a[data-view="' + view + '"]');
+  if (!navLink) return;
+  document.querySelectorAll('.nav a').forEach(function(x) { x.classList.remove('active'); });
+  navLink.classList.add('active');
+  document.querySelectorAll('.content').forEach(function(c) { c.classList.add('hidden'); });
+  document.getElementById('view-' + view).classList.remove('hidden');
+  document.getElementById('viewTitle').textContent = navLink.textContent.trim();
+  if (view === 'people') { loadPeople(); }
+  if (view === 'workflows') { loadWorkflowStats(); loadWorkflows(); }
+  if (view === 'map') {
+    setTimeout(function() {
+      initMap();
+      if (mapInstance) mapInstance.invalidateSize();
+    }, 100);
+  }
+}
+
+document.querySelectorAll('.nav a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    var view = a.dataset.view;
+    location.hash = view;
+    switchView(view);
   });
 });
+
+// Restore view from URL hash on load/back-forward
+function restoreFromHash() {
+  var hash = location.hash.replace('#', '');
+  if (hash && document.getElementById('view-' + hash)) {
+    switchView(hash);
+  }
+}
+window.addEventListener('hashchange', restoreFromHash);
+restoreFromHash();
 
 // Load Centers
 async function loadCenters() {
@@ -783,17 +810,64 @@ async function loadOrgs() {
 async function doSearch() {
   const q = document.getElementById('fullSearch').value;
   if (!q) return;
-  const res = await fetch(API + '/api/search?q=' + encodeURIComponent(q));
-  const data = await res.json();
   const div = document.getElementById('searchResults');
-  if (data.results.length === 0) {
-    div.innerHTML = '<p style="color:var(--text2)">No results found.</p>';
-    return;
+  div.innerHTML = '<p style="color:var(--text2)">Searching...</p>';
+
+  // Search across all data sources in parallel
+  const [contentRes, centersRes, peopleRes, orgsRes] = await Promise.all([
+    fetch(API + '/api/search?q=' + encodeURIComponent(q)).then(r => r.json()).catch(() => ({results:[]})),
+    fetch(API + '/api/centers?search=' + encodeURIComponent(q)).then(r => r.json()).catch(() => ({centers:[]})),
+    fetch(API + '/api/people?search=' + encodeURIComponent(q)).then(r => r.json()).catch(() => ({people:[]})),
+    fetch(API + '/api/organizations?search=' + encodeURIComponent(q)).then(r => r.json()).catch(() => ({organizations:[]})),
+  ]);
+
+  let html = '';
+
+  // Centers results
+  if (centersRes.centers && centersRes.centers.length > 0) {
+    html += '<h4 style="color:var(--accent2);margin:16px 0 8px;">🏥 Cancer Centers (' + centersRes.centers.length + ')</h4>';
+    html += centersRes.centers.slice(0, 10).map(c =>
+      '<div class="search-result" style="cursor:pointer" onclick="openCenter(' + c.id + ')">' +
+      '<div class="heading">' + esc(c.name) + '</div>' +
+      '<div class="snippet">' + [c.city, c.state, c.category, c.parent_org, c.ehr_vendor ? 'EHR: '+c.ehr_vendor : '', c.est_oncologists ? c.est_oncologists+' oncologists' : ''].filter(Boolean).join(' - ') + '</div></div>'
+    ).join('');
   }
-  div.innerHTML = data.results.map(r => `<div class="search-result">
-    <div class="source">${esc(r.source_file)} → ${esc(r.section_heading)}</div>
-    <div class="snippet">${r.snippet}</div>
-  </div>`).join('');
+
+  // People results
+  if (peopleRes.people && peopleRes.people.length > 0) {
+    html += '<h4 style="color:var(--accent2);margin:16px 0 8px;">👥 People (' + peopleRes.people.length + ')</h4>';
+    html += peopleRes.people.slice(0, 10).map(p =>
+      '<div class="search-result" style="cursor:pointer" onclick="openPerson(' + p.id + ')">' +
+      '<div class="heading">' + esc(p.name) + '</div>' +
+      '<div class="snippet">' + [p.title, p.organization, p.role_type, p.relevance_to_risa].filter(Boolean).join(' - ') + '</div></div>'
+    ).join('');
+  }
+
+  // Organizations results
+  if (orgsRes.organizations && orgsRes.organizations.length > 0) {
+    html += '<h4 style="color:var(--accent2);margin:16px 0 8px;">🏢 Organizations (' + orgsRes.organizations.length + ')</h4>';
+    html += orgsRes.organizations.slice(0, 10).map(o =>
+      '<div class="search-result" style="cursor:pointer" onclick="openOrg(' + o.id + ')">' +
+      '<div class="heading">' + esc(o.name) + '</div>' +
+      '<div class="snippet">' + [o.type, o.description].filter(Boolean).join(' - ') + '</div></div>'
+    ).join('');
+  }
+
+  // Content results
+  if (contentRes.results && contentRes.results.length > 0) {
+    html += '<h4 style="color:var(--accent2);margin:16px 0 8px;">📄 Research Content (' + contentRes.results.length + ')</h4>';
+    html += contentRes.results.slice(0, 10).map(r =>
+      '<div class="search-result">' +
+      '<div class="source">' + esc(r.source_file) + ' - ' + esc(r.section_heading) + '</div>' +
+      '<div class="snippet">' + (r.snippet || '') + '</div></div>'
+    ).join('');
+  }
+
+  if (!html) {
+    html = '<p style="color:var(--text2)">No results found. Try shorter keywords or use the 💬 Chat for natural language questions.</p>';
+  }
+
+  div.innerHTML = html;
 }
 
 // Chat
@@ -1456,6 +1530,42 @@ async function loadWorkflowStats() {
   document.getElementById('wfAvgBn').textContent = d.avg_bottleneck + '/5';
 }
 
+// Workflow sorting
+var wfSortCol = null;
+var wfSortAsc = true;
+var wfCachedData = [];
+
+function sortWorkflows(col) {
+  if (wfSortCol === col) {
+    wfSortAsc = !wfSortAsc;
+  } else {
+    wfSortCol = col;
+    wfSortAsc = true;
+  }
+  // Update sort indicators
+  document.querySelectorAll('[id^="wfSort_"]').forEach(function(el) { el.textContent = ''; });
+  var indicator = document.getElementById('wfSort_' + col);
+  if (indicator) indicator.textContent = wfSortAsc ? ' ▲' : ' ▼';
+
+  // Sort cached data
+  var complexOrder = {'High': 3, 'Medium': 2, 'Low': 1};
+  var sorted = wfCachedData.slice().sort(function(a, b) {
+    var va = a[col], vb = b[col];
+    if (col === 'complexity') { va = complexOrder[va] || 0; vb = complexOrder[vb] || 0; }
+    if (col === 'bottleneck_severity' || col === 'avg_time_minutes' || col === 'patient_journey_stage') {
+      va = Number(va) || 0; vb = Number(vb) || 0;
+    }
+    if (va == null) va = '';
+    if (vb == null) vb = '';
+    if (va < vb) return wfSortAsc ? -1 : 1;
+    if (va > vb) return wfSortAsc ? 1 : -1;
+    return 0;
+  });
+  renderWfTable(sorted);
+  renderWfCards(sorted);
+  renderWfJourney(sorted);
+}
+
 async function loadWorkflows() {
   const params = new URLSearchParams();
   const dept = document.getElementById('wfDeptFilter').value;
@@ -1470,6 +1580,10 @@ async function loadWorkflows() {
   if (search) params.set('search', search);
   const res = await fetch(API + '/api/workflows?' + params);
   const data = await res.json();
+  wfCachedData = data.workflows;
+  wfSortCol = null;
+  wfSortAsc = true;
+  document.querySelectorAll('[id^="wfSort_"]').forEach(function(el) { el.textContent = ''; });
   document.getElementById('wfCount').textContent = data.count + ' workflows';
   renderWfTable(data.workflows);
   renderWfCards(data.workflows);
