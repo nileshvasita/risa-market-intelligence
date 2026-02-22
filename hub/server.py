@@ -51,6 +51,49 @@ def get_centers(
     return {"count": len(rows), "centers": rows}
 
 
+@app.get("/api/centers/geo")
+def get_centers_geo():
+    conn = get_db()
+    c = conn.cursor()
+    c.execute(
+        "SELECT id, name, city, state, category, est_oncologists, "
+        "ehr_vendor, latitude, longitude, is_340b "
+        "FROM cancer_centers WHERE latitude IS NOT NULL"
+    )
+    rows = [dict(r) for r in c.fetchall()]
+    conn.close()
+    return {"count": len(rows), "centers": rows}
+
+
+@app.get("/api/centers/{center_id}")
+def get_center(center_id: int):
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("SELECT * FROM cancer_centers WHERE id = ?", [center_id])
+    row = c.fetchone()
+    conn.close()
+    if not row:
+        return JSONResponse({"error": "Not found"}, 404)
+    return dict(row)
+
+
+class NotesUpdate(BaseModel):
+    notes: str
+
+
+@app.put("/api/centers/{center_id}/notes")
+def update_center_notes(center_id: int, req: NotesUpdate):
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("UPDATE cancer_centers SET notes = ? WHERE id = ?", [req.notes, center_id])
+    conn.commit()
+    if c.rowcount == 0:
+        conn.close()
+        return JSONResponse({"error": "Not found"}, 404)
+    conn.close()
+    return {"ok": True, "id": center_id}
+
+
 @app.get("/api/segments")
 def get_segments(search: Optional[str] = Query(None)):
     conn = get_db()
@@ -252,7 +295,10 @@ def serve_viz(filename: str):
 
 @app.get("/")
 def serve_index():
-    return FileResponse(os.path.join(BASE_DIR, "index.html"))
+    from fastapi.responses import HTMLResponse
+    with open(os.path.join(BASE_DIR, "index.html"), "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(content, headers={"Cache-Control": "no-cache, no-store, must-revalidate", "Pragma": "no-cache"})
 
 
 @app.get("/hub/{filepath:path}")
