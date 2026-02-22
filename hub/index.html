@@ -171,6 +171,46 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
 .leaflet-popup-content strong { color:var(--accent2); }
 .leaflet-container { background:var(--bg) !important; }
 
+/* People view */
+.people-stats { display:flex; gap:16px; margin-bottom:16px; }
+.people-stat-card { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:14px 20px; flex:1; text-align:center; }
+.people-stat-card .num { font-size:24px; font-weight:700; color:var(--accent2); }
+.people-stat-card .lbl { font-size:11px; color:var(--text2); margin-top:2px; }
+.relevance-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.relevance-badge.decision-maker { background:rgba(255,118,117,0.2); color:var(--red); }
+.relevance-badge.influencer { background:rgba(253,203,110,0.2); color:var(--orange); }
+.relevance-badge.champion { background:rgba(0,206,201,0.2); color:var(--green); }
+.relevance-badge.network { background:rgba(108,92,231,0.2); color:var(--accent2); }
+.relevance-badge.blocker { background:rgba(255,118,117,0.35); color:#ff5252; }
+.linkedin-link { color:var(--accent2); text-decoration:none; font-size:16px; }
+.linkedin-link:hover { color:var(--text); }
+
+/* Form modal */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 20px; }
+.form-group { display:flex; flex-direction:column; gap:4px; }
+.form-group.full { grid-column:1 / -1; }
+.form-group label { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
+.form-group input, .form-group select, .form-group textarea {
+  background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text);
+  padding:8px 12px; font-size:13px; font-family:inherit; outline:none;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--accent); }
+.form-group textarea { min-height:80px; resize:vertical; }
+.form-actions { display:flex; gap:8px; margin-top:18px; justify-content:flex-end; }
+.form-actions button { padding:8px 20px; border-radius:6px; font-size:13px; cursor:pointer; border:none; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:var(--accent2); }
+.btn-danger { background:var(--red); color:#fff; }
+.btn-danger:hover { opacity:0.8; }
+.btn-secondary { background:var(--bg4); color:var(--text2); }
+.btn-secondary:hover { color:var(--text); }
+
+/* People in center modal */
+.center-people-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
+.center-people-table th { background:var(--bg); color:var(--text2); padding:6px 8px; text-align:left; font-weight:500; }
+.center-people-table td { padding:6px 8px; border-bottom:1px solid var(--border); color:var(--text2); }
+.center-people-table tr:hover td { color:var(--text); }
+
 .hidden { display:none; }
 .badge { background:var(--accent); color:#fff; font-size:10px; padding:2px 6px; border-radius:8px; margin-left:6px; }
 </style>
@@ -187,6 +227,8 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
     <a data-view="map"><span class="icon">📍</span>Map</a>
     <a data-view="segments"><span class="icon">🗺️</span>Market Map</a>
     <a data-view="orgs"><span class="icon">🏢</span>Organizations</a>
+    <a data-view="people"><span class="icon">👥</span>People</a>
+    <a data-view="workflows"><span class="icon">⚙️</span>Workflows</a>
     <div class="nav-divider"></div>
     <a data-view="viz"><span class="icon">📊</span>Visualizations</a>
     <a data-view="search"><span class="icon">🔍</span>Full Search</a>
@@ -210,6 +252,9 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
       <select id="filterState" onchange="loadCenters()">
         <option value="">All States</option>
         <option value="CA">California</option>
+        <option value="FL">Florida</option>
+        <option value="MA">Massachusetts</option>
+        <option value="NY">New York</option>
         <option value="TX">Texas</option>
         <option value="WA">Washington</option>
       </select>
@@ -302,6 +347,9 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
             <select id="mapStateFilter" onchange="applyMapFilters()">
               <option value="">All States</option>
               <option value="CA">California</option>
+              <option value="FL">Florida</option>
+              <option value="MA">Massachusetts</option>
+              <option value="NY">New York</option>
               <option value="TX">Texas</option>
               <option value="WA">Washington</option>
             </select>
@@ -328,6 +376,134 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
     </div>
   </div>
 
+  <!-- People View -->
+  <div class="content hidden" id="view-people">
+    <div class="people-stats">
+      <div class="people-stat-card"><div class="num" id="peopleTotalStat">-</div><div class="lbl">Total People</div></div>
+      <div class="people-stat-card"><div class="num" id="peopleDecisionStat">-</div><div class="lbl">Decision Makers</div></div>
+      <div class="people-stat-card"><div class="num" id="peopleCentersStat">-</div><div class="lbl">Centers Covered</div></div>
+    </div>
+    <div class="filters">
+      <select id="peopleRoleFilter" onchange="loadPeople()">
+        <option value="">All Roles</option>
+        <option value="C-Suite">C-Suite</option>
+        <option value="VP">VP</option>
+        <option value="Director">Director</option>
+        <option value="Clinical">Clinical</option>
+        <option value="IT">IT</option>
+        <option value="Finance">Finance</option>
+        <option value="Practice Admin">Practice Admin</option>
+      </select>
+      <select id="peopleDeptFilter" onchange="loadPeople()">
+        <option value="">All Departments</option>
+        <option value="Oncology">Oncology</option>
+        <option value="Revenue Cycle">Revenue Cycle</option>
+        <option value="IT">IT</option>
+        <option value="Administration">Administration</option>
+        <option value="Clinical Ops">Clinical Ops</option>
+        <option value="Finance">Finance</option>
+      </select>
+      <select id="peopleRelFilter" onchange="loadPeople()">
+        <option value="">All Relevance</option>
+        <option value="Decision Maker">Decision Maker</option>
+        <option value="Influencer">Influencer</option>
+        <option value="Champion">Champion</option>
+        <option value="Network">Network</option>
+      </select>
+      <input type="text" id="peopleSearch" placeholder="Search name, title, org..." oninput="loadPeople()">
+      <button onclick="openPersonForm()" style="background:var(--accent);border:none;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;">+ Add Person</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr><th>Name</th><th>Title</th><th>Organization</th><th>Role Type</th><th>Department</th><th>Relevance</th><th>LinkedIn</th></tr>
+        </thead>
+        <tbody id="peopleBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Workflows View -->
+  <div class="content hidden" id="view-workflows">
+    <div class="people-stats" id="wfStats">
+      <div class="people-stat-card"><div class="num" id="wfTotal">-</div><div class="lbl">Total Workflows</div></div>
+      <div class="people-stat-card"><div class="num" id="wfSteps">-</div><div class="lbl">Total Steps</div></div>
+      <div class="people-stat-card"><div class="num" id="wfAutoPct">-</div><div class="lbl">% Automatable</div></div>
+      <div class="people-stat-card"><div class="num" id="wfAvgBn">-</div><div class="lbl">Avg Bottleneck</div></div>
+    </div>
+    <div class="filters">
+      <select id="wfDeptFilter" onchange="loadWorkflows()">
+        <option value="">All Departments</option>
+        <option value="Patient Access">Patient Access</option>
+        <option value="Clinical Ops">Clinical Ops</option>
+        <option value="BMT/Cell Therapy">BMT/Cell Therapy</option>
+        <option value="RCM">RCM</option>
+        <option value="Research">Research</option>
+        <option value="Quality">Quality</option>
+        <option value="Admin">Admin</option>
+      </select>
+      <select id="wfStageFilter" onchange="loadWorkflows()">
+        <option value="">All Stages</option>
+        <option value="1">1 - Referral & Access</option>
+        <option value="2">2 - Intake & Registration</option>
+        <option value="3">3 - Diagnosis & Staging</option>
+        <option value="4">4 - Treatment Planning</option>
+        <option value="5">5 - Active Treatment</option>
+        <option value="6">6 - Monitoring & Response</option>
+        <option value="7">7 - Survivorship & Follow-Up</option>
+        <option value="8">8 - End of Life / Palliative</option>
+        <option value="9">9 - Behind the Scenes</option>
+      </select>
+      <select id="wfComplexFilter" onchange="loadWorkflows()">
+        <option value="">All Complexity</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+      <select id="wfCenterFilter" onchange="loadWorkflows()">
+        <option value="">All Centers</option>
+        <option value="TX">Texas Oncology</option>
+        <option value="ST">Stanford</option>
+        <option value="FH">Fred Hutch</option>
+      </select>
+      <input type="text" id="wfSearch" placeholder="Search workflows..." oninput="loadWorkflows()">
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <button onclick="setWfView('table')" id="wfViewTable" style="background:var(--accent);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;">Table</button>
+      <button onclick="setWfView('cards')" id="wfViewCards" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;">Cards</button>
+      <button onclick="setWfView('journey')" id="wfViewJourney" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;">Journey Map</button>
+      <span style="margin-left:auto;font-size:12px;color:var(--text2);align-self:center;" id="wfCount"></span>
+    </div>
+    <div id="wfTableView" style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr><th>ID</th><th>Workflow</th><th>Department</th><th>Stage</th><th>Centers</th><th>Complexity</th><th>Bottleneck</th><th>Time (min)</th></tr>
+        </thead>
+        <tbody id="wfBody"></tbody>
+      </table>
+    </div>
+    <div id="wfCardsView" class="hidden">
+      <div class="card-grid" id="wfCardsGrid"></div>
+    </div>
+    <div id="wfJourneyView" class="hidden">
+      <div id="wfJourneyMap"></div>
+    </div>
+  </div>
+
+  <!-- Workflow Detail Modal -->
+  <div class="modal-overlay hidden" id="wfModal" onclick="if(event.target===this)closeWfModal()">
+    <div class="modal" style="max-width:900px;">
+      <div class="modal-header">
+        <div>
+          <h2 id="wfModalName"></h2>
+          <div class="sub" id="wfModalSub"></div>
+        </div>
+        <button class="modal-close" onclick="closeWfModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="wfModalBody"></div>
+    </div>
+  </div>
+
   <!-- Search View -->
   <div class="content hidden" id="view-search">
     <div class="filters">
@@ -350,6 +526,61 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
     <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Person Detail Modal -->
+<div class="modal-overlay hidden" id="personModal" onclick="if(event.target===this)closePersonModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="personModalName"></h2>
+        <div class="sub" id="personModalSub"></div>
+      </div>
+      <button class="modal-close" onclick="closePersonModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="personModalBody"></div>
+  </div>
+</div>
+
+<!-- Person Form Modal -->
+<div class="modal-overlay hidden" id="personFormModal" onclick="if(event.target===this)closePersonForm()">
+  <div class="modal" style="max-width:700px;">
+    <div class="modal-header">
+      <div><h2 id="personFormTitle">Add Person</h2></div>
+      <button class="modal-close" onclick="closePersonForm()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Name *</label><input type="text" id="pf_name"></div>
+        <div class="form-group"><label>Title</label><input type="text" id="pf_title"></div>
+        <div class="form-group"><label>Role Type</label>
+          <select id="pf_role_type"><option value="">Select...</option><option>C-Suite</option><option>VP</option><option>Director</option><option>Clinical</option><option>IT</option><option>Finance</option><option>Practice Admin</option><option>Other</option></select>
+        </div>
+        <div class="form-group"><label>Organization</label><input type="text" id="pf_organization" list="orgSuggestions"><datalist id="orgSuggestions"></datalist></div>
+        <div class="form-group"><label>Department</label>
+          <select id="pf_department"><option value="">Select...</option><option>Oncology</option><option>Revenue Cycle</option><option>IT</option><option>Administration</option><option>Clinical Ops</option><option>Finance</option></select>
+        </div>
+        <div class="form-group"><label>Relevance to RISA</label>
+          <select id="pf_relevance"><option value="">Select...</option><option>Decision Maker</option><option>Influencer</option><option>Champion</option><option>Blocker</option><option>Network</option></select>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" id="pf_email"></div>
+        <div class="form-group"><label>Phone</label><input type="text" id="pf_phone"></div>
+        <div class="form-group"><label>LinkedIn URL</label><input type="text" id="pf_linkedin"></div>
+        <div class="form-group"><label>Source</label>
+          <select id="pf_source"><option value="">Select...</option><option>Website</option><option>LinkedIn</option><option>Conference</option><option>Referral</option><option>Manual</option></select>
+        </div>
+        <div class="form-group"><label>Last Contacted</label><input type="date" id="pf_last_contacted"></div>
+        <div class="form-group"><label>Next Follow-up</label><input type="date" id="pf_next_followup"></div>
+        <div class="form-group full"><label>Notes</label><textarea id="pf_notes"></textarea></div>
+      </div>
+      <input type="hidden" id="pf_center_id">
+      <input type="hidden" id="pf_edit_id">
+      <div class="form-actions">
+        <button class="btn-secondary" onclick="closePersonForm()">Cancel</button>
+        <button class="btn-primary" onclick="savePerson()">Save</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -380,6 +611,8 @@ document.querySelectorAll('.nav a').forEach(a => {
     document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
     document.getElementById('view-' + view).classList.remove('hidden');
     document.getElementById('viewTitle').textContent = a.textContent.trim();
+    if (view === 'people') { loadPeople(); }
+    if (view === 'workflows') { loadWorkflowStats(); loadWorkflows(); }
     if (view === 'map') {
       setTimeout(function() {
         initMap();
@@ -624,10 +857,20 @@ async function openCenter(id) {
         <span class="notes-status" id="notesStatus"></span>
       </div>
     </div>
+
+    <div class="detail-section">
+      <h3>👥 Key People at ${esc(c.name)}</h3>
+      <div id="centerPeopleSection">Loading...</div>
+    </div>
   `;
 
   document.getElementById('centerModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+
+  // Load people for this center
+  loadCenterPeople(id, c.name).then(function(html) {
+    document.getElementById('centerPeopleSection').innerHTML = html;
+  });
 }
 
 function closeModal() {
@@ -673,13 +916,15 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 // Stats
 async function loadStats() {
   try {
-    const [c, s, o] = await Promise.all([
+    const [c, s, o, ppl] = await Promise.all([
       fetch(API+'/api/centers').then(r=>r.json()),
       fetch(API+'/api/segments').then(r=>r.json()),
       fetch(API+'/api/organizations').then(r=>r.json()),
+      fetch(API+'/api/people/stats').then(r=>r.json()),
     ]);
     document.getElementById('stats').innerHTML = `
       <div class="stat">🏥 Centers: <span>${c.count}</span></div>
+      <div class="stat">👥 People: <span>${ppl.total}</span></div>
       <div class="stat">🗺️ Segments: <span>${s.count}</span></div>
       <div class="stat">🏢 Orgs: <span>${o.count}</span></div>
     `;
@@ -856,6 +1101,416 @@ function updateMapAnalytics(data) {
     '<span class="bar-count">' + pct + '%</span></div>' +
     '<div style="font-size:11px;color:var(--text2);margin-top:4px;">' + yes340 + ' of ' + total340 + ' centers</div>';
 }
+
+// --- People ---
+function relevanceBadge(rel) {
+  if (!rel) return '';
+  var cls = rel.toLowerCase().replace(/\s+/g, '-');
+  return '<span class="relevance-badge ' + cls + '">' + esc(rel) + '</span>';
+}
+
+async function loadPeople() {
+  var p = new URLSearchParams();
+  var role = document.getElementById('peopleRoleFilter').value;
+  var dept = document.getElementById('peopleDeptFilter').value;
+  var rel = document.getElementById('peopleRelFilter').value;
+  var search = document.getElementById('peopleSearch').value;
+  if (role) p.set('role_type', role);
+  if (dept) p.set('department', dept);
+  if (rel) p.set('relevance', rel);
+  if (search) p.set('search', search);
+  var res = await fetch(API + '/api/people?' + p);
+  var data = await res.json();
+  var tbody = document.getElementById('peopleBody');
+  tbody.innerHTML = data.people.map(function(person) {
+    var li = person.linkedin_url ? '<a href="' + esc(person.linkedin_url) + '" target="_blank" class="linkedin-link" onclick="event.stopPropagation()" title="LinkedIn">in</a>' : '';
+    return '<tr onclick="openPerson(' + person.id + ')">' +
+      '<td><strong style="color:var(--accent2)">' + esc(person.name) + '</strong></td>' +
+      '<td>' + esc(person.title) + '</td>' +
+      '<td>' + esc(person.organization) + '</td>' +
+      '<td>' + esc(person.role_type) + '</td>' +
+      '<td>' + esc(person.department) + '</td>' +
+      '<td>' + relevanceBadge(person.relevance_to_risa) + '</td>' +
+      '<td>' + li + '</td></tr>';
+  }).join('');
+  loadPeopleStats();
+}
+
+async function loadPeopleStats() {
+  var res = await fetch(API + '/api/people/stats');
+  var data = await res.json();
+  document.getElementById('peopleTotalStat').textContent = data.total;
+  document.getElementById('peopleDecisionStat').textContent = data.decision_makers;
+  document.getElementById('peopleCentersStat').textContent = data.centers_covered;
+}
+
+async function openPerson(id) {
+  var res = await fetch(API + '/api/people/' + id);
+  var p = await res.json();
+  document.getElementById('personModalName').textContent = p.name;
+  document.getElementById('personModalSub').textContent = [p.title, p.organization].filter(Boolean).join(' - ');
+
+  var v = function(val) { return val ? esc(String(val)) : '<span class="empty">Not available</span>'; };
+  var centerLink = '';
+  if (p.center_id) {
+    centerLink = '<a href="#" onclick="closePersonModal();openCenter(' + p.center_id + ');return false;" style="color:var(--accent2)">View Center</a>';
+  }
+
+  document.getElementById('personModalBody').innerHTML =
+    '<div class="detail-grid">' +
+      '<div class="detail-item"><div class="label">Role Type</div><div class="value">' + v(p.role_type) + '</div></div>' +
+      '<div class="detail-item"><div class="label">Department</div><div class="value">' + v(p.department) + '</div></div>' +
+      '<div class="detail-item"><div class="label">Organization</div><div class="value">' + v(p.organization) + '</div></div>' +
+      '<div class="detail-item"><div class="label">Relevance</div><div class="value">' + relevanceBadge(p.relevance_to_risa) + '</div></div>' +
+      '<div class="detail-item"><div class="label">Email</div><div class="value">' + (p.email ? '<a href="mailto:' + esc(p.email) + '" style="color:var(--accent2)">' + esc(p.email) + '</a>' : '<span class="empty">Not available</span>') + '</div></div>' +
+      '<div class="detail-item"><div class="label">Phone</div><div class="value">' + v(p.phone) + '</div></div>' +
+      '<div class="detail-item"><div class="label">LinkedIn</div><div class="value">' + (p.linkedin_url ? '<a href="' + esc(p.linkedin_url) + '" target="_blank" style="color:var(--accent2)">Profile</a>' : '<span class="empty">Not available</span>') + '</div></div>' +
+      '<div class="detail-item"><div class="label">Source</div><div class="value">' + v(p.source) + '</div></div>' +
+      '<div class="detail-item"><div class="label">Last Contacted</div><div class="value">' + v(p.last_contacted) + '</div></div>' +
+      '<div class="detail-item"><div class="label">Next Follow-up</div><div class="value">' + v(p.next_followup) + '</div></div>' +
+      (centerLink ? '<div class="detail-item"><div class="label">Linked Center</div><div class="value">' + centerLink + '</div></div>' : '') +
+    '</div>' +
+    '<div class="detail-section">' +
+      '<h3>📝 Notes</h3>' +
+      '<textarea class="notes-textarea" id="personNotesArea" placeholder="Add notes...">' + esc(p.notes || '') + '</textarea>' +
+      '<div class="notes-actions">' +
+        '<button class="btn-save" onclick="savePersonNotes(' + p.id + ')">Save Notes</button>' +
+        '<button class="btn-secondary" onclick="editPerson(' + p.id + ')" style="margin-left:auto;">Edit</button>' +
+        '<button class="btn-danger" onclick="deletePerson(' + p.id + ')">Delete</button>' +
+        '<span class="notes-status" id="personNotesStatus"></span>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById('personModal').classList.remove('hidden');
+}
+
+function closePersonModal() {
+  document.getElementById('personModal').classList.add('hidden');
+}
+
+async function savePersonNotes(id) {
+  var notes = document.getElementById('personNotesArea').value;
+  var status = document.getElementById('personNotesStatus');
+  await fetch(API + '/api/people/' + id, {
+    method: 'PUT', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({notes: notes})
+  });
+  status.textContent = '✓ Saved';
+  status.style.color = 'var(--green)';
+  setTimeout(function() { status.textContent = ''; }, 3000);
+}
+
+async function deletePerson(id) {
+  if (!confirm('Delete this person?')) return;
+  await fetch(API + '/api/people/' + id, { method: 'DELETE' });
+  closePersonModal();
+  loadPeople();
+}
+
+async function editPerson(id) {
+  closePersonModal();
+  var res = await fetch(API + '/api/people/' + id);
+  var p = await res.json();
+  openPersonForm(p);
+}
+
+function openPersonForm(person) {
+  var isEdit = person && person.id;
+  document.getElementById('personFormTitle').textContent = isEdit ? 'Edit Person' : 'Add Person';
+  document.getElementById('pf_edit_id').value = isEdit ? person.id : '';
+  document.getElementById('pf_name').value = isEdit ? (person.name || '') : '';
+  document.getElementById('pf_title').value = isEdit ? (person.title || '') : '';
+  document.getElementById('pf_role_type').value = isEdit ? (person.role_type || '') : '';
+  document.getElementById('pf_organization').value = isEdit ? (person.organization || '') : '';
+  document.getElementById('pf_department').value = isEdit ? (person.department || '') : '';
+  document.getElementById('pf_relevance').value = isEdit ? (person.relevance_to_risa || '') : '';
+  document.getElementById('pf_email').value = isEdit ? (person.email || '') : '';
+  document.getElementById('pf_phone').value = isEdit ? (person.phone || '') : '';
+  document.getElementById('pf_linkedin').value = isEdit ? (person.linkedin_url || '') : '';
+  document.getElementById('pf_source').value = isEdit ? (person.source || '') : '';
+  document.getElementById('pf_last_contacted').value = isEdit ? (person.last_contacted || '') : '';
+  document.getElementById('pf_next_followup').value = isEdit ? (person.next_followup || '') : '';
+  document.getElementById('pf_notes').value = isEdit ? (person.notes || '') : '';
+  document.getElementById('pf_center_id').value = isEdit ? (person.center_id || '') : '';
+  // Load org suggestions
+  fetch(API + '/api/centers?').then(function(r) { return r.json(); }).then(function(d) {
+    var dl = document.getElementById('orgSuggestions');
+    var seen = {};
+    dl.innerHTML = d.centers.map(function(c) {
+      if (seen[c.name]) return '';
+      seen[c.name] = true;
+      return '<option value="' + esc(c.name) + '">';
+    }).join('');
+  });
+  document.getElementById('personFormModal').classList.remove('hidden');
+}
+
+function closePersonForm() {
+  document.getElementById('personFormModal').classList.add('hidden');
+}
+
+async function savePerson() {
+  var name = document.getElementById('pf_name').value.trim();
+  if (!name) { alert('Name is required'); return; }
+  var body = {
+    name: name,
+    title: document.getElementById('pf_title').value || null,
+    role_type: document.getElementById('pf_role_type').value || null,
+    organization: document.getElementById('pf_organization').value || null,
+    department: document.getElementById('pf_department').value || null,
+    relevance_to_risa: document.getElementById('pf_relevance').value || null,
+    email: document.getElementById('pf_email').value || null,
+    phone: document.getElementById('pf_phone').value || null,
+    linkedin_url: document.getElementById('pf_linkedin').value || null,
+    source: document.getElementById('pf_source').value || null,
+    last_contacted: document.getElementById('pf_last_contacted').value || null,
+    next_followup: document.getElementById('pf_next_followup').value || null,
+    notes: document.getElementById('pf_notes').value || null
+  };
+  var centerId = document.getElementById('pf_center_id').value;
+  if (centerId) body.center_id = parseInt(centerId);
+  var editId = document.getElementById('pf_edit_id').value;
+  if (editId) {
+    await fetch(API + '/api/people/' + editId, {
+      method: 'PUT', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+  } else {
+    await fetch(API + '/api/people', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+  }
+  closePersonForm();
+  loadPeople();
+}
+
+// Load people linked to a center (for center detail modal)
+async function loadCenterPeople(centerId, centerName) {
+  var res = await fetch(API + '/api/people?center_id=' + centerId);
+  var data = await res.json();
+  if (data.count === 0) {
+    return '<p style="color:var(--text2);font-size:13px;">No people linked to this center yet.</p>' +
+      '<button class="btn-secondary" onclick="closeModal();openPersonFormForCenter(' + centerId + ',\'' + esc(centerName).replace(/'/g, "\\'") + '\')" style="margin-top:8px;padding:6px 12px;font-size:12px;">+ Add Person</button>';
+  }
+  var rows = data.people.map(function(p) {
+    return '<tr style="cursor:pointer" onclick="closeModal();openPerson(' + p.id + ')">' +
+      '<td>' + esc(p.name) + '</td><td>' + esc(p.title) + '</td><td>' + esc(p.role_type) + '</td>' +
+      '<td>' + relevanceBadge(p.relevance_to_risa) + '</td></tr>';
+  }).join('');
+  return '<table class="center-people-table"><thead><tr><th>Name</th><th>Title</th><th>Role</th><th>Relevance</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<button class="btn-secondary" onclick="closeModal();openPersonFormForCenter(' + centerId + ',\'' + esc(centerName).replace(/'/g, "\\'") + '\')" style="margin-top:8px;padding:6px 12px;font-size:12px;">+ Add Person</button>';
+}
+
+function openPersonFormForCenter(centerId, centerName) {
+  openPersonForm();
+  document.getElementById('pf_center_id').value = centerId;
+  document.getElementById('pf_organization').value = centerName;
+}
+
+// ========== WORKFLOWS ==========
+let currentWfView = 'table';
+const COMPLEXITY_COLORS = {High:'var(--red)', Medium:'var(--orange)', Low:'var(--green)'};
+const STAGE_COLORS = ['','#e74c3c','#e67e22','#f1c40f','#2ecc71','#1abc9c','#3498db','#9b59b6','#95a5a6','#7f8c8d'];
+
+async function loadWorkflowStats() {
+  const res = await fetch(API + '/api/workflows/stats');
+  const d = await res.json();
+  document.getElementById('wfTotal').textContent = d.total;
+  document.getElementById('wfSteps').textContent = d.total_steps;
+  document.getElementById('wfAutoPct').textContent = d.automation_pct + '%';
+  document.getElementById('wfAvgBn').textContent = d.avg_bottleneck + '/5';
+}
+
+async function loadWorkflows() {
+  const params = new URLSearchParams();
+  const dept = document.getElementById('wfDeptFilter').value;
+  const stage = document.getElementById('wfStageFilter').value;
+  const complexity = document.getElementById('wfComplexFilter').value;
+  const center = document.getElementById('wfCenterFilter').value;
+  const search = document.getElementById('wfSearch').value;
+  if (dept) params.set('department', dept);
+  if (stage) params.set('stage', stage);
+  if (complexity) params.set('complexity', complexity);
+  if (center) params.set('center', center);
+  if (search) params.set('search', search);
+  const res = await fetch(API + '/api/workflows?' + params);
+  const data = await res.json();
+  document.getElementById('wfCount').textContent = data.count + ' workflows';
+  renderWfTable(data.workflows);
+  renderWfCards(data.workflows);
+  renderWfJourney(data.workflows);
+}
+
+function renderWfTable(wfs) {
+  const body = document.getElementById('wfBody');
+  body.innerHTML = wfs.map(w => {
+    const bnBar = '█'.repeat(w.bottleneck_severity) + '░'.repeat(5 - w.bottleneck_severity);
+    const cColor = COMPLEXITY_COLORS[w.complexity] || 'var(--text2)';
+    return '<tr onclick="openWfDetail(\'' + w.workflow_id + '\')">' +
+      '<td style="color:var(--accent2);font-weight:600;">' + w.workflow_id + '</td>' +
+      '<td style="color:var(--text);max-width:280px;">' + w.name + '</td>' +
+      '<td>' + w.department + '</td>' +
+      '<td><span style="color:' + STAGE_COLORS[w.patient_journey_stage] + ';">' + w.patient_journey_stage + '</span> ' + w.stage_name + '</td>' +
+      '<td>' + w.centers_applicable + '</td>' +
+      '<td style="color:' + cColor + ';">' + w.complexity + '</td>' +
+      '<td style="font-family:monospace;font-size:11px;letter-spacing:1px;color:' + (w.bottleneck_severity >= 4 ? 'var(--red)' : w.bottleneck_severity >= 2 ? 'var(--orange)' : 'var(--green)') + ';">' + bnBar + '</td>' +
+      '<td>' + (w.avg_time_minutes || '-') + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function renderWfCards(wfs) {
+  const grid = document.getElementById('wfCardsGrid');
+  grid.innerHTML = wfs.map(w => {
+    const cColor = COMPLEXITY_COLORS[w.complexity] || 'var(--text2)';
+    return '<div class="card" style="cursor:pointer;" onclick="openWfDetail(\'' + w.workflow_id + '\')">' +
+      '<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">' +
+        '<h4 style="flex:1;">' + w.workflow_id + ' - ' + w.name + '</h4>' +
+        '<span style="color:' + cColor + ';font-size:11px;font-weight:600;white-space:nowrap;margin-left:8px;">' + w.complexity + '</span>' +
+      '</div>' +
+      '<p style="margin-bottom:8px;">' + (w.description || '').substring(0, 150) + '...</p>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:4px;">' +
+        '<span class="tag">' + w.department + '</span>' +
+        '<span class="tag">Stage ' + w.patient_journey_stage + '</span>' +
+        '<span class="tag">' + w.centers_applicable + '</span>' +
+        '<span class="tag" style="background:rgba(255,118,117,0.15);color:var(--red);">Bottleneck: ' + w.bottleneck_severity + '/5</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderWfJourney(wfs) {
+  const map = document.getElementById('wfJourneyMap');
+  const stages = {};
+  wfs.forEach(w => {
+    const s = w.patient_journey_stage;
+    if (!stages[s]) stages[s] = {name: w.stage_name, workflows: []};
+    stages[s].workflows.push(w);
+  });
+  let html = '<div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;">';
+  for (let s = 1; s <= 9; s++) {
+    if (!stages[s]) continue;
+    const st = stages[s];
+    html += '<div style="min-width:220px;max-width:280px;flex-shrink:0;">' +
+      '<div style="background:' + STAGE_COLORS[s] + ';color:#fff;padding:10px 14px;border-radius:8px 8px 0 0;font-size:13px;font-weight:600;">Stage ' + s + ': ' + st.name + ' <span style="opacity:0.7;">(' + st.workflows.length + ')</span></div>' +
+      '<div style="background:var(--bg3);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:8px;max-height:500px;overflow-y:auto;">';
+    st.workflows.forEach(w => {
+      const cColor = COMPLEXITY_COLORS[w.complexity] || 'var(--text2)';
+      html += '<div style="padding:8px;margin-bottom:6px;background:var(--bg2);border-radius:6px;border-left:3px solid ' + cColor + ';cursor:pointer;font-size:11px;" onclick="openWfDetail(\'' + w.workflow_id + '\')">' +
+        '<div style="color:var(--accent2);font-weight:600;">' + w.workflow_id + '</div>' +
+        '<div style="color:var(--text);margin-top:2px;">' + w.name + '</div>' +
+        '<div style="color:var(--text2);margin-top:4px;">' + w.department + ' - ' + w.centers_applicable + '</div>' +
+      '</div>';
+    });
+    html += '</div></div>';
+  }
+  html += '</div>';
+  map.innerHTML = html;
+}
+
+function setWfView(v) {
+  currentWfView = v;
+  ['table','cards','journey'].forEach(x => {
+    document.getElementById('wf' + x.charAt(0).toUpperCase() + x.slice(1) + 'View').classList.toggle('hidden', x !== v);
+    const btn = document.getElementById('wfView' + x.charAt(0).toUpperCase() + x.slice(1));
+    if (x === v) { btn.style.background = 'var(--accent)'; btn.style.color = '#fff'; btn.style.border = 'none'; }
+    else { btn.style.background = 'var(--bg3)'; btn.style.color = 'var(--text2)'; btn.style.border = '1px solid var(--border)'; }
+  });
+}
+
+async function openWfDetail(wfId) {
+  const res = await fetch(API + '/api/workflows/' + wfId);
+  const w = await res.json();
+  document.getElementById('wfModalName').textContent = w.workflow_id + ' - ' + w.name;
+  document.getElementById('wfModalSub').textContent = w.department + ' | Stage ' + w.patient_journey_stage + ': ' + w.stage_name + ' | ' + w.centers_applicable;
+
+  let html = '<div class="detail-grid">' +
+    '<div class="detail-item full"><div class="label">Description</div><div class="value">' + (w.description || '-') + '</div></div>' +
+    '<div class="detail-item"><div class="label">Complexity</div><div class="value" style="color:' + (COMPLEXITY_COLORS[w.complexity] || 'var(--text)') + ';font-weight:600;">' + (w.complexity || '-') + '</div></div>' +
+    '<div class="detail-item"><div class="label">Avg Time</div><div class="value">' + (w.avg_time_minutes || '-') + ' minutes</div></div>' +
+    '<div class="detail-item"><div class="label">Bottleneck Severity</div><div class="value">' + renderBottleneck(w.bottleneck_severity) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Centers</div><div class="value">' + (w.centers_applicable || '-') + '</div></div>' +
+    '<div class="detail-item full"><div class="label">Pain Points</div><div class="value" style="color:var(--red);font-size:13px;line-height:1.6;">' + (w.pain_points || '-') + '</div></div>' +
+    '<div class="detail-item full"><div class="label">RISA Opportunity</div><div class="value" style="color:var(--green);font-size:13px;line-height:1.6;">' + (w.risa_opportunity || '-') + '</div></div>' +
+  '</div>';
+
+  // Steps
+  if (w.steps && w.steps.length) {
+    html += '<div class="detail-section"><h3>Workflow Steps</h3>' +
+      '<div style="position:relative;padding-left:24px;">';
+    w.steps.forEach((s, i) => {
+      const isLast = i === w.steps.length - 1;
+      const bottleStyle = s.is_bottleneck ? 'border-color:var(--red);' : '';
+      const autoIcon = s.is_automatable ? ' <span title="Automatable by RISA" style="color:var(--green);font-size:10px;">🤖</span>' : '';
+      html += '<div style="position:relative;margin-bottom:' + (isLast ? '0' : '16px') + ';">' +
+        '<div style="position:absolute;left:-24px;top:0;width:20px;height:20px;border-radius:50%;background:' + (s.is_bottleneck ? 'var(--red)' : 'var(--accent)') + ';color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">' + s.step_number + '</div>' +
+        (isLast ? '' : '<div style="position:absolute;left:-15px;top:20px;bottom:-16px;width:2px;background:var(--border);"></div>') +
+        '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;' + bottleStyle + '">' +
+          '<div style="font-size:13px;color:var(--text);font-weight:500;">' + s.description + autoIcon + '</div>' +
+          '<div style="display:flex;gap:12px;margin-top:6px;font-size:11px;color:var(--text2);">' +
+            '<span>👤 ' + s.actor + '</span>' +
+            '<span>💻 ' + s.system_used + '</span>' +
+            '<span>⏱ ' + s.avg_time_minutes + ' min</span>' +
+            (s.is_bottleneck ? '<span style="color:var(--red);">🔴 Bottleneck</span>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    });
+    html += '</div></div>';
+  }
+
+  // Stakeholders
+  if (w.stakeholders && w.stakeholders.length) {
+    html += '<div class="detail-section"><h3>Key Stakeholders</h3>' +
+      '<table class="center-people-table"><thead><tr><th>Role</th><th>Responsibility</th><th>Authority</th></tr></thead><tbody>';
+    w.stakeholders.forEach(s => {
+      const authColor = s.decision_authority === 'Approver' ? 'var(--red)' : s.decision_authority === 'Executor' ? 'var(--accent2)' : 'var(--text2)';
+      html += '<tr><td style="color:var(--text);font-weight:500;">' + s.role_name + '</td>' +
+        '<td>' + s.responsibility + '</td>' +
+        '<td style="color:' + authColor + ';">' + s.decision_authority + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  // Notes
+  html += '<div class="detail-section"><h3>Notes</h3>' +
+    '<textarea class="notes-textarea" id="wfNotesArea" placeholder="Add notes about this workflow...">' + esc(w.notes || '') + '</textarea>' +
+    '<div class="notes-actions">' +
+      '<button class="btn-save" onclick="saveWfNotes(\'' + w.workflow_id + '\')">Save Notes</button>' +
+      '<span class="notes-status" id="wfNotesStatus"></span>' +
+    '</div></div>';
+
+  document.getElementById('wfModalBody').innerHTML = html;
+  document.getElementById('wfModal').classList.remove('hidden');
+}
+
+async function saveWfNotes(wfId) {
+  const notes = document.getElementById('wfNotesArea').value;
+  const status = document.getElementById('wfNotesStatus');
+  const res = await fetch(API + '/api/workflows/' + wfId + '/notes', {
+    method: 'PUT', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({notes: notes})
+  });
+  const data = await res.json();
+  if (data.ok) {
+    status.textContent = '✓ Saved'; status.style.color = 'var(--green)';
+  } else {
+    status.textContent = 'Error'; status.style.color = 'var(--red)';
+  }
+  setTimeout(() => { status.textContent = ''; }, 3000);
+}
+
+function renderBottleneck(severity) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    const color = i <= severity ? (severity >= 4 ? 'var(--red)' : severity >= 2 ? 'var(--orange)' : 'var(--green)') : 'var(--bg4)';
+    html += '<span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:' + color + ';margin-right:3px;"></span>';
+  }
+  return html + ' <span style="font-size:12px;color:var(--text2);">(' + severity + '/5)</span>';
+}
+
+function closeWfModal() { document.getElementById('wfModal').classList.add('hidden'); }
 
 // Init
 loadCenters();

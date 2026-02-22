@@ -64,6 +64,27 @@ def create_tables(conn):
         )
     """)
     c.execute("""
+        CREATE TABLE IF NOT EXISTS stakeholders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            title TEXT,
+            role_type TEXT,
+            organization TEXT,
+            center_id INTEGER,
+            department TEXT,
+            email TEXT,
+            phone TEXT,
+            linkedin_url TEXT,
+            relevance_to_risa TEXT,
+            source TEXT,
+            last_contacted TEXT,
+            next_followup TEXT,
+            notes TEXT,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        )
+    """)
+    c.execute("""
         CREATE TABLE content_chunks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             source_file TEXT,
