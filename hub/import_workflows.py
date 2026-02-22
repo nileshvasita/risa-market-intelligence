@@ -648,6 +648,46 @@ def import_workflows():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
+    # Create tables if they don't exist
+    c.execute("""CREATE TABLE IF NOT EXISTS workflows (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        workflow_id TEXT UNIQUE,
+        name TEXT NOT NULL,
+        department TEXT,
+        patient_journey_stage INTEGER,
+        stage_name TEXT,
+        description TEXT,
+        centers_applicable TEXT,
+        pain_points TEXT,
+        risa_opportunity TEXT,
+        complexity TEXT,
+        estimated_volume TEXT,
+        avg_time_minutes INTEGER,
+        bottleneck_severity INTEGER,
+        notes TEXT
+    )""")
+    c.execute("""CREATE TABLE IF NOT EXISTS workflow_steps (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        workflow_id INTEGER REFERENCES workflows(id),
+        step_number INTEGER,
+        description TEXT,
+        actor TEXT,
+        system_used TEXT,
+        avg_time_minutes INTEGER,
+        is_bottleneck INTEGER DEFAULT 0,
+        is_automatable INTEGER DEFAULT 0,
+        notes TEXT
+    )""")
+    c.execute("""CREATE TABLE IF NOT EXISTS workflow_stakeholders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        workflow_id INTEGER REFERENCES workflows(id),
+        role_name TEXT,
+        responsibility TEXT,
+        decision_authority TEXT,
+        stakeholder_id INTEGER REFERENCES stakeholders(id),
+        notes TEXT
+    )""")
+
     # Clear existing data
     c.execute("DELETE FROM workflow_stakeholders")
     c.execute("DELETE FROM workflow_steps")

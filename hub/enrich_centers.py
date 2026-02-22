@@ -393,6 +393,14 @@ def main():
     conn = get_conn()
     cur = conn.cursor()
 
+    # Ensure enrichment columns exist
+    for col in ["ehr_vendor", "health_system", "bed_count", "is_340b", "annual_cancer_cases", "notes"]:
+        try:
+            cur.execute("ALTER TABLE cancer_centers ADD COLUMN {} {}".format(
+                col, "INTEGER" if col in ("bed_count", "is_340b", "annual_cancer_cases") else "TEXT"))
+        except Exception:
+            pass  # Column already exists
+
     rows = cur.execute("SELECT * FROM cancer_centers").fetchall()
     print("Total centers: {}".format(len(rows)))
 
