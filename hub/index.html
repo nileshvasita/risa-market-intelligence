@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISA Labs — Market Intelligence Hub</title>
+<style>
+:root {
+  --bg: #0f1117; --bg2: #161822; --bg3: #1e2030; --bg4: #262940;
+  --text: #e0e0ee; --text2: #9499b3; --accent: #6c5ce7; --accent2: #a29bfe;
+  --green: #00cec9; --red: #ff7675; --orange: #fdcb6e; --border: #2d3154;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg); color:var(--text); display:flex; height:100vh; overflow:hidden; }
+
+/* Sidebar */
+.sidebar { width:220px; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
+.logo { padding:20px 16px; border-bottom:1px solid var(--border); }
+.logo h1 { font-size:18px; color:var(--accent2); letter-spacing:1px; }
+.logo p { font-size:11px; color:var(--text2); margin-top:4px; }
+.nav { flex:1; padding:12px 0; }
+.nav a { display:flex; align-items:center; gap:10px; padding:10px 16px; color:var(--text2); text-decoration:none; font-size:14px; cursor:pointer; transition:all .15s; }
+.nav a:hover, .nav a.active { color:var(--text); background:var(--bg3); border-left:3px solid var(--accent); }
+.nav a .icon { font-size:18px; width:24px; text-align:center; }
+.nav-divider { height:1px; background:var(--border); margin:8px 16px; }
+.stats { padding:16px; border-top:1px solid var(--border); font-size:12px; color:var(--text2); }
+.stats .stat { margin:4px 0; }
+.stats .stat span { color:var(--accent2); font-weight:600; }
+
+/* Main */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:12px 24px; border-bottom:1px solid var(--border); background:var(--bg2); flex-shrink:0; }
+.topbar h2 { font-size:16px; font-weight:500; }
+.topbar .actions { display:flex; gap:8px; }
+.topbar .actions button { background:var(--bg3); border:1px solid var(--border); color:var(--text2); padding:6px 12px; border-radius:6px; cursor:pointer; font-size:13px; }
+.topbar .actions button:hover { background:var(--bg4); color:var(--text); }
+.content { flex:1; overflow-y:auto; padding:24px; }
+
+/* Chat Panel */
+.chat-panel { width:380px; background:var(--bg2); border-left:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; transition:width .2s; }
+.chat-panel.collapsed { width:0; overflow:hidden; border:none; }
+.chat-header { padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.chat-header h3 { font-size:14px; color:var(--accent2); }
+.chat-messages { flex:1; overflow-y:auto; padding:12px; }
+.chat-msg { margin:8px 0; padding:10px 12px; border-radius:8px; font-size:13px; line-height:1.5; }
+.chat-msg.user { background:var(--accent); color:#fff; margin-left:40px; }
+.chat-msg.bot { background:var(--bg3); color:var(--text); margin-right:20px; }
+.chat-msg.bot mark { background:var(--orange); color:#000; padding:0 2px; border-radius:2px; }
+.chat-input { display:flex; gap:8px; padding:12px; border-top:1px solid var(--border); }
+.chat-input input { flex:1; background:var(--bg3); border:1px solid var(--border); border-radius:6px; padding:8px 12px; color:var(--text); font-size:13px; outline:none; }
+.chat-input input:focus { border-color:var(--accent); }
+.chat-input button { background:var(--accent); border:none; color:#fff; padding:8px 16px; border-radius:6px; cursor:pointer; font-size:13px; }
+
+/* Tables */
+.data-table { width:100%; border-collapse:collapse; font-size:13px; }
+.data-table th { background:var(--bg3); color:var(--accent2); padding:10px 12px; text-align:left; font-weight:500; position:sticky; top:0; }
+.data-table td { padding:8px 12px; border-bottom:1px solid var(--border); color:var(--text2); }
+.data-table tr:hover td { background:var(--bg3); color:var(--text); }
+
+/* Filters */
+.filters { display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+.filters select, .filters input { background:var(--bg3); border:1px solid var(--border); color:var(--text); padding:8px 12px; border-radius:6px; font-size:13px; outline:none; }
+.filters select:focus, .filters input:focus { border-color:var(--accent); }
+
+/* Cards */
+.card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+.card { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:16px; }
+.card h4 { color:var(--accent2); font-size:14px; margin-bottom:8px; }
+.card p { font-size:12px; color:var(--text2); line-height:1.6; }
+.card .tag { display:inline-block; background:var(--bg4); color:var(--accent2); padding:2px 8px; border-radius:10px; font-size:11px; margin:4px 4px 0 0; }
+
+/* Viz links */
+.viz-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+.viz-card { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:20px; text-align:center; cursor:pointer; transition:all .15s; }
+.viz-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+.viz-card .icon { font-size:36px; margin-bottom:12px; }
+.viz-card h4 { color:var(--text); margin-bottom:4px; }
+.viz-card p { font-size:12px; color:var(--text2); }
+
+/* Search results */
+.search-result { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:10px; }
+.search-result .source { font-size:11px; color:var(--accent2); margin-bottom:4px; }
+.search-result .heading { font-size:13px; color:var(--text); font-weight:500; }
+.search-result .snippet { font-size:12px; color:var(--text2); margin-top:6px; line-height:1.5; }
+
+.hidden { display:none; }
+.badge { background:var(--accent); color:#fff; font-size:10px; padding:2px 6px; border-radius:8px; margin-left:6px; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="logo">
+    <h1>RISA LABS</h1>
+    <p>Market Intelligence Hub</p>
+  </div>
+  <div class="nav">
+    <a class="active" data-view="centers"><span class="icon">🏥</span>Cancer Centers</a>
+    <a data-view="segments"><span class="icon">🗺️</span>Market Map</a>
+    <a data-view="orgs"><span class="icon">🏢</span>Organizations</a>
+    <div class="nav-divider"></div>
+    <a data-view="viz"><span class="icon">📊</span>Visualizations</a>
+    <a data-view="search"><span class="icon">🔍</span>Full Search</a>
+  </div>
+  <div class="stats" id="stats">
+    <div class="stat">Loading stats...</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <h2 id="viewTitle">Cancer Centers</h2>
+    <div class="actions">
+      <button onclick="toggleChat()">💬 Chat</button>
+    </div>
+  </div>
+
+  <!-- Centers View -->
+  <div class="content" id="view-centers">
+    <div class="filters">
+      <select id="filterState" onchange="loadCenters()">
+        <option value="">All States</option>
+        <option value="CA">California</option>
+        <option value="TX">Texas</option>
+        <option value="WA">Washington</option>
+      </select>
+      <select id="filterCategory" onchange="loadCenters()">
+        <option value="">All Categories</option>
+        <option value="NCI">NCI-Designated</option>
+        <option value="Academic">Academic</option>
+        <option value="Community">Community</option>
+        <option value="Hospital">Hospital System</option>
+        <option value="Specialty">Specialty/Boutique</option>
+      </select>
+      <input type="text" id="filterSearch" placeholder="Search centers..." oninput="loadCenters()">
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr><th>Name</th><th>City</th><th>State</th><th>Category</th><th>Parent Org</th><th>EHR</th><th>Est. Oncologists</th><th>Website</th></tr>
+        </thead>
+        <tbody id="centersBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Market Segments View -->
+  <div class="content hidden" id="view-segments">
+    <div class="filters">
+      <input type="text" id="segSearch" placeholder="Search segments..." oninput="loadSegments()">
+    </div>
+    <div class="card-grid" id="segmentsGrid"></div>
+  </div>
+
+  <!-- Organizations View -->
+  <div class="content hidden" id="view-orgs">
+    <div class="filters">
+      <select id="orgType" onchange="loadOrgs()">
+        <option value="">All Types</option>
+        <option value="Pharma">Pharma</option>
+        <option value="Technology">Technology</option>
+        <option value="Payer">Payer</option>
+        <option value="Diagnostics">Diagnostics</option>
+        <option value="Distributor">Distributor</option>
+        <option value="Regulatory/Guidelines">Regulatory</option>
+      </select>
+      <input type="text" id="orgSearch" placeholder="Search organizations..." oninput="loadOrgs()">
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody id="orgsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Visualizations View -->
+  <div class="content hidden" id="view-viz">
+    <div class="viz-grid">
+      <div class="viz-card" onclick="window.open('/viz/oncology-money-flows.html','_blank')">
+        <div class="icon">💰</div><h4>Oncology Money Flows</h4><p>Interactive financial flow visualization</p>
+      </div>
+      <div class="viz-card" onclick="window.open('/viz/oncology-workflows.html','_blank')">
+        <div class="icon">🔄</div><h4>Oncology Workflows</h4><p>Prior auth, claims, billing workflows</p>
+      </div>
+      <div class="viz-card" onclick="window.open('/viz/cancer-centers.html','_blank')">
+        <div class="icon">🏥</div><h4>Cancer Centers Map</h4><p>Geographic visualization of centers</p>
+      </div>
+      <div class="viz-card" onclick="window.open('/viz/us-oncology-mindmap.html','_blank')">
+        <div class="icon">🧠</div><h4>US Oncology Mind Map</h4><p>Full ecosystem mind map</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search View -->
+  <div class="content hidden" id="view-search">
+    <div class="filters">
+      <input type="text" id="fullSearch" placeholder="Search across all content..." style="flex:1;min-width:300px;"
+             onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()" style="background:var(--accent);border:none;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer;">Search</button>
+    </div>
+    <div id="searchResults"></div>
+  </div>
+</div>
+
+<!-- Chat Panel -->
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header">
+    <h3>💬 Ask about the market</h3>
+    <button onclick="toggleChat()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">Welcome! Ask me anything about oncology cancer centers, market segments, payers, or RISA Labs opportunities.</div>
+  </div>
+  <div class="chat-input">
+    <input id="chatInput" placeholder="Ask a question..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button onclick="sendChat()">Send</button>
+  </div>
+</div>
+
+<script>
+const API = '';
+
+// Navigation
+document.querySelectorAll('.nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelectorAll('.nav a').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+    const view = a.dataset.view;
+    document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('view-' + view).classList.remove('hidden');
+    document.getElementById('viewTitle').textContent = a.textContent.trim();
+  });
+});
+
+// Load Centers
+async function loadCenters() {
+  const state = document.getElementById('filterState').value;
+  const cat = document.getElementById('filterCategory').value;
+  const search = document.getElementById('filterSearch').value;
+  const params = new URLSearchParams();
+  if (state) params.set('state', state);
+  if (cat) params.set('category', cat);
+  if (search) params.set('search', search);
+  const res = await fetch(API + '/api/centers?' + params);
+  const data = await res.json();
+  const tbody = document.getElementById('centersBody');
+  tbody.innerHTML = data.centers.map(c => `<tr>
+    <td><strong>${esc(c.name)}</strong></td>
+    <td>${esc(c.city)}</td>
+    <td>${esc(c.state)}</td>
+    <td>${esc(c.category)}</td>
+    <td>${esc(c.parent_org)}</td>
+    <td>${esc(c.ehr_vendor)}</td>
+    <td>${esc(c.est_oncologists)}</td>
+    <td>${c.website && c.website !== '—' ? '<a href="https://'+esc(c.website)+'" target="_blank" style="color:var(--accent2)">'+esc(c.website)+'</a>' : '—'}</td>
+  </tr>`).join('');
+}
+
+// Load Segments
+async function loadSegments() {
+  const search = document.getElementById('segSearch').value;
+  const params = new URLSearchParams();
+  if (search) params.set('search', search);
+  const res = await fetch(API + '/api/segments?' + params);
+  const data = await res.json();
+  const grid = document.getElementById('segmentsGrid');
+  grid.innerHTML = data.segments.map(s => `<div class="card">
+    <h4>${esc(s.segment_name)}</h4>
+    <p class="tag">${esc(s.category)}</p>
+    ${s.role ? '<p style="margin-top:8px"><strong>Role:</strong> '+esc(s.role)+'</p>' : ''}
+    ${s.pain_points ? '<p style="margin-top:4px"><strong>Pain Points:</strong> '+esc(s.pain_points)+'</p>' : ''}
+    ${s.risa_opportunity ? '<p style="margin-top:4px;color:var(--green)"><strong>RISA Opportunity:</strong> '+esc(s.risa_opportunity)+'</p>' : ''}
+    ${s.money_flow ? '<p style="margin-top:4px"><strong>Money Flow:</strong> '+esc(s.money_flow)+'</p>' : ''}
+  </div>`).join('');
+}
+
+// Load Organizations
+async function loadOrgs() {
+  const type = document.getElementById('orgType').value;
+  const search = document.getElementById('orgSearch').value;
+  const params = new URLSearchParams();
+  if (type) params.set('type', type);
+  if (search) params.set('search', search);
+  const res = await fetch(API + '/api/organizations?' + params);
+  const data = await res.json();
+  const tbody = document.getElementById('orgsBody');
+  tbody.innerHTML = data.organizations.map(o => `<tr>
+    <td><strong>${esc(o.name)}</strong></td>
+    <td><span class="tag">${esc(o.type)}</span></td>
+    <td>${esc(o.description)}</td>
+  </tr>`).join('');
+}
+
+// Full Search
+async function doSearch() {
+  const q = document.getElementById('fullSearch').value;
+  if (!q) return;
+  const res = await fetch(API + '/api/search?q=' + encodeURIComponent(q));
+  const data = await res.json();
+  const div = document.getElementById('searchResults');
+  if (data.results.length === 0) {
+    div.innerHTML = '<p style="color:var(--text2)">No results found.</p>';
+    return;
+  }
+  div.innerHTML = data.results.map(r => `<div class="search-result">
+    <div class="source">${esc(r.source_file)} → ${esc(r.section_heading)}</div>
+    <div class="snippet">${r.snippet}</div>
+  </div>`).join('');
+}
+
+// Chat
+function toggleChat() {
+  document.getElementById('chatPanel').classList.toggle('collapsed');
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += `<div class="chat-msg user">${esc(q)}</div>`;
+  msgs.innerHTML += `<div class="chat-msg bot" id="typing">Thinking...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const res = await fetch(API + '/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question: q})
+    });
+    const data = await res.json();
+    document.getElementById('typing').remove();
+    // Simple markdown-to-html
+    let answer = data.answer
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+    if (data.mode === 'search-fallback') {
+      answer = '<em style="color:var(--orange)">[Search mode — LLM unavailable]</em><br>' + answer;
+    }
+    msgs.innerHTML += `<div class="chat-msg bot">${answer}</div>`;
+  } catch(e) {
+    document.getElementById('typing').remove();
+    msgs.innerHTML += `<div class="chat-msg bot" style="color:var(--red)">Error: ${esc(e.message)}</div>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// Stats
+async function loadStats() {
+  try {
+    const [c, s, o] = await Promise.all([
+      fetch(API+'/api/centers').then(r=>r.json()),
+      fetch(API+'/api/segments').then(r=>r.json()),
+      fetch(API+'/api/organizations').then(r=>r.json()),
+    ]);
+    document.getElementById('stats').innerHTML = `
+      <div class="stat">🏥 Centers: <span>${c.count}</span></div>
+      <div class="stat">🗺️ Segments: <span>${s.count}</span></div>
+      <div class="stat">🏢 Orgs: <span>${o.count}</span></div>
+    `;
+  } catch(e) {}
+}
+
+function esc(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Init
+loadCenters();
+loadSegments();
+loadOrgs();
+loadStats();
+</script>
+</body>
+</html>
