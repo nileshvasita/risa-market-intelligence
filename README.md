@@ -1,10 +1,10 @@
-# RISA Labs — US Oncology Market Intelligence
+# RISA Labs - US Oncology Market Intelligence
 
 > Interactive visualizations and intelligence platform for the US oncology ecosystem.
 
 ## 📊 Live Visualizations
 
-Hosted on GitHub Pages — no setup needed:
+Hosted on GitHub Pages - no setup needed:
 
 | Visualization | Description |
 |--------------|-------------|
@@ -50,8 +50,8 @@ chmod +x start.sh
 ### Chat Modes
 
 The chatbot answers questions using two sources:
-- **Local data** — your curated RISA market intelligence (prioritized)
-- **Claude's general knowledge** — supplements when local data doesn't cover the topic
+- **Local data** - your curated RISA market intelligence (prioritized)
+- **Claude's general knowledge** - supplements when local data doesn't cover the topic
 
 Answers clearly distinguish between internal data and general knowledge.
 
@@ -84,7 +84,7 @@ Answers clearly distinguish between internal data and general knowledge.
 
 ## 🔒 Security
 
-- API keys are **never committed** — use `hub/.env` (gitignored)
+- API keys are **never committed** - use `hub/.env` (gitignored)
 - `.db` files are generated locally, not checked in
 - Run `build_db.py` to rebuild from source markdown at any time
 
@@ -92,7 +92,7 @@ Answers clearly distinguish between internal data and general knowledge.
 
 1. Create a branch from `main`
 2. Make your changes
-3. Open a PR — describe what changed and why
+3. Open a PR - describe what changed and why
 4. Merge after review
 
 ---

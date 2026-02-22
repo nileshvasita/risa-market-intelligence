@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RISA Labs — Market Intelligence Hub</title>
+<title>RISA Labs - Market Intelligence Hub</title>
 <style>
 :root {
   --bg: #0f1117; --bg2: #161822; --bg3: #1e2030; --bg4: #262940;
@@ -337,7 +337,7 @@ async function sendChat() {
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\n/g, '<br>');
     if (data.mode === 'search-fallback') {
-      answer = '<em style="color:var(--orange)">[Search mode — LLM unavailable]</em><br>' + answer;
+      answer = '<em style="color:var(--orange)">[Search mode - LLM unavailable]</em><br>' + answer;
     }
     msgs.innerHTML += `<div class="chat-msg bot">${answer}</div>`;
   } catch(e) {
