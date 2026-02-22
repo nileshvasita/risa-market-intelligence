@@ -213,6 +213,84 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
 
 .hidden { display:none; }
 .badge { background:var(--accent); color:#fff; font-size:10px; padding:2px 6px; border-radius:8px; margin-left:6px; }
+
+/* Tutor Hub Tabs */
+.tutor-tabs { display:flex; gap:0; margin-bottom:16px; border-bottom:2px solid var(--border); }
+.tutor-tab { background:none; border:none; color:var(--text2); font-size:14px; padding:10px 20px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .15s; }
+.tutor-tab:hover { color:var(--text); }
+.tutor-tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+
+/* Learning Paths */
+.path-card { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:20px; cursor:pointer; transition:all .2s; }
+.path-card:hover { border-color:var(--accent); transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+.path-card-header { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.path-card-header .path-icon { font-size:28px; }
+.path-card-header h3 { font-size:16px; color:var(--text); margin:0; }
+.path-card-desc { font-size:13px; color:var(--text2); line-height:1.5; margin-bottom:12px; }
+.path-card-meta { display:flex; gap:16px; font-size:12px; color:var(--text2); }
+.path-card-meta span { display:flex; align-items:center; gap:4px; }
+
+.path-detail-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.path-detail-header .back-btn { background:var(--bg3); border:1px solid var(--border); color:var(--text2); padding:6px 14px; border-radius:6px; cursor:pointer; font-size:13px; transition:all .15s; }
+.path-detail-header .back-btn:hover { color:var(--text); border-color:var(--accent); }
+.path-detail-header h2 { margin:0; font-size:18px; color:var(--text); }
+
+.module-card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; margin-bottom:12px; overflow:hidden; }
+.module-header { padding:14px 18px; cursor:pointer; display:flex; align-items:center; gap:12px; transition:background .15s; }
+.module-header:hover { background:var(--bg3); }
+.module-num { background:var(--accent); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; }
+.module-title { font-size:14px; font-weight:600; color:var(--text); }
+.module-chevron { margin-left:auto; color:var(--text2); font-size:12px; transition:transform .2s; }
+.module-header.open .module-chevron { transform:rotate(90deg); }
+.module-body { display:none; border-top:1px solid var(--border); padding:18px; }
+.module-body.open { display:block; }
+.module-section { margin-bottom:16px; }
+.module-section h4 { font-size:12px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.module-section h4.content-h { color:var(--text); }
+.module-section h4.hub-h { color:var(--accent2); }
+.module-section h4.insight-h { color:#f59e0b; }
+.module-section h4.quiz-h { color:#10b981; }
+.module-section p, .module-section div.mod-text { font-size:13px; color:var(--text2); line-height:1.7; white-space:pre-line; }
+
+.quiz-block { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:10px; }
+.quiz-question { font-size:13px; color:var(--text); font-weight:500; margin-bottom:10px; }
+.quiz-option { display:flex; align-items:center; gap:8px; padding:8px 12px; margin-bottom:4px; border-radius:6px; cursor:pointer; font-size:13px; color:var(--text2); transition:all .15s; border:1px solid transparent; }
+.quiz-option:hover { background:var(--bg2); color:var(--text); }
+.quiz-option.selected { border-color:var(--accent); background:rgba(59,130,246,0.1); color:var(--text); }
+.quiz-option.correct { border-color:#10b981; background:rgba(16,185,129,0.1); color:#10b981; }
+.quiz-option.wrong { border-color:#ef4444; background:rgba(239,68,68,0.1); color:#ef4444; }
+.quiz-option .opt-marker { width:20px; height:20px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+.quiz-option.correct .opt-marker { border-color:#10b981; background:#10b981; color:#fff; }
+.quiz-option.wrong .opt-marker { border-color:#ef4444; background:#ef4444; color:#fff; }
+.quiz-explanation { display:none; margin-top:10px; padding:10px; background:var(--bg2); border-radius:6px; font-size:12px; color:var(--text2); line-height:1.6; }
+.quiz-explanation.show { display:block; }
+.progress-bar { height:4px; background:var(--bg3); border-radius:2px; overflow:hidden; margin-top:6px; }
+.progress-fill { height:100%; background:var(--accent); border-radius:2px; transition:width .3s; }
+
+/* Glossary / Tutor Hub */
+.glossary-category { background:var(--bg2); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.glossary-category-header { padding:14px 18px; cursor:pointer; display:flex; align-items:center; gap:10px; font-size:15px; font-weight:600; color:var(--text); transition:background .15s; }
+.glossary-category-header:hover { background:var(--bg3); }
+.glossary-category-header .cat-icon { font-size:20px; }
+.glossary-category-header .cat-desc { font-size:12px; color:var(--text2); font-weight:400; margin-left:auto; }
+.glossary-category-header .chevron { color:var(--text2); font-size:12px; transition:transform .2s; margin-left:8px; }
+.glossary-category-header.open .chevron { transform:rotate(90deg); }
+.glossary-category-body { display:none; border-top:1px solid var(--border); }
+.glossary-category-body.open { display:block; }
+.glossary-term { padding:14px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; }
+.glossary-term:last-child { border-bottom:none; }
+.glossary-term:hover { background:var(--bg3); }
+.glossary-term-name { font-size:14px; font-weight:600; color:var(--accent2); margin-bottom:4px; }
+.glossary-term-def { font-size:13px; color:var(--text2); line-height:1.5; }
+.glossary-term-expanded { display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+.glossary-term-expanded.open { display:block; }
+.glossary-detail-block { margin-bottom:10px; }
+.glossary-detail-block h4 { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--accent); margin-bottom:4px; }
+.glossary-detail-block p { font-size:13px; color:var(--text2); line-height:1.5; margin:0; }
+.glossary-related { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+.glossary-related-tag { background:var(--bg3); border:1px solid var(--border); color:var(--text2); font-size:11px; padding:2px 8px; border-radius:12px; cursor:pointer; transition:all .15s; }
+.glossary-related-tag:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.glossary-count { font-size:12px; color:var(--text2); padding:4px 8px; background:var(--bg3); border-radius:10px; }
 </style>
 </head>
 <body>
@@ -230,6 +308,7 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
     <a data-view="people"><span class="icon">👥</span>People</a>
     <a data-view="workflows"><span class="icon">⚙️</span>Workflows</a>
     <div class="nav-divider"></div>
+    <a data-view="glossary"><span class="icon">📖</span>Tutor Hub</a>
     <a data-view="viz"><span class="icon">📊</span>Visualizations</a>
     <a data-view="search"><span class="icon">🔍</span>Full Search</a>
   </div>
@@ -523,6 +602,27 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
     </div>
     <div id="searchResults"></div>
   </div>
+
+  <!-- Tutor Hub View -->
+  <div class="content hidden" id="view-glossary">
+    <div class="tutor-tabs">
+      <button class="tutor-tab active" data-ttab="paths" onclick="switchTutorTab('paths')">🛤️ Learning Paths</button>
+      <button class="tutor-tab" data-ttab="glossary" onclick="switchTutorTab('glossary')">📖 Glossary</button>
+    </div>
+    <div id="tutorPaths" class="tutor-panel">
+      <div id="pathsList" style="display:flex;flex-direction:column;gap:16px;"></div>
+      <div id="pathDetail" style="display:none;"></div>
+    </div>
+    <div id="tutorGlossary" class="tutor-panel" style="display:none;">
+      <div class="filters">
+        <input type="text" id="glossarySearch" placeholder="Search terms, definitions..." style="flex:1;min-width:300px;" oninput="filterGlossary()">
+        <select id="glossaryCategoryFilter" onchange="filterGlossary()" style="min-width:200px;">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+      <div id="glossaryContent" style="display:flex;flex-direction:column;gap:20px;"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Center Detail Modal -->
@@ -637,6 +737,7 @@ function switchView(view) {
   document.getElementById('viewTitle').textContent = navLink.textContent.trim();
   if (view === 'people') { loadPeople(); }
   if (view === 'workflows') { loadWorkflowStats(); loadWorkflows(); }
+  if (view === 'glossary') { loadPaths(); }
   if (view === 'map') {
     setTimeout(function() {
       initMap();
@@ -1759,6 +1860,276 @@ function renderBottleneck(severity) {
 }
 
 function closeWfModal() { document.getElementById('wfModal').classList.add('hidden'); }
+
+// === Tutor Hub ===
+function switchTutorTab(tab) {
+  document.querySelectorAll('.tutor-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelector('.tutor-tab[data-ttab="' + tab + '"]').classList.add('active');
+  document.getElementById('tutorPaths').style.display = tab === 'paths' ? 'block' : 'none';
+  document.getElementById('tutorGlossary').style.display = tab === 'glossary' ? 'block' : 'none';
+  if (tab === 'glossary') loadGlossary();
+  if (tab === 'paths') loadPaths();
+}
+
+// === Learning Paths ===
+var pathsData = null;
+var quizState = {};
+
+async function loadPaths() {
+  if (pathsData) { renderPathsList(); return; }
+  try {
+    var resp = await fetch('/hub/learning_paths.json');
+    pathsData = await resp.json();
+    renderPathsList();
+  } catch(e) {
+    document.getElementById('pathsList').innerHTML = '<p style="color:var(--text2)">Failed to load learning paths.</p>';
+  }
+}
+
+function renderPathsList() {
+  var list = document.getElementById('pathsList');
+  var detail = document.getElementById('pathDetail');
+  list.style.display = 'flex';
+  detail.style.display = 'none';
+
+  var html = '';
+  pathsData.paths.forEach(function(p) {
+    html += '<div class="path-card" onclick="openPath(\'' + p.id + '\')">';
+    html += '<div class="path-card-header"><span class="path-icon">' + p.icon + '</span><h3>' + esc(p.name) + '</h3></div>';
+    html += '<div class="path-card-desc">' + esc(p.description) + '</div>';
+    html += '<div class="path-card-meta">';
+    html += '<span>📚 ' + p.modules.length + ' modules</span>';
+    html += '<span>⏱️ ~' + p.estimated_minutes + ' min</span>';
+    var totalQ = 0;
+    p.modules.forEach(function(m) { totalQ += (m.quiz || []).length; });
+    html += '<span>❓ ' + totalQ + ' quiz questions</span>';
+    html += '</div>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function openPath(pathId) {
+  var path = null;
+  pathsData.paths.forEach(function(p) { if (p.id === pathId) path = p; });
+  if (!path) return;
+
+  var list = document.getElementById('pathsList');
+  var detail = document.getElementById('pathDetail');
+  list.style.display = 'none';
+  detail.style.display = 'block';
+
+  var html = '<div class="path-detail-header">';
+  html += '<button class="back-btn" onclick="renderPathsList()">← Back</button>';
+  html += '<h2>' + path.icon + ' ' + esc(path.name) + '</h2>';
+  html += '</div>';
+
+  path.modules.forEach(function(m, idx) {
+    html += '<div class="module-card">';
+    html += '<div class="module-header" onclick="toggleModule(this)">';
+    html += '<span class="module-num">' + (idx + 1) + '</span>';
+    html += '<span class="module-title">' + esc(m.title) + '</span>';
+    html += '<span class="module-chevron">&#9654;</span>';
+    html += '</div>';
+    html += '<div class="module-body">';
+
+    // Content
+    html += '<div class="module-section"><h4 class="content-h">📝 Content</h4>';
+    html += '<div class="mod-text">' + formatModuleText(m.content) + '</div></div>';
+
+    // Hub Connection
+    if (m.hub_connection) {
+      html += '<div class="module-section"><h4 class="hub-h">🔗 Hub Connection</h4>';
+      html += '<div class="mod-text">' + formatModuleText(m.hub_connection) + '</div></div>';
+    }
+
+    // Key Insight
+    if (m.key_insight) {
+      html += '<div class="module-section"><h4 class="insight-h">💡 Key Insight</h4>';
+      html += '<div class="mod-text">' + formatModuleText(m.key_insight) + '</div></div>';
+    }
+
+    // Quiz
+    if (m.quiz && m.quiz.length) {
+      html += '<div class="module-section"><h4 class="quiz-h">🧠 Check Your Understanding</h4>';
+      m.quiz.forEach(function(q, qi) {
+        var qid = m.id + '-q' + qi;
+        html += '<div class="quiz-block" id="quiz-' + qid + '">';
+        html += '<div class="quiz-question">' + esc(q.question) + '</div>';
+        q.options.forEach(function(opt, oi) {
+          html += '<div class="quiz-option" data-qid="' + qid + '" data-oi="' + oi + '" data-correct="' + q.correct + '" onclick="answerQuiz(this)">';
+          html += '<span class="opt-marker"></span>';
+          html += '<span>' + esc(opt) + '</span>';
+          html += '</div>';
+        });
+        html += '<div class="quiz-explanation" id="expl-' + qid + '">' + esc(q.explanation) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '</div></div>';
+  });
+
+  detail.innerHTML = html;
+}
+
+function formatModuleText(text) {
+  // Basic markdown-like formatting
+  var t = esc(text);
+  // Bold
+  t = t.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:var(--text)">$1</strong>');
+  // Numbered lists
+  t = t.replace(/^(\d+)\. /gm, '<span style="color:var(--accent);font-weight:600;">$1.</span> ');
+  // Bullet points
+  t = t.replace(/^- /gm, '<span style="color:var(--accent);">-</span> ');
+  return t;
+}
+
+function toggleModule(header) {
+  header.classList.toggle('open');
+  var body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function answerQuiz(el) {
+  var qid = el.getAttribute('data-qid');
+  if (quizState[qid]) return; // Already answered
+
+  var oi = parseInt(el.getAttribute('data-oi'));
+  var correct = parseInt(el.getAttribute('data-correct'));
+  quizState[qid] = true;
+
+  var block = document.getElementById('quiz-' + qid);
+  var options = block.querySelectorAll('.quiz-option');
+
+  options.forEach(function(opt) {
+    var optIdx = parseInt(opt.getAttribute('data-oi'));
+    if (optIdx === correct) {
+      opt.classList.add('correct');
+      opt.querySelector('.opt-marker').textContent = '✓';
+    } else if (optIdx === oi && oi !== correct) {
+      opt.classList.add('wrong');
+      opt.querySelector('.opt-marker').textContent = '✗';
+    }
+  });
+
+  document.getElementById('expl-' + qid).classList.add('show');
+}
+
+// === Glossary ===
+var glossaryData = null;
+
+async function loadGlossary() {
+  if (glossaryData) { renderGlossary(glossaryData); return; }
+  try {
+    var resp = await fetch('/hub/glossary.json');
+    glossaryData = await resp.json();
+    // Populate category filter
+    var sel = document.getElementById('glossaryCategoryFilter');
+    glossaryData.categories.forEach(function(cat) {
+      var opt = document.createElement('option');
+      opt.value = cat.id;
+      opt.textContent = cat.icon + ' ' + cat.name;
+      sel.appendChild(opt);
+    });
+    renderGlossary(glossaryData);
+  } catch(e) {
+    document.getElementById('glossaryContent').innerHTML = '<p style="color:var(--text2)">Failed to load glossary data.</p>';
+  }
+}
+
+function renderGlossary(data) {
+  var search = (document.getElementById('glossarySearch').value || '').toLowerCase();
+  var catFilter = document.getElementById('glossaryCategoryFilter').value;
+  var container = document.getElementById('glossaryContent');
+  var html = '';
+  var totalTerms = 0;
+  var shownTerms = 0;
+
+  data.categories.forEach(function(cat) {
+    if (catFilter && cat.id !== catFilter) return;
+
+    var terms = cat.terms.filter(function(t) {
+      if (!search) return true;
+      return t.term.toLowerCase().indexOf(search) !== -1 ||
+             t.definition.toLowerCase().indexOf(search) !== -1 ||
+             (t.why_it_matters || '').toLowerCase().indexOf(search) !== -1;
+    });
+
+    totalTerms += cat.terms.length;
+    if (terms.length === 0) return;
+    shownTerms += terms.length;
+
+    var isOpen = !!search || !!catFilter;
+
+    html += '<div class="glossary-category">';
+    html += '<div class="glossary-category-header' + (isOpen ? ' open' : '') + '" onclick="toggleGlossaryCategory(this)">';
+    html += '<span class="cat-icon">' + esc(cat.icon) + '</span>';
+    html += '<span>' + esc(cat.name) + '</span>';
+    html += '<span class="glossary-count">' + terms.length + ' terms</span>';
+    html += '<span class="cat-desc">' + esc(cat.description) + '</span>';
+    html += '<span class="chevron">&#9654;</span>';
+    html += '</div>';
+    html += '<div class="glossary-category-body' + (isOpen ? ' open' : '') + '">';
+
+    terms.forEach(function(t) {
+      html += '<div class="glossary-term" onclick="toggleGlossaryTerm(this)">';
+      html += '<div class="glossary-term-name">' + highlightMatch(esc(t.term), search) + '</div>';
+      html += '<div class="glossary-term-def">' + highlightMatch(esc(t.definition).substring(0, 200), search);
+      if (t.definition.length > 200) html += '...';
+      html += '</div>';
+      html += '<div class="glossary-term-expanded">';
+      html += '<div class="glossary-detail-block"><h4>Full Definition</h4><p>' + highlightMatch(esc(t.definition), search) + '</p></div>';
+      if (t.why_it_matters) {
+        html += '<div class="glossary-detail-block"><h4>Why It Matters for RISA</h4><p>' + highlightMatch(esc(t.why_it_matters), search) + '</p></div>';
+      }
+      if (t.related && t.related.length) {
+        html += '<div class="glossary-detail-block"><h4>Related Concepts</h4><div class="glossary-related">';
+        t.related.forEach(function(r) {
+          html += '<span class="glossary-related-tag" onclick="event.stopPropagation();searchGlossaryTerm(\'' + esc(r).replace(/'/g, "\\'") + '\')">' + esc(r) + '</span>';
+        });
+        html += '</div></div>';
+      }
+      html += '</div>';
+      html += '</div>';
+    });
+
+    html += '</div></div>';
+  });
+
+  if (!html) {
+    html = '<p style="color:var(--text2);padding:20px;">No terms found matching your search.</p>';
+  }
+
+  container.innerHTML = html;
+}
+
+function highlightMatch(text, search) {
+  if (!search || search.length < 2) return text;
+  var regex = new RegExp('(' + search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  return text.replace(regex, '<span style="background:rgba(59,130,246,0.3);border-radius:2px;padding:0 1px;">$1</span>');
+}
+
+function toggleGlossaryCategory(header) {
+  header.classList.toggle('open');
+  var body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function toggleGlossaryTerm(termEl) {
+  var expanded = termEl.querySelector('.glossary-term-expanded');
+  expanded.classList.toggle('open');
+}
+
+function searchGlossaryTerm(term) {
+  document.getElementById('glossarySearch').value = term;
+  filterGlossary();
+}
+
+function filterGlossary() {
+  if (glossaryData) renderGlossary(glossaryData);
+}
 
 // Init
 loadCenters();

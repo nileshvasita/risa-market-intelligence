@@ -1,0 +1,882 @@
+{
+  "categories": [
+    {
+      "id": "industry-fundamentals",
+      "name": "Industry Fundamentals",
+      "icon": "\ud83c\udfd7\ufe0f",
+      "description": "Core concepts that define how the U.S. oncology market works",
+      "terms": [
+        {
+          "term": "Oncology",
+          "definition": "The branch of medicine dealing with the prevention, diagnosis, and treatment of cancer. In the U.S., oncology is a $280B+ market spanning care delivery, drugs, diagnostics, and technology.",
+          "why_it_matters": "RISA operates in oncology RCM (Revenue Cycle Management) - understanding the full ecosystem helps you see where every dollar flows and where AI can add value.",
+          "related": [
+            "Medical Oncology",
+            "Surgical Oncology",
+            "Radiation Oncology"
+          ]
+        },
+        {
+          "term": "Medical Oncology",
+          "definition": "Treatment of cancer using systemic therapies - chemotherapy, immunotherapy, targeted therapy, hormone therapy. Medical oncologists are typically the 'quarterbacks' of cancer care.",
+          "why_it_matters": "Most of RISA's workflow automation targets medical oncology workflows - drug ordering, prior auth, treatment planning.",
+          "related": [
+            "Chemotherapy",
+            "Immunotherapy",
+            "Targeted Therapy"
+          ]
+        },
+        {
+          "term": "Surgical Oncology",
+          "definition": "Surgical removal of tumors and surrounding tissue. Often the first treatment step for solid tumors.",
+          "why_it_matters": "Surgical workflows have their own billing complexity - facility fees, surgeon fees, pathology, and post-op care.",
+          "related": [
+            "Tumor Board",
+            "Pathology"
+          ]
+        },
+        {
+          "term": "Radiation Oncology",
+          "definition": "Treatment using high-energy radiation to kill cancer cells. Includes external beam (IMRT, proton therapy) and brachytherapy (internal).",
+          "why_it_matters": "Radiation has unique billing codes, treatment planning workflows, and its own CMS payment model (RO Model).",
+          "related": [
+            "Proton Therapy",
+            "IMRT",
+            "Varian"
+          ]
+        },
+        {
+          "term": "Hematologic Oncology",
+          "definition": "Cancers of the blood, bone marrow, and lymph system - leukemia, lymphoma, myeloma. Often overlaps with hematology.",
+          "why_it_matters": "Heme cancers involve unique treatments (CAR-T, stem cell transplant) with extremely high costs ($300K-$500K per patient) and complex authorization workflows.",
+          "related": [
+            "CAR-T",
+            "BMT/Stem Cell Transplant",
+            "Leukemia"
+          ]
+        },
+        {
+          "term": "Cancer Center",
+          "definition": "A facility or program specializing in cancer diagnosis and treatment. Ranges from small community practices to massive academic medical centers. The hub tracks 327 across 6 states.",
+          "why_it_matters": "Each center type has different decision-making structures, budgets, tech stacks, and pain points. Knowing the type tells you how to sell to them.",
+          "related": [
+            "NCI-Designated",
+            "Academic Medical Center",
+            "Community Oncology"
+          ]
+        },
+        {
+          "term": "NCI-Designated Cancer Center",
+          "definition": "A cancer center that has earned designation from the National Cancer Institute based on scientific excellence. There are 72 NCI-designated centers in the U.S. - 'Comprehensive' is the highest tier (53 centers), meaning they do research, clinical care, and community outreach.",
+          "why_it_matters": "NCI centers are the most prestigious and well-funded. They're opinion leaders - if MD Anderson or MSK adopts a tool, others follow. Also complex organizations with massive RCM needs.",
+          "related": [
+            "NCI",
+            "Comprehensive Cancer Center",
+            "Academic Medical Center"
+          ]
+        },
+        {
+          "term": "Academic Medical Center (AMC)",
+          "definition": "A hospital affiliated with a medical school that combines clinical care, research, and education. Examples: Stanford Health Care, Mass General, NYU Langone.",
+          "why_it_matters": "AMCs have the most complex workflows - teaching, research, grants, clinical trials all layered on top of patient care. More complexity = more RCM pain = more RISA opportunity.",
+          "related": [
+            "NCI-Designated",
+            "Clinical Trials",
+            "Teaching Hospital"
+          ]
+        },
+        {
+          "term": "Community Oncology Practice",
+          "definition": "Oncology practices not affiliated with academic centers. Range from small private practices to large multi-site groups like Texas Oncology (500+ physicians) or Florida Cancer Specialists.",
+          "why_it_matters": "Community practices treat ~55% of U.S. cancer patients. They're more cost-conscious, faster to adopt technology, and often managed by networks like US Oncology (McKesson).",
+          "related": [
+            "US Oncology Network",
+            "Texas Oncology",
+            "Private Practice"
+          ]
+        },
+        {
+          "term": "Health System",
+          "definition": "A large organization that operates multiple hospitals and clinics. Examples: HCA Healthcare (180+ hospitals), Providence, CommonSpirit. Cancer programs are often embedded within health systems.",
+          "why_it_matters": "Health system decisions are made at the C-suite level. One deal with a health system can mean access to dozens of cancer programs simultaneously.",
+          "related": [
+            "Parent Organization",
+            "Hospital System Cancer Programs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revenue-cycle",
+      "name": "Revenue Cycle Management (RCM)",
+      "icon": "\ud83d\udcb0",
+      "description": "The financial backbone - how cancer centers get paid. This is RISA's core domain.",
+      "terms": [
+        {
+          "term": "Revenue Cycle Management (RCM)",
+          "definition": "The entire financial process of a healthcare encounter - from patient scheduling and registration, through coding and billing, to payment collection. In oncology, this is exceptionally complex due to expensive drugs, multiple treatment modalities, and frequent prior authorizations.",
+          "why_it_matters": "This is literally what RISA does. Every inefficiency in the revenue cycle is a potential automation opportunity.",
+          "related": [
+            "Charge Capture",
+            "Claims",
+            "Denial Management",
+            "Prior Authorization"
+          ]
+        },
+        {
+          "term": "Prior Authorization (Prior Auth / PA)",
+          "definition": "A requirement from insurance companies that providers must get approval BEFORE delivering certain treatments. In oncology, nearly every chemo regimen, imaging study, and expensive procedure needs prior auth.",
+          "why_it_matters": "Prior auth is the #1 pain point in oncology RCM. It delays care, costs staff time (avg 45 min per auth), and denials can mean $10K-$100K+ in lost revenue per case. Prime target for AI automation.",
+          "related": [
+            "Payer",
+            "Denial",
+            "Utilization Management"
+          ]
+        },
+        {
+          "term": "Charge Capture",
+          "definition": "The process of recording all billable services provided to a patient - drug administration, office visits, labs, procedures. In oncology, a single chemo visit might generate 10+ separate charges.",
+          "why_it_matters": "Missed charges = lost revenue. Studies show oncology practices lose 1-5% of revenue to charge capture errors. AI can audit and flag missed charges.",
+          "related": [
+            "CPT Code",
+            "HCPCS",
+            "Coding"
+          ]
+        },
+        {
+          "term": "Claims",
+          "definition": "The formal billing request sent to a payer (insurance company) for reimbursement. Claims contain diagnosis codes (ICD-10), procedure codes (CPT/HCPCS), and patient/provider info.",
+          "why_it_matters": "Clean claims (no errors) get paid in 14-30 days. Dirty claims get denied, creating a costly rework cycle. RISA can help ensure claims go out clean.",
+          "related": [
+            "Clean Claim",
+            "Denial",
+            "Remittance"
+          ]
+        },
+        {
+          "term": "Denial Management",
+          "definition": "The process of handling rejected insurance claims - identifying why they were denied, appealing, and preventing future denials. Oncology denial rates run 5-15%.",
+          "why_it_matters": "Each denied claim costs $25-50 to rework. A large cancer center might have thousands of denials per month. AI can predict which claims will be denied before submission and auto-generate appeals.",
+          "related": [
+            "Appeal",
+            "Prior Authorization",
+            "Claims"
+          ]
+        },
+        {
+          "term": "CPT Code (Current Procedural Terminology)",
+          "definition": "5-digit codes that describe medical procedures and services. Examples: 96413 (chemo infusion, first hour), 99213 (office visit, moderate complexity). Oncology uses hundreds of specific CPT codes.",
+          "why_it_matters": "Correct coding = correct payment. Upcoding is fraud, undercoding is lost revenue. AI can suggest optimal, compliant codes.",
+          "related": [
+            "HCPCS",
+            "ICD-10",
+            "Coding"
+          ]
+        },
+        {
+          "term": "HCPCS Code",
+          "definition": "Healthcare Common Procedure Coding System - used primarily for drugs, supplies, and equipment. In oncology, every chemo drug has a J-code (e.g., J9271 = Keytruda). Drug billing is a massive revenue stream.",
+          "why_it_matters": "Drug reimbursement can be 50-70% of an oncology practice's revenue. Getting J-codes right, with correct units and waste reporting, is critical.",
+          "related": [
+            "CPT Code",
+            "Drug Reimbursement",
+            "ASP"
+          ]
+        },
+        {
+          "term": "ICD-10 Diagnosis Code",
+          "definition": "International Classification of Diseases codes that specify the patient's diagnosis. Oncology is extremely granular - C50.911 is 'malignant neoplasm of unspecified site of right female breast.' The code must match the treatment for the claim to be paid.",
+          "why_it_matters": "Wrong diagnosis code = automatic denial. Cancer staging, histology, and site must all be coded precisely.",
+          "related": [
+            "CPT Code",
+            "Claims",
+            "Coding"
+          ]
+        },
+        {
+          "term": "340B Drug Pricing Program",
+          "definition": "A federal program that requires drug manufacturers to sell outpatient drugs at significant discounts (25-50% off) to eligible healthcare organizations - primarily hospitals serving low-income patients. The hospital buys the drug cheap but can bill insurance at regular rates, keeping the spread.",
+          "why_it_matters": "340B is a major revenue source for eligible cancer centers. Our hub tracks 340B status because it fundamentally changes a center's financial model and drug purchasing workflows.",
+          "related": [
+            "Drug Reimbursement",
+            "Safety-Net Hospital",
+            "HRSA"
+          ]
+        },
+        {
+          "term": "ASP (Average Sales Price)",
+          "definition": "The benchmark CMS uses to reimburse physician-administered drugs (like chemo). Medicare pays ASP + 6% (sequestration reduces this). If a practice buys a drug below ASP, they profit on the spread.",
+          "why_it_matters": "Drug margin management is a core financial strategy for oncology practices. Understanding ASP dynamics helps you see why drug billing accuracy matters so much.",
+          "related": [
+            "340B",
+            "HCPCS",
+            "Buy-and-Bill"
+          ]
+        },
+        {
+          "term": "Buy-and-Bill",
+          "definition": "The model where oncology practices purchase drugs, administer them to patients, and then bill insurance for reimbursement. This is unique to oncology/infusion - most other specialties don't buy their own drugs.",
+          "why_it_matters": "Buy-and-bill means practices carry huge drug inventory costs ($millions). Cash flow management, drug waste tracking, and accurate billing are critical. Errors here are very expensive.",
+          "related": [
+            "ASP",
+            "340B",
+            "Specialty Pharmacy"
+          ]
+        },
+        {
+          "term": "Explanation of Benefits (EOB) / Remittance (ERA)",
+          "definition": "The document from a payer explaining what they paid, denied, or adjusted on a claim. ERA is the electronic version. Oncology EOBs are complex because a single visit can have many line items.",
+          "why_it_matters": "Posting payments and reconciling remittances is labor-intensive. AI can automate payment posting and flag underpayments.",
+          "related": [
+            "Claims",
+            "Denial",
+            "Payment Posting"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "payers-reimbursement",
+      "name": "Payers and Reimbursement",
+      "icon": "\ud83c\udfe6",
+      "description": "Who pays for cancer care and how - the money side of the equation",
+      "terms": [
+        {
+          "term": "Payer",
+          "definition": "The entity that pays for healthcare services. Three main types: commercial insurance (UnitedHealthcare, Anthem, Aetna, Cigna), government (Medicare, Medicaid), and self-pay patients.",
+          "why_it_matters": "Each payer has different rules, formularies, prior auth requirements, and reimbursement rates. A cancer center deals with dozens of payers, each with unique workflows.",
+          "related": [
+            "Medicare",
+            "Medicaid",
+            "Commercial Insurance"
+          ]
+        },
+        {
+          "term": "Medicare",
+          "definition": "Federal health insurance for people 65+ and some disabled individuals. Covers ~60% of cancer patients (cancer skews older). Two flavors: Traditional (fee-for-service, government pays directly) and Medicare Advantage (private insurers manage benefits, ~50% of beneficiaries).",
+          "why_it_matters": "Medicare is the largest payer in oncology. CMS sets the rules that everyone follows. Understanding Medicare reimbursement = understanding oncology economics.",
+          "related": [
+            "CMS",
+            "Medicare Advantage",
+            "EOM"
+          ]
+        },
+        {
+          "term": "Medicare Advantage (MA)",
+          "definition": "Medicare benefits administered by private insurers (UnitedHealthcare, Humana, etc.) instead of the government. MA plans can add prior auth requirements, narrow networks, and step therapy - making them harder for oncology practices to work with.",
+          "why_it_matters": "MA is growing fast (~50% of Medicare now) and is significantly more burdensome for providers than traditional Medicare. More prior auths, more denials, more work.",
+          "related": [
+            "Medicare",
+            "Prior Authorization",
+            "Payer"
+          ]
+        },
+        {
+          "term": "CMS (Centers for Medicare & Medicaid Services)",
+          "definition": "The federal agency that administers Medicare and Medicaid. CMS sets payment rates, quality measures, and payment models for oncology. Basically the most powerful entity in U.S. healthcare.",
+          "why_it_matters": "When CMS changes a rule, the entire industry shifts. CMS oncology programs (EOM, MIPS, RO Model) directly impact how cancer centers get paid.",
+          "related": [
+            "Medicare",
+            "EOM",
+            "MIPS"
+          ]
+        },
+        {
+          "term": "EOM (Enhancing Oncology Model)",
+          "definition": "CMS's current value-based payment model for oncology (replaced OCM in 2023). Participating practices take financial responsibility for the total cost of a cancer patient's care during a 6-month episode. If costs are below target, the practice earns shared savings.",
+          "why_it_matters": "EOM is pushing oncology toward value-based care. Practices need to track costs, quality measures, and outcomes - all areas where AI and analytics add massive value.",
+          "related": [
+            "Value-Based Care",
+            "CMS",
+            "OCM"
+          ]
+        },
+        {
+          "term": "Value-Based Care (VBC)",
+          "definition": "A payment model where providers are rewarded for quality outcomes rather than volume of services. In oncology, this means managing total cost of care, reducing ER visits, improving survival rates, and patient satisfaction.",
+          "why_it_matters": "The entire industry is shifting from fee-for-service to value-based. This is a huge opportunity for data/AI companies - you can't manage value without measuring it.",
+          "related": [
+            "EOM",
+            "MIPS",
+            "Fee-for-Service"
+          ]
+        },
+        {
+          "term": "PBM (Pharmacy Benefit Manager)",
+          "definition": "Middlemen between drug manufacturers, pharmacies, and insurers. The Big 3: CVS Caremark, Express Scripts (Cigna), Optum Rx (UnitedHealth). They negotiate drug prices, manage formularies, and process pharmacy claims.",
+          "why_it_matters": "PBMs control which drugs get covered and at what cost. For oral oncology drugs (growing segment), PBMs are the gatekeepers.",
+          "related": [
+            "Specialty Pharmacy",
+            "Formulary",
+            "Drug Reimbursement"
+          ]
+        },
+        {
+          "term": "Formulary",
+          "definition": "A payer's list of approved/covered drugs, organized by tiers. Tier 1 (generics, low copay) through Tier 4-5 (specialty drugs, high cost). Many cancer drugs are Tier 4-5 or require prior auth.",
+          "why_it_matters": "If a drug isn't on formulary, getting it approved requires extra steps (prior auth, step therapy, peer-to-peer review). This is a major workflow bottleneck.",
+          "related": [
+            "PBM",
+            "Prior Authorization",
+            "Step Therapy"
+          ]
+        },
+        {
+          "term": "Step Therapy",
+          "definition": "A payer requirement that patients must try cheaper drugs first ('step 1') before the payer will cover the prescribed drug ('step 2'). Controversial in oncology because cancer patients may not have time to fail on a cheaper drug.",
+          "why_it_matters": "Step therapy creates delays in care and extra paperwork. Several states have passed laws limiting step therapy in oncology.",
+          "related": [
+            "Prior Authorization",
+            "Formulary",
+            "Payer"
+          ]
+        },
+        {
+          "term": "Fee-for-Service (FFS)",
+          "definition": "The traditional payment model - providers get paid for each service they deliver. More services = more revenue. This is still the dominant model in oncology but is gradually shifting toward value-based care.",
+          "why_it_matters": "FFS incentivizes volume. RCM under FFS is about maximizing clean claims and correct coding. Under VBC, the RCM focus shifts to cost management and quality reporting.",
+          "related": [
+            "Value-Based Care",
+            "EOM",
+            "Medicare"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technology",
+      "name": "Technology and Data",
+      "icon": "\ud83d\udcbb",
+      "description": "The tech stack that powers oncology care delivery and operations",
+      "terms": [
+        {
+          "term": "EHR (Electronic Health Record)",
+          "definition": "The digital system where patient medical records are stored and managed. In oncology, the dominant EHRs are Epic (72 of our tracked centers), Cerner/Oracle Health, MEDITECH, and oncology-specific systems like Flatiron OncoEMR and iKnowMed (McKesson).",
+          "why_it_matters": "The EHR is the operating system of a cancer center. Every workflow touches it. RISA needs to integrate with whatever EHR a center uses. Epic dominance means Epic integration is priority #1.",
+          "related": [
+            "Epic",
+            "Cerner",
+            "OncoEMR",
+            "iKnowMed"
+          ]
+        },
+        {
+          "term": "Epic",
+          "definition": "The dominant EHR vendor in the U.S., especially for large health systems and academic medical centers. Epic's oncology module is called 'Beacon.' Used by 72 of our 327 tracked centers.",
+          "why_it_matters": "If you're selling to large cancer centers, you're integrating with Epic. Period. Understanding Epic's architecture, APIs (FHIR), and App Orchard marketplace is essential.",
+          "related": [
+            "EHR",
+            "Beacon",
+            "FHIR",
+            "Interoperability"
+          ]
+        },
+        {
+          "term": "Beacon (Epic)",
+          "definition": "Epic's oncology-specific module for managing treatment plans, protocols, drug ordering, and cancer-specific documentation. Includes treatment plan templates, regimen management, and oncology flowsheets.",
+          "why_it_matters": "Beacon is where oncologists live day-to-day. Any AI tool that touches clinical oncology workflows needs to work with Beacon.",
+          "related": [
+            "Epic",
+            "Treatment Protocol",
+            "Order Set"
+          ]
+        },
+        {
+          "term": "iKnowMed (McKesson)",
+          "definition": "McKesson's oncology-specific EHR used by US Oncology Network practices. Used by 9 of our tracked centers, primarily community oncology practices.",
+          "why_it_matters": "iKnowMed practices are part of the US Oncology Network - a large, organized buyer. One integration unlocks hundreds of practices.",
+          "related": [
+            "US Oncology Network",
+            "McKesson",
+            "EHR"
+          ]
+        },
+        {
+          "term": "Flatiron OncoEMR",
+          "definition": "Roche-owned oncology-specific EHR purpose-built for cancer care. Strong in community oncology. Also powers Flatiron's real-world data (RWD) business.",
+          "why_it_matters": "OncoEMR practices contribute data to Flatiron's RWD platform. Flatiron is both a potential partner and competitor in the oncology data space.",
+          "related": [
+            "Flatiron Health",
+            "Real-World Data",
+            "EHR"
+          ]
+        },
+        {
+          "term": "FHIR (Fast Healthcare Interoperability Resources)",
+          "definition": "The modern standard for exchanging healthcare data between systems. Uses RESTful APIs. CMS now mandates FHIR support. Think of it as the 'API standard' for healthcare.",
+          "why_it_matters": "FHIR is how RISA would pull patient data from EHRs. Understanding FHIR resources (Patient, MedicationRequest, Claim) is key to building integrations.",
+          "related": [
+            "EHR",
+            "Interoperability",
+            "HL7"
+          ]
+        },
+        {
+          "term": "Real-World Data (RWD) / Real-World Evidence (RWE)",
+          "definition": "Clinical data collected outside of clinical trials - from EHRs, claims, registries, etc. RWE is the insights derived from RWD. Flatiron Health (Roche) is the gold standard in oncology RWD.",
+          "why_it_matters": "RWD is increasingly used for FDA drug approvals, payer coverage decisions, and pharma research. Companies that control oncology data have enormous leverage.",
+          "related": [
+            "Flatiron Health",
+            "Tempus",
+            "Clinical Trials"
+          ]
+        },
+        {
+          "term": "Genomic Testing / NGS",
+          "definition": "Next-Generation Sequencing (NGS) analyzes a tumor's DNA to identify mutations that can be targeted with specific drugs. Key players: Foundation Medicine (Roche), Tempus, Guardant Health, Natera.",
+          "why_it_matters": "Genomic testing drives treatment decisions and drug selection in oncology. It also creates prior auth complexity - payers must approve both the test and the targeted drug.",
+          "related": [
+            "Precision Medicine",
+            "Companion Diagnostics",
+            "Targeted Therapy"
+          ]
+        },
+        {
+          "term": "Tumor Board",
+          "definition": "A multidisciplinary meeting where surgeons, medical oncologists, radiation oncologists, pathologists, and radiologists discuss complex cancer cases together and agree on a treatment plan.",
+          "why_it_matters": "Tumor boards are a key workflow in cancer centers. Documentation, scheduling, and follow-up from tumor boards are all potential automation targets.",
+          "related": [
+            "Multidisciplinary Care",
+            "Treatment Plan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clinical-operations",
+      "name": "Clinical Operations",
+      "icon": "\u2699\ufe0f",
+      "description": "How cancer care is actually delivered day-to-day",
+      "terms": [
+        {
+          "term": "Patient Journey (Oncology)",
+          "definition": "The end-to-end experience of a cancer patient: Screening/Detection -> Diagnosis/Staging -> Treatment Planning -> Active Treatment (surgery, chemo, radiation) -> Monitoring/Survivorship. Our hub maps 305 workflows across 9 patient journey stages.",
+          "why_it_matters": "Every stage has distinct workflows, stakeholders, and billing. Understanding the full journey helps identify where AI can reduce friction.",
+          "related": [
+            "Workflow",
+            "Treatment Plan",
+            "Survivorship"
+          ]
+        },
+        {
+          "term": "Treatment Protocol / Regimen",
+          "definition": "A standardized plan for treating a specific cancer type - which drugs, doses, schedule, and supportive care. Based on NCCN guidelines. Example: 'FOLFOX' for colon cancer (fluorouracil + leucovorin + oxaliplatin, every 2 weeks for 12 cycles).",
+          "why_it_matters": "Protocols drive everything downstream - drug orders, scheduling, prior auths, billing. A single regimen change triggers a cascade of workflow updates.",
+          "related": [
+            "NCCN",
+            "Chemotherapy",
+            "Treatment Plan"
+          ]
+        },
+        {
+          "term": "Infusion Center",
+          "definition": "The facility where patients receive IV chemotherapy, immunotherapy, and other infused drugs. Infusion scheduling, chair time management, and nursing workflow are major operational challenges.",
+          "why_it_matters": "Infusion centers are revenue engines - each chair can generate $1M+/year. Optimizing scheduling and reducing no-shows directly impacts revenue.",
+          "related": [
+            "Chemotherapy",
+            "Chair Time",
+            "Drug Administration"
+          ]
+        },
+        {
+          "term": "Clinical Trial",
+          "definition": "A research study testing new treatments on patients. Phases I (safety) through III (efficacy) before FDA approval. Cancer centers run hundreds of trials simultaneously.",
+          "why_it_matters": "Trials bring prestige, funding, and access to cutting-edge drugs. But they're operationally complex - screening, enrollment, protocol compliance, and billing (research vs. standard of care) are all pain points.",
+          "related": [
+            "CRO",
+            "FDA",
+            "NCI"
+          ]
+        },
+        {
+          "term": "CAR-T Cell Therapy",
+          "definition": "A groundbreaking treatment where a patient's own T-cells are extracted, genetically engineered to attack cancer, and infused back. Currently approved for certain blood cancers. Costs $373K-$475K per treatment (drug cost alone).",
+          "why_it_matters": "CAR-T is the most expensive single treatment in oncology. The authorization, manufacturing coordination, and billing workflows are extraordinarily complex. Perfect use case for AI-assisted RCM.",
+          "related": [
+            "BMT/Stem Cell Transplant",
+            "Immunotherapy",
+            "Cell Therapy"
+          ]
+        },
+        {
+          "term": "BMT / Stem Cell Transplant",
+          "definition": "Bone Marrow Transplant - replacing a patient's bone marrow with healthy stem cells. Used for blood cancers. Two types: autologous (patient's own cells) and allogeneic (donor cells). Total cost: $100K-$800K per transplant.",
+          "why_it_matters": "BMT programs are high-revenue, high-complexity operations. Our hub tracks BMT/Cell Therapy as a distinct workflow department with unique authorization and billing requirements.",
+          "related": [
+            "CAR-T",
+            "Hematologic Oncology",
+            "Cell Therapy"
+          ]
+        },
+        {
+          "term": "Patient Navigation",
+          "definition": "Dedicated staff (nurse navigators, lay navigators) who guide patients through the cancer care system - scheduling, education, financial counseling, emotional support. Required by the Commission on Cancer for accreditation.",
+          "why_it_matters": "Navigation reduces no-shows, improves outcomes, and increases patient satisfaction. AI can assist navigators by automating scheduling, reminders, and resource matching.",
+          "related": [
+            "Patient Access",
+            "CoC",
+            "Care Coordination"
+          ]
+        },
+        {
+          "term": "Survivorship",
+          "definition": "The phase after active cancer treatment - monitoring for recurrence, managing long-term side effects, and transitioning back to primary care. ~18 million cancer survivors in the U.S.",
+          "why_it_matters": "Survivorship is a growing focus area. Survivorship care plans, follow-up scheduling, and long-term monitoring are all workflow opportunities.",
+          "related": [
+            "Patient Journey",
+            "Follow-Up Care",
+            "Quality"
+          ]
+        },
+        {
+          "term": "QOPI (Quality Oncology Practice Initiative)",
+          "definition": "ASCO's quality certification program for oncology practices. Measures things like treatment documentation, pain management, end-of-life care planning. Practices self-report and get benchmarked.",
+          "why_it_matters": "Quality certification is increasingly tied to reimbursement and reputation. Automated quality measure reporting is a clear AI use case.",
+          "related": [
+            "ASCO",
+            "Quality Measures",
+            "Accreditation"
+          ]
+        },
+        {
+          "term": "Commission on Cancer (CoC)",
+          "definition": "An American College of Surgeons program that accredits hospital cancer programs. Requires standards like tumor boards, patient navigation, survivorship care plans, and cancer registry reporting.",
+          "why_it_matters": "CoC accreditation is a badge of credibility. The compliance requirements create workflows that can be automated.",
+          "related": [
+            "Accreditation",
+            "Tumor Board",
+            "Cancer Registry"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pharma-drugs",
+      "name": "Pharma and Drug Landscape",
+      "icon": "\ud83d\udc8a",
+      "description": "The drug ecosystem - biggest cost driver in oncology",
+      "terms": [
+        {
+          "term": "Immunotherapy",
+          "definition": "Drugs that help the immune system fight cancer. The biggest revolution in oncology in the last decade. Keytruda (Merck) is the #1 drug globally (~$25B/year). Other key drugs: Opdivo (BMS), Tecentriq (Roche), Imfinzi (AstraZeneca).",
+          "why_it_matters": "Immunotherapy is expanding to more cancer types every year. Each new indication = new prior auth requirements, new billing codes, new treatment protocols.",
+          "related": [
+            "Checkpoint Inhibitor",
+            "PD-1/PD-L1",
+            "Keytruda"
+          ]
+        },
+        {
+          "term": "Targeted Therapy",
+          "definition": "Drugs that target specific genetic mutations in tumors. Requires genomic testing to identify the target. Examples: Herceptin (HER2+ breast cancer), Tagrisso (EGFR lung cancer), imatinib (CML).",
+          "why_it_matters": "Targeted therapy makes genomic testing essential and adds complexity to treatment selection, prior auth, and coding.",
+          "related": [
+            "Genomic Testing",
+            "Precision Medicine",
+            "Companion Diagnostics"
+          ]
+        },
+        {
+          "term": "Biosimilar",
+          "definition": "A near-identical copy of a biologic drug (like a generic, but for biologics). Examples: biosimilar trastuzumab (Herceptin), bevacizumab (Avastin), rituximab (Rituxan). Typically 15-30% cheaper.",
+          "why_it_matters": "Biosimilars are growing fast in oncology. They create formulary complexity (which version does the payer prefer?) and can impact buy-and-bill margins.",
+          "related": [
+            "Buy-and-Bill",
+            "Formulary",
+            "Drug Reimbursement"
+          ]
+        },
+        {
+          "term": "Oral Oncolytics",
+          "definition": "Cancer drugs taken by mouth (pills/capsules) rather than infused. Growing segment - ~25% of cancer drugs in development are oral. Examples: ibrutinib (CLL), capecitabine (colon cancer), osimertinib (lung cancer).",
+          "why_it_matters": "Oral drugs shift revenue from the practice to the pharmacy. They go through pharmacy benefits (PBMs) instead of medical benefits, changing the entire billing workflow.",
+          "related": [
+            "PBM",
+            "Specialty Pharmacy",
+            "Medical vs. Pharmacy Benefit"
+          ]
+        },
+        {
+          "term": "Specialty Pharmacy",
+          "definition": "Pharmacies that handle high-cost, complex medications (like cancer drugs). The Big 3: CVS Specialty, Accredo (Express Scripts), OptumRx Specialty. Many cancer centers are building their own in-house specialty pharmacies to capture this revenue.",
+          "why_it_matters": "As more cancer drugs go oral, specialty pharmacy becomes a revenue battleground. In-house pharmacy programs are a growing trend at cancer centers.",
+          "related": [
+            "Oral Oncolytics",
+            "PBM",
+            "340B"
+          ]
+        },
+        {
+          "term": "Specialty Distributors (Big 3)",
+          "definition": "McKesson (#1), Cencora (formerly AmerisourceBergen, #2), and Cardinal Health (#3) distribute drugs to hospitals and practices. Note: McKesson also separately owns US Oncology Network (an MSO) - these are distinct business units. The distribution arm ships drugs; the MSO arm manages oncology practices.",
+          "why_it_matters": "The distribution channel matters for drug pricing, GPO contracts, and supply chain. McKesson's unique position - distributor AND practice network owner - gives them unmatched market power in oncology. But don't confuse the two: US Oncology Network is an MSO, not a distributor.",
+          "related": [
+            "McKesson",
+            "US Oncology Network",
+            "Buy-and-Bill"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "key-organizations",
+      "name": "Key Organizations and Networks",
+      "icon": "\ud83c\udfe2",
+      "description": "The major players you'll encounter repeatedly",
+      "terms": [
+        {
+          "term": "MSO (Management Services Organization)",
+          "definition": "A company that provides non-clinical management and administrative services to medical practices - things like billing, IT, HR, compliance, group purchasing, and contract negotiation. The practice keeps clinical independence while the MSO handles the business side. In oncology, US Oncology Network (McKesson) and OneOncology (TPG) are the two largest MSOs.",
+          "why_it_matters": "MSOs are how oncology practices scale without merging into health systems. They're centralized buyers of technology - one MSO deal can unlock hundreds of practices. For RISA, MSO partnerships are the highest-leverage sales channel in community oncology.",
+          "related": [
+            "US Oncology Network",
+            "OneOncology",
+            "Community Oncology",
+            "Practice Management"
+          ]
+        },
+        {
+          "term": "US Oncology Network (McKesson)",
+          "definition": "The largest oncology practice management organization in the U.S. - 1,400+ physicians across 500+ sites. McKesson provides management services, group purchasing, EHR (iKnowMed), and operational support. Texas Oncology is their largest member.",
+          "why_it_matters": "US Oncology is a single point of entry to hundreds of community oncology practices. A partnership here is transformative.",
+          "related": [
+            "McKesson",
+            "Texas Oncology",
+            "Community Oncology"
+          ]
+        },
+        {
+          "term": "NCCN (National Comprehensive Cancer Network)",
+          "definition": "An alliance of 33 leading cancer centers that develops clinical practice guidelines. NCCN guidelines are the de facto standard for cancer treatment in the U.S. - payers use them to determine coverage.",
+          "why_it_matters": "If a treatment is in NCCN guidelines, it's usually covered by insurance. If it's not, good luck getting prior auth. NCCN compendia are used for off-label drug coverage decisions.",
+          "related": [
+            "Guidelines",
+            "Formulary",
+            "Prior Authorization"
+          ]
+        },
+        {
+          "term": "ASCO (American Society of Clinical Oncology)",
+          "definition": "The largest oncology professional society. Runs the annual ASCO meeting (40,000+ attendees), publishes key journals (JCO), and manages QOPI quality certification. Also sets practice guidelines.",
+          "why_it_matters": "ASCO is where the oncology community gathers. Their annual meeting is where new drugs are announced, partnerships are formed, and industry trends emerge.",
+          "related": [
+            "QOPI",
+            "Guidelines",
+            "Oncology Community"
+          ]
+        },
+        {
+          "term": "Flatiron Health",
+          "definition": "A Roche-owned health technology company that provides oncology-specific EHR (OncoEMR) and the largest real-world oncology data platform. Their data covers 280+ cancer clinics and 3M+ patient records.",
+          "why_it_matters": "Flatiron is the closest thing to a monopoly in oncology data. They're both a potential partner (data) and a competitive benchmark (technology) for RISA.",
+          "related": [
+            "OncoEMR",
+            "Real-World Data",
+            "Roche"
+          ]
+        },
+        {
+          "term": "Tempus",
+          "definition": "An AI-driven precision medicine company (IPO June 2024). Combines genomic sequencing, clinical data, and AI to match patients to treatments and trials. Founded by Eric Lefkofsky (Groupon co-founder).",
+          "why_it_matters": "Tempus is the highest-profile AI company in oncology. Their approach to data + AI is a reference point for positioning RISA.",
+          "related": [
+            "Genomic Testing",
+            "AI in Oncology",
+            "Real-World Data"
+          ]
+        },
+        {
+          "term": "OneOncology",
+          "definition": "The largest PE-backed (TPG Capital) oncology practice platform. Aggregates community oncology practices to gain scale in negotiations, technology, and value-based care programs.",
+          "why_it_matters": "OneOncology represents the consolidation trend in community oncology. Private equity is rolling up practices rapidly. These platforms become large, centralized buyers of technology.",
+          "related": [
+            "Private Equity",
+            "Community Oncology",
+            "Consolidation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stakeholder-roles",
+      "name": "Stakeholder Roles",
+      "icon": "\ud83d\udc65",
+      "description": "Who does what at a cancer center - the people you're selling to",
+      "terms": [
+        {
+          "term": "Chief Revenue Cycle Officer / VP Revenue Cycle",
+          "definition": "Owns the entire revenue cycle - from patient access through collections. Reports to CFO or COO. At Stanford, this is Jill Buathier (our top RISA target).",
+          "why_it_matters": "This is RISA's primary buyer. They own the budget, feel the pain of denials and inefficiency, and have authority to bring in new RCM tools.",
+          "related": [
+            "RCM",
+            "CFO",
+            "Patient Access"
+          ]
+        },
+        {
+          "term": "CIO (Chief Information Officer)",
+          "definition": "Owns the technology stack - EHR, integrations, data infrastructure, cybersecurity. At Stanford, Michael Pfeffer. Must approve any new software that touches clinical systems.",
+          "why_it_matters": "CIO is the technical gatekeeper. Even if the revenue cycle team wants RISA, the CIO must approve the integration and security posture.",
+          "related": [
+            "EHR",
+            "Integration",
+            "IT Security"
+          ]
+        },
+        {
+          "term": "CFO (Chief Financial Officer)",
+          "definition": "Owns the financial health of the organization. In a cancer center, the CFO cares about margins, drug costs, payer mix, and revenue optimization.",
+          "why_it_matters": "CFO often has final budget authority. The ROI story for RISA needs to resonate at this level - dollars saved, revenue recovered, FTE reduction.",
+          "related": [
+            "Revenue Cycle",
+            "ROI",
+            "Budget"
+          ]
+        },
+        {
+          "term": "CMO (Chief Medical Officer)",
+          "definition": "The top clinical leader - responsible for clinical quality, physician satisfaction, and clinical operations. Must buy in on any tool that touches clinical workflows.",
+          "why_it_matters": "CMO buy-in is essential for clinical workflow automation. If physicians don't adopt the tool, it fails regardless of how good the RCM automation is.",
+          "related": [
+            "Clinical Operations",
+            "Quality",
+            "Physician"
+          ]
+        },
+        {
+          "term": "Cancer Center Director",
+          "definition": "The leader of the cancer program specifically (vs. the whole hospital). Often a physician-scientist. At NCI centers, this role carries enormous prestige and research responsibility.",
+          "why_it_matters": "The cancer center director sets the strategic vision. If they're focused on growth, operational excellence, or value-based care, that shapes what tools they'll invest in.",
+          "related": [
+            "NCI-Designated",
+            "Cancer Program"
+          ]
+        },
+        {
+          "term": "Practice Administrator / Clinic Manager",
+          "definition": "Manages day-to-day operations of a cancer clinic or practice - scheduling, staffing, patient flow, compliance. In community practices, often the key decision-maker for technology purchases.",
+          "why_it_matters": "In smaller practices, this person IS the buyer. They feel the pain of inefficiency daily and have practical authority to adopt new tools.",
+          "related": [
+            "Community Oncology",
+            "Operations"
+          ]
+        },
+        {
+          "term": "Nurse Navigator",
+          "definition": "A specialized oncology nurse who guides patients through their cancer journey - coordinating appointments, explaining treatment plans, connecting patients to resources. Required by CoC accreditation.",
+          "why_it_matters": "Navigators are the glue that holds the patient experience together. They're overwhelmed with administrative tasks that AI could help with.",
+          "related": [
+            "Patient Navigation",
+            "CoC",
+            "Patient Experience"
+          ]
+        },
+        {
+          "term": "Coder / CDI Specialist",
+          "definition": "Specialists who translate clinical documentation into billing codes (CPT, ICD-10, HCPCS). CDI (Clinical Documentation Improvement) specialists work with physicians to ensure documentation supports accurate coding.",
+          "why_it_matters": "Coding accuracy directly drives revenue. AI-assisted coding and CDI is one of the most tangible use cases for oncology AI.",
+          "related": [
+            "CPT Code",
+            "ICD-10",
+            "Charge Capture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "regulatory",
+      "name": "Regulatory and Compliance",
+      "icon": "\u2696\ufe0f",
+      "description": "Rules and bodies that govern oncology care",
+      "terms": [
+        {
+          "term": "FDA (Food and Drug Administration)",
+          "definition": "Approves drugs, devices, and diagnostics. Key oncology programs: RTOR (Real-Time Oncology Review) for accelerated approvals, Project Orbis for international coordination, Breakthrough Therapy designation.",
+          "why_it_matters": "Every new FDA approval creates new workflows - new prior auth requirements, new billing codes, new treatment protocols. The pace of oncology approvals is accelerating.",
+          "related": [
+            "Drug Approval",
+            "Clinical Trials",
+            "Companion Diagnostics"
+          ]
+        },
+        {
+          "term": "HIPAA",
+          "definition": "Health Insurance Portability and Accountability Act - the federal law governing patient data privacy and security. Any tool that touches patient data (like RISA) must be HIPAA-compliant.",
+          "why_it_matters": "HIPAA compliance is table stakes. BAA (Business Associate Agreement) required with every healthcare client. Violations can mean $millions in fines.",
+          "related": [
+            "PHI",
+            "Security",
+            "BAA"
+          ]
+        },
+        {
+          "term": "MIPS (Merit-based Incentive Payment System)",
+          "definition": "CMS quality payment program that adjusts Medicare payments based on performance measures - quality, cost, improvement activities, and promoting interoperability. Oncologists are scored and can lose up to 9% of Medicare payments.",
+          "why_it_matters": "MIPS compliance requires data collection and reporting. Automated quality measure tracking is a clear AI use case.",
+          "related": [
+            "CMS",
+            "Quality Measures",
+            "Value-Based Care"
+          ]
+        },
+        {
+          "term": "HITRUST",
+          "definition": "A security framework specifically for healthcare organizations. HITRUST certification demonstrates that a company meets rigorous security and privacy standards. More comprehensive than SOC 2.",
+          "why_it_matters": "Large health systems increasingly require HITRUST certification from vendors. RISA's HITRUST compliance (Simran is leading this) is a competitive advantage.",
+          "related": [
+            "HIPAA",
+            "Security",
+            "Compliance"
+          ]
+        },
+        {
+          "term": "Certificate of Need (CON)",
+          "definition": "State laws requiring healthcare providers to get government approval before building new facilities or offering new services. Not all states have CON laws, but those that do can limit competition.",
+          "why_it_matters": "CON laws explain why some markets have limited cancer care options and why health systems fight so hard to protect their market share.",
+          "related": [
+            "State Regulation",
+            "Market Access"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "financial-market",
+      "name": "Financial and Market Dynamics",
+      "icon": "\ud83d\udcc8",
+      "description": "The business and investment landscape of oncology",
+      "terms": [
+        {
+          "term": "Private Equity in Oncology",
+          "definition": "PE firms are aggressively buying and consolidating oncology practices. TPG (OneOncology), Webster Equity (Integrated Oncology Network), and others are creating large platforms by rolling up community practices.",
+          "why_it_matters": "PE consolidation creates large, tech-hungry buyers. A platform with 100+ sites can make one technology decision for all of them. This is a tailwind for RISA.",
+          "related": [
+            "OneOncology",
+            "Consolidation",
+            "Community Oncology"
+          ]
+        },
+        {
+          "term": "Consolidation Trend",
+          "definition": "The ongoing wave of mergers and acquisitions in oncology - hospital systems buying practices, PE rolling up community oncology, and large practices merging. Independent oncology practices are disappearing.",
+          "why_it_matters": "Consolidation means fewer, larger buyers. The sales cycle is longer but the deal size is bigger. It also means more standardization of workflows and technology.",
+          "related": [
+            "Private Equity",
+            "Health System",
+            "Community Oncology"
+          ]
+        },
+        {
+          "term": "Payer Mix",
+          "definition": "The distribution of a center's patients across payer types - Medicare, Medicare Advantage, commercial, Medicaid, self-pay. A center's payer mix heavily influences its financial health.",
+          "why_it_matters": "Payer mix determines revenue per patient and operational complexity. Centers with heavy Medicare Advantage have more prior auth burden. Centers with good commercial mix have higher margins.",
+          "related": [
+            "Payer",
+            "Medicare",
+            "Commercial Insurance"
+          ]
+        }
+      ]
+    }
+  ]
+}

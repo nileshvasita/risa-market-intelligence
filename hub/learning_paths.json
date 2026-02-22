@@ -1,0 +1,364 @@
+{
+  "paths": [
+    {
+      "id": "patient-journey",
+      "name": "The Patient Journey",
+      "icon": "🛤️",
+      "description": "Follow a cancer patient from first symptom to survivorship. Understand every touchpoint, every workflow, every dollar that moves.",
+      "estimated_minutes": 25,
+      "modules": [
+        {
+          "id": "pj-1",
+          "title": "Screening & Detection",
+          "content": "Cancer care starts before diagnosis. Screening programs (mammograms, colonoscopies, low-dose CT for lung cancer) catch cancer early when it's most treatable.\n\nNot all cancers have screening programs. Only breast, cervical, colorectal, lung, and prostate have established screening guidelines. The rest are caught when symptoms appear.\n\n**Who's involved at this stage:**\n- Primary care physicians (refer to specialists)\n- Radiologists (read imaging)\n- Screening navigators (coordinate logistics)\n\n**Where the money flows:**\n- Screening is covered by insurance with no copay (ACA mandate for preventive care)\n- But diagnostic follow-ups (biopsies, advanced imaging) DO have cost-sharing\n- This creates a billing cliff - free screening, then sudden patient costs",
+          "hub_connection": "In our hub, look at Hospital System Cancer Programs (152 centers) - many run high-volume screening programs. Community practices rarely do screening; they receive referrals after something is found.",
+          "key_insight": "Early detection drives everything downstream. A cancer caught at Stage I vs Stage IV means completely different treatment plans, costs ($50K vs $500K+), and outcomes. This is why screening programs matter economically, not just clinically.",
+          "quiz": [
+            {
+              "question": "Why does screening create a 'billing cliff' for patients?",
+              "options": ["Screening is expensive", "Screening is free but follow-up diagnostics have cost-sharing", "Insurance doesn't cover cancer screening", "Hospitals overcharge for screening"],
+              "correct": 1,
+              "explanation": "The ACA mandates free preventive screening, but the moment something abnormal is found and you move to diagnostic workup (biopsy, PET scan, etc.), normal insurance cost-sharing kicks in. Patients go from $0 to potentially thousands in out-of-pocket costs."
+            },
+            {
+              "question": "Which cancers have established screening programs in the U.S.?",
+              "options": ["All major cancers", "Only breast and colon", "Breast, cervical, colorectal, lung, and prostate", "Screening exists but isn't standardized"],
+              "correct": 2,
+              "explanation": "Only 5 cancers have USPSTF-recommended screening programs. This means most cancers (pancreatic, ovarian, brain, etc.) are caught symptomatically, often at later stages."
+            }
+          ]
+        },
+        {
+          "id": "pj-2",
+          "title": "Diagnosis & Staging",
+          "content": "Once something suspicious is found, the diagnostic machine kicks in. This stage determines exactly what type of cancer it is, how far it's spread, and what the treatment options are.\n\n**The diagnostic workflow:**\n1. **Biopsy** - tissue sample taken and sent to pathology\n2. **Pathology review** - pathologist examines tissue under microscope, determines cancer type and grade\n3. **Genomic testing** - tumor DNA sequenced to find actionable mutations (Foundation Medicine, Tempus, Guardant)\n4. **Staging imaging** - CT, PET/CT, MRI to see if cancer has spread\n5. **Staging** - TNM system (Tumor size, Node involvement, Metastasis) - Stage I through IV\n\n**The critical players:**\n- Pathologist (makes the diagnosis - literally the most important person at this stage)\n- Radiologist (reads staging scans)\n- Oncologist (interprets everything and creates treatment plan)\n\n**Billing complexity starts here:**\n- Pathology has its own coding (88305-88309 for surgical pathology)\n- Genomic testing is expensive ($3K-$7K per test) and often requires prior auth\n- Each imaging study needs medical necessity documentation\n- ICD-10 coding must be precise - wrong code = denied claim",
+          "hub_connection": "Look at our Market Map's 'Diagnostics & Precision Medicine' category - 4 sub-segments (AI Diagnostics, Genomic Testing, Imaging, Pathology/Lab). Companies like Foundation Medicine, Tempus, and Guardant are all fighting for this diagnostic moment. In our workflows, 'Diagnostic workup and staging' is a key patient journey stage.",
+          "key_insight": "Diagnosis is where precision medicine begins. A lung cancer with an EGFR mutation gets targeted therapy (Tagrisso). Without the mutation, it gets chemotherapy or immunotherapy. The genomic test result literally determines which $100K+ drug the patient gets - and which prior auth workflow kicks off.",
+          "quiz": [
+            {
+              "question": "Why is genomic testing a prior auth battleground?",
+              "options": ["It's experimental and unproven", "It's expensive ($3K-$7K) and payers want to ensure medical necessity", "Doctors order it unnecessarily", "It's only available at NCI centers"],
+              "correct": 1,
+              "explanation": "At $3K-$7K per test, payers want to make sure genomic testing is appropriate for the cancer type and stage. But oncologists argue that NGS results directly drive treatment selection, making it medically necessary. This tension creates a major prior auth workflow."
+            },
+            {
+              "question": "What does TNM staging tell you?",
+              "options": ["Treatment, Nursing, Medication plan", "Tumor size, Node involvement, Metastasis status", "Testing, Next steps, Management", "Type of cancer, Number of tumors, Mortality risk"],
+              "correct": 1,
+              "explanation": "TNM is the universal cancer staging system. T = tumor size/extent, N = whether cancer has spread to lymph nodes, M = whether it has metastasized (spread to distant organs). A T1N0M0 (small tumor, no node involvement, no metastasis) is Stage I. T4N2M1 would be Stage IV."
+            }
+          ]
+        },
+        {
+          "id": "pj-3",
+          "title": "Treatment Planning & Tumor Board",
+          "content": "Before treatment starts, a plan must be created. For complex cases, this happens at a Tumor Board - a multidisciplinary meeting that's one of the most important workflows in a cancer center.\n\n**Tumor Board:**\n- Medical oncologist, surgical oncologist, radiation oncologist, pathologist, radiologist - all in one room\n- They review the patient's case together and agree on a treatment plan\n- Required by the Commission on Cancer (CoC) for accreditation\n- Documentation of tumor board decisions is a compliance requirement\n\n**Treatment plan components:**\n- Which drugs/regimen (guided by NCCN guidelines + genomic results)\n- Surgery needed? When in the sequence?\n- Radiation needed? What type and dose?\n- Clinical trial eligibility?\n- Supportive care (anti-nausea, growth factors, pain management)\n\n**The prior auth cascade begins:**\n- Chemo regimen needs prior auth from the payer\n- If genomic-targeted, the genomic test AND the drug both need auth\n- Surgery needs pre-certification\n- PET/CT for monitoring needs auth\n- Each auth is a separate workflow with different payer rules\n\n**This is where RISA's value proposition is strongest.** A single patient's treatment plan can trigger 5-10 separate prior auth workflows, each taking 45+ minutes of staff time.",
+          "hub_connection": "Our hub tracks 305 workflows. Treatment planning workflows sit at Patient Journey Stage 3. Look at the 'Prior Authorization' and 'Treatment Planning' workflows - these are the ones where bottleneck severity is highest. In our People directory, the Chief Revenue Cycle Officer (Jill Buathier at Stanford) owns the teams that execute these auths.",
+          "key_insight": "Treatment planning is where clinical decisions create administrative burden. Every clinical choice (which drug, which sequence, which facility) has a billing and authorization consequence. The oncologist thinks clinically; someone else has to translate that into the payer's language. That translation gap is where errors, denials, and delays live.",
+          "quiz": [
+            {
+              "question": "Why is the Tumor Board important beyond just clinical decision-making?",
+              "options": ["It's optional but nice to have", "It's required for CoC accreditation and creates compliance documentation", "It's mainly for teaching medical students", "It reduces the number of doctors a patient sees"],
+              "correct": 1,
+              "explanation": "Tumor Boards are a CoC accreditation requirement. The documentation they generate (who was present, what was discussed, what was decided) is a compliance artifact. This creates a workflow around scheduling, documentation, and follow-up that's ripe for automation."
+            },
+            {
+              "question": "A patient's treatment plan for Stage III lung cancer with an ALK mutation might trigger how many prior auth workflows?",
+              "options": ["Just one for the chemo drugs", "2-3 at most", "5-10 separate workflows", "Prior auth isn't needed for cancer treatment"],
+              "correct": 2,
+              "explanation": "The genomic test, the targeted drug (e.g., alectinib), staging PET/CT, brain MRI, potential radiation, and any supportive care drugs each need separate prior authorization. A complex cancer case easily generates 5-10 prior auth requests, each with its own payer-specific requirements and timelines."
+            }
+          ]
+        },
+        {
+          "id": "pj-4",
+          "title": "Active Treatment - Chemotherapy & Infusion",
+          "content": "The infusion center is the beating heart of a cancer center. This is where patients receive IV chemotherapy, immunotherapy, and other infused drugs - and where a huge portion of revenue is generated.\n\n**How an infusion visit works:**\n1. Patient arrives, vitals checked, labs drawn\n2. Pharmacist verifies and prepares the drugs (chemo is often mixed on-site)\n3. Nurse accesses port or starts IV\n4. Pre-medications administered (anti-nausea, steroids)\n5. Chemo infused (30 minutes to 8+ hours depending on regimen)\n6. Post-infusion monitoring\n7. Patient discharged with follow-up instructions\n\n**The buy-and-bill model:**\n- The practice BUYS the drug upfront (often $10K-$50K per dose)\n- Administers it to the patient\n- BILLS the insurance company for reimbursement\n- Gets paid ASP + 6% (for Medicare)\n- If they bought below ASP, they keep the margin\n- If the drug goes to waste (vial has more than needed), they bill for waste too\n\n**Revenue per infusion chair:** A single infusion chair can generate $1M+ per year. Optimizing chair utilization (scheduling, reducing no-shows, minimizing gaps) directly impacts the bottom line.\n\n**Billing for a single chemo visit might include:**\n- Drug cost (J-code / HCPCS)\n- Drug administration (CPT 96413, 96415 for additional hours)\n- Office visit (if E/M service is separate)\n- Hydration (96360-96361)\n- Anti-nausea drugs\n- Lab work\n- Port flush\n\nThat's 7+ line items for ONE visit. Miss any of them = lost revenue.",
+          "hub_connection": "In our hub, the RCM department workflows cover charge capture, drug billing, and claims submission. Look at the workflow steps for 'Chemotherapy administration' - each step has a billing implication. Our center data shows EHR vendors: Epic (72 centers) dominates, and Epic's Beacon module is where chemo orders and administration are documented.",
+          "key_insight": "Infusion is where the money is in oncology. A single Keytruda infusion bills at ~$11K every 3 weeks. A practice running 50 chairs, 5 days a week, is processing millions in drug charges monthly. Getting the billing right on every single line item is the difference between a thriving practice and one that's bleeding revenue. This is RISA's core value proposition.",
+          "quiz": [
+            {
+              "question": "In the buy-and-bill model, what happens if a practice buys a drug ABOVE the ASP?",
+              "options": ["They still make money because insurance pays retail", "They lose money on that drug - Medicare only reimburses ASP + 6%", "They can charge the patient the difference", "They return the drug to the manufacturer"],
+              "correct": 1,
+              "explanation": "Medicare pays ASP + 6% regardless of what the practice paid. If the practice bought above ASP, they take a loss on that drug. This is why GPO contracts, 340B pricing, and drug purchasing strategy are so important. Practices that buy below ASP profit; those that buy above ASP lose money on every infusion."
+            },
+            {
+              "question": "Why is charge capture so critical in infusion centers?",
+              "options": ["Regulatory compliance", "A single visit has 7+ billable line items and each missed item is lost revenue", "Patients demand itemized bills", "Insurance requires it for fraud prevention"],
+              "correct": 1,
+              "explanation": "A chemo visit generates multiple billable items - the drug, administration time, hydration, pre-meds, labs, port flush, and potentially an E/M visit. Missing even one line item across hundreds of visits per week adds up to significant revenue leakage. Studies show practices lose 1-5% of revenue to charge capture errors."
+            }
+          ]
+        },
+        {
+          "id": "pj-5",
+          "title": "Active Treatment - Surgery & Radiation",
+          "content": "**Surgery:**\nFor solid tumors, surgery is often the primary curative treatment. The surgical workflow involves:\n- Pre-surgical workup (imaging, cardiac clearance, anesthesia consult)\n- Pre-certification from the payer\n- The procedure itself (OR time, surgeon, anesthesia, pathology of removed tissue)\n- Post-op recovery (inpatient for major surgeries)\n- Follow-up visits\n\nSurgery billing is facility-based - the hospital bills for the facility (OR, recovery room, supplies) and the surgeon bills separately for their professional services. Two separate claims, two separate authorization workflows.\n\n**Radiation Oncology:**\nRadiation therapy is its own world with unique economics:\n- **Treatment planning** - physicist and dosimetrist create a radiation plan (highly technical, takes days)\n- **Simulation** - patient is positioned and marked for precise targeting\n- **Daily treatments** - patients come in every day for 5-7 weeks (for traditional radiation)\n- **Equipment** - linear accelerators cost $3-5M each. Proton therapy centers cost $100-200M to build.\n\nRadiation has its own CMS payment model (RO Model) that bundles payments for an entire course of treatment rather than paying per-fraction.\n\n**Key radiation players from our Market Map:**\n- Varian (Siemens Healthineers) - dominant in linear accelerators and treatment planning software (ARIA)\n- Elekta - #2 in linacs\n- Mevion, IBA - proton therapy systems",
+          "hub_connection": "Our Market Map has a dedicated 'Radiation Oncology Technology' segment. In our center data, look for centers with 'Proton therapy' in their NCI type - these are massive capital investments. Workflow-wise, radiation authorization is distinct from chemo authorization and lives in the 'Clinical Ops' department workflows.",
+          "key_insight": "Surgery and radiation have fundamentally different business models than medical oncology. Surgery is high-revenue, low-frequency (one-time event). Radiation is moderate-revenue, high-frequency (daily for weeks). Chemo is high-revenue, medium-frequency (every 2-4 weeks for months). Understanding these different revenue patterns helps you see why cancer centers organize their RCM teams differently for each modality.",
+          "quiz": [
+            {
+              "question": "Why does a cancer surgery generate TWO separate insurance claims?",
+              "options": ["One for the patient and one for the hospital", "The facility (hospital) and the surgeon bill separately", "Primary and secondary insurance each get a claim", "It's a billing error that should be corrected"],
+              "correct": 1,
+              "explanation": "In facility-based surgery, the hospital submits a facility claim (UB-04) for OR time, recovery room, supplies, etc. The surgeon submits a professional claim (CMS-1500) for their services. Each goes through its own adjudication process. This dual-claim model creates complexity in tracking and reconciliation."
+            }
+          ]
+        },
+        {
+          "id": "pj-6",
+          "title": "Monitoring, Survivorship & Recurrence",
+          "content": "Treatment doesn't end when chemo stops. Patients enter a monitoring phase that can last years - and this phase has its own workflows and economics.\n\n**Monitoring phase:**\n- Regular imaging (CT/PET every 3-6 months initially, then annually)\n- Lab work (tumor markers, blood counts)\n- Follow-up visits with oncologist\n- Each scan needs prior auth (yes, even in survivorship)\n- Constant anxiety for patients ('scanxiety' is real)\n\n**Survivorship care:**\n- Survivorship care plan (SCP) - required by CoC, documents what treatment was given and what follow-up is needed\n- Long-term side effect management (neuropathy, fatigue, cognitive issues)\n- Transition back to primary care (who owns the patient now?)\n- ~18 million cancer survivors in the U.S. and growing\n\n**Recurrence:**\n- If cancer comes back, the entire journey restarts - new staging, new treatment plan, new prior auths\n- Second-line and third-line treatments are typically more expensive and have lower response rates\n- Clinical trial enrollment often happens at recurrence\n\n**The economics of survivorship:**\n- Lower revenue per visit than active treatment\n- But high volume (millions of survivors needing ongoing monitoring)\n- Growing focus area for value-based care programs\n- Patient retention matters - survivors who stay in your system are referral sources",
+          "hub_connection": "Look at our workflow data for Patient Journey Stages 7-9 (post-treatment). The 'Quality' department workflows include survivorship care plan generation and cancer registry reporting. In our People directory, quality officers and patient navigators are key stakeholders in survivorship programs.",
+          "key_insight": "Survivorship is the 'long tail' of cancer care. Active treatment gets all the attention (and revenue), but survivorship is where patient relationships are maintained and where the next wave of value-based care models will focus. A cancer center that manages survivorship well retains patients, generates steady monitoring revenue, and catches recurrences early.",
+          "quiz": [
+            {
+              "question": "Why is survivorship care planning important for cancer centers beyond patient care?",
+              "options": ["It generates the most revenue", "It's a CoC accreditation requirement and supports value-based care metrics", "It's optional but recommended", "It's only important for pediatric cancers"],
+              "correct": 1,
+              "explanation": "CoC requires survivorship care plans for accreditation. Beyond compliance, survivorship programs support VBC metrics (patient outcomes, follow-up adherence), retain patients in the system, and create ongoing monitoring revenue. It's a strategic investment, not just a clinical nice-to-have."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "follow-the-money",
+      "name": "Follow the Money",
+      "icon": "💰",
+      "description": "Trace every dollar in oncology - from drug manufacturer to patient to payer to provider. Understand who pays, who profits, and where the friction lives.",
+      "estimated_minutes": 30,
+      "modules": [
+        {
+          "id": "ftm-1",
+          "title": "The Oncology Dollar - Where Does It Go?",
+          "content": "U.S. oncology spending is approximately $280B+ annually. Here's how it breaks down:\n\n**Drug costs: ~60% of oncology spend**\n- Average new cancer drug costs $150K-$250K per year of treatment\n- Keytruda (Merck) alone generates ~$25B/year globally\n- Drug spending is the fastest-growing component\n\n**Hospital/facility costs: ~25%**\n- Inpatient stays, surgeries, ER visits, radiation treatments\n- Facility fees are separate from professional fees\n\n**Professional services: ~10%**\n- Physician fees, pathology, radiology reads\n\n**Other: ~5%**\n- Lab work, genetic testing, supportive care, patient navigation\n\n**The key insight:** Drugs dominate oncology economics. This is why drug authorization, drug billing, and drug reimbursement are the highest-stakes workflows in a cancer center. A single billing error on a chemo drug can mean $10K-$50K in lost revenue.",
+          "hub_connection": "Our Market Map shows this clearly - Category 3 (Pharma & Biotech) and Category 2 (Payers & Reimbursement) are the two biggest money categories. The RCM workflows in our hub are dominated by drug-related processes: prior auth for drugs, charge capture for drug administration, drug waste billing, and buy-and-bill reconciliation.",
+          "key_insight": "If you understand how drugs flow through the oncology system - from manufacturer to distributor to practice to patient to payer and back - you understand 60% of the economics. Everything else is important, but drugs are the main event.",
+          "quiz": [
+            {
+              "question": "What's the single largest cost component in oncology?",
+              "options": ["Hospital stays", "Surgeon fees", "Cancer drugs (~60% of spend)", "Diagnostic testing"],
+              "correct": 2,
+              "explanation": "Drug costs dominate oncology economics at ~60% of total spend. This is fundamentally different from most other medical specialties where facility and professional fees are dominant. It's why drug billing accuracy, prior auth for drugs, and buy-and-bill management are the highest-priority RCM workflows."
+            }
+          ]
+        },
+        {
+          "id": "ftm-2",
+          "title": "The Drug Supply Chain",
+          "content": "Follow a cancer drug from factory to patient:\n\n**1. Manufacturer** (Merck, Roche, BMS, etc.)\n- Sets the list price (WAC - Wholesale Acquisition Cost)\n- Offers rebates to PBMs and payers\n- Provides patient assistance programs (copay cards, free drug programs)\n\n**2. Distributor** (McKesson, Cencora, Cardinal Health)\n- Buys from manufacturer, sells to practices/hospitals\n- Thin margins (~1-2%) but massive volume\n- McKesson also owns US Oncology Network (MSO) - giving them visibility into both distribution AND practice operations\n\n**3. Practice/Hospital** (buy-and-bill)\n- Buys the drug (often $10K-$50K per dose)\n- Stores it, mixes it, administers it\n- Bills the payer for reimbursement\n- Hopes to be reimbursed at or above purchase price\n\n**4. Payer** (Medicare, commercial insurance)\n- Receives the claim\n- Checks: Was it authorized? Is the diagnosis correct? Is the drug on formulary?\n- Pays (or denies) based on contracted rates\n- Medicare: ASP + 6%. Commercial: negotiated rates (often higher)\n\n**5. Patient**\n- Pays their share: copay, coinsurance, deductible\n- For a $15K drug, 20% coinsurance = $3K per infusion\n- Patient assistance programs and 340B can reduce this\n\n**Where the money leaks:**\n- Denied prior auths (drug never gets reimbursed)\n- Incorrect J-codes (wrong drug code = denied claim)\n- Drug waste not billed (leftover drug in the vial is billable)\n- Delayed claim submission (timely filing limits)\n- Underpayments not caught and appealed",
+          "hub_connection": "Our Market Map's 'Specialty Distributors (Big 3)' segment maps this supply chain. The RCM workflows track each step from authorization through payment posting. Look at the 'Drug billing' and 'Denial management' workflows - these are where revenue leaks most in the drug supply chain.",
+          "key_insight": "The drug supply chain has multiple points of revenue leakage. RISA's AI can plug these leaks at every step - ensuring prior auth is obtained before the drug is mixed, J-codes are correct before claims are submitted, drug waste is captured, and denials are appealed automatically. Each plug point recovers real dollars.",
+          "quiz": [
+            {
+              "question": "In buy-and-bill, why is it risky for a practice to administer chemo BEFORE getting prior auth?",
+              "options": ["The drug might not work", "If auth is denied, the practice ate the drug cost ($10K-$50K) with no reimbursement", "The patient might refuse treatment", "It's illegal to treat without prior auth"],
+              "correct": 1,
+              "explanation": "The practice already bought and administered the drug. If the payer denies the auth retroactively, the practice can't un-give the drug. They're stuck with a $10K-$50K loss. This is why real-time prior auth verification before drug mixing is so critical - and why AI-assisted auth is so valuable."
+            }
+          ]
+        },
+        {
+          "id": "ftm-3",
+          "title": "How Cancer Centers Actually Make Money",
+          "content": "Not all cancer centers have the same business model. Understanding revenue sources helps you see what each type cares about:\n\n**Academic Medical Centers (Stanford, MSK, Dana-Farber):**\n- Revenue: Drug margins + facility fees + research grants + philanthropy\n- Drug margins are thinner (less GPO buying power sometimes, but 340B helps)\n- Research grants from NCI, NIH, pharma ($50M-$500M/year at top centers)\n- Philanthropy can be enormous (Stanford, MSK raise $100M+/year)\n- Focus: Prestige, publications, trials, complex cases\n\n**Large Community Practices (Texas Oncology, Florida Cancer Specialists):**\n- Revenue: Primarily drug margins (buy-and-bill)\n- Better drug buying power through GPOs and networks (US Oncology)\n- Lower overhead than AMCs (no research, no teaching)\n- Focus: Volume, efficiency, keeping patients local\n- Threat: Hospital systems acquiring their physicians\n\n**Hospital System Cancer Programs (HCA, Providence):**\n- Revenue: Facility fees (big differentiator) + drug margins + ancillary services\n- Hospital outpatient departments (HOPD) can charge facility fees that independent practices cannot\n- This means the SAME drug infusion costs payers/patients more at a hospital than at an independent practice\n- Focus: Keeping patients in-system, growing market share\n\n**The 340B advantage:**\n- Eligible centers (mostly hospitals serving low-income populations) buy drugs at 25-50% discount\n- But bill insurance at normal rates\n- The spread is pure margin\n- 340B revenue can be $10M-$100M+/year for large centers\n- Our hub tracks 68 centers with 340B status",
+          "hub_connection": "Check our Cancer Centers data - filter by category. Compare 'Academic Medical Center Cancer Programs' (42 centers) vs 'Hospital System Cancer Programs' (152) vs 'Large Community Oncology Practices' (69). Each has different economic models. The 340B filter shows which centers have this revenue advantage. The bed count correlates with facility fee revenue potential.",
+          "key_insight": "When you're selling RISA to a cancer center, you need to know what KIND of center it is. An academic center cares about research efficiency and complex case management. A community practice cares about drug margins and authorization speed. A hospital system cares about facility fee capture and market share. Same product, different pitch.",
+          "quiz": [
+            {
+              "question": "Why can a hospital outpatient department charge MORE for the same chemo infusion than an independent oncology practice?",
+              "options": ["They use better drugs", "Hospital facility fees - HOPDs can charge a facility component that independent practices cannot", "Hospital staff are more qualified", "Insurance pays hospitals more by default"],
+              "correct": 1,
+              "explanation": "When a cancer practice is owned by a hospital, it becomes a Hospital Outpatient Department (HOPD) and can charge facility fees on top of the professional and drug fees. The exact same infusion that costs $5K at an independent practice might cost $8K at an HOPD. This 'site of service' differential is a major driver of hospital acquisitions of oncology practices."
+            },
+            {
+              "question": "A 340B-eligible cancer center buys Keytruda at a 40% discount and bills Medicare at ASP + 6%. What happens to the spread?",
+              "options": ["It goes to the patient", "The center keeps it as margin - potentially millions per year", "It's returned to the manufacturer", "Medicare adjusts the payment to match the purchase price"],
+              "correct": 1,
+              "explanation": "The 340B spread is the center's to keep. If Keytruda's ASP is $10K and they buy at $6K (40% discount), they get reimbursed ~$10.6K (ASP + 6%). That's ~$4.6K margin per infusion. Multiply by hundreds of infusions per year and 340B becomes a massive revenue stream. This is why 340B status matters so much in our center data."
+            }
+          ]
+        },
+        {
+          "id": "ftm-4",
+          "title": "The Prior Auth Economy",
+          "content": "Prior authorization is the single biggest friction point in oncology RCM - and RISA's primary battlefield.\n\n**The numbers:**\n- Average oncology practice handles 1,000+ prior auths per month\n- Each auth takes 45-90 minutes of staff time\n- 25-40% of auths require peer-to-peer review (oncologist calls payer's medical director)\n- Denial rate on initial auth: 5-15%\n- Appeal success rate: 60-80% (meaning most denials are overturned - they were wrong to deny)\n\n**What needs prior auth in oncology:**\n- Chemo/immunotherapy drugs (almost always)\n- Advanced imaging (PET/CT, MRI)\n- Genomic testing (Foundation Medicine, Tempus)\n- Surgery (pre-certification)\n- Radiation therapy\n- Clinical trial-related services (complex - research vs. standard of care)\n- Supportive care drugs (growth factors, anti-emetics)\n\n**The human cost:**\n- Cancer centers employ entire teams just for prior auth (10-30+ staff at large centers)\n- Oncologists spend 10+ hours/week on admin tasks (peer-to-peer calls, documentation)\n- Patients wait for treatment while auth is pending\n- Burnout is a real driver of oncologist attrition\n\n**The financial cost:**\n- $11 per prior auth (industry average admin cost)\n- At 1,000 auths/month = $132K/year just in admin costs\n- Plus lost revenue from denials that aren't appealed\n- Plus patient leakage (patients go elsewhere if care is delayed)\n\n**RISA's opportunity:**\n- Auto-generate auth requests from treatment plan data\n- Pre-check payer-specific rules before submission\n- Track auth status and auto-follow-up\n- Generate appeal letters for denials\n- Predict which auths will need peer-to-peer review\n- Each minute saved per auth, multiplied by thousands per month = massive ROI",
+          "hub_connection": "Our workflow data shows Prior Authorization as a top bottleneck across multiple departments (Patient Access, RCM, Clinical Ops). Look at the bottleneck severity scores - auth-related workflows consistently score highest. In our People directory, Revenue Cycle leaders like Jill Buathier (Stanford) manage these auth teams directly.",
+          "key_insight": "Here's the absurdity: 60-80% of denied auths are overturned on appeal. This means the payer was wrong to deny in the majority of cases. The entire prior auth system generates massive administrative waste on BOTH sides (provider and payer). AI can reduce this waste by submitting cleaner, more complete auth requests upfront and auto-generating evidence-based appeals for denials.",
+          "quiz": [
+            {
+              "question": "If 60-80% of denied prior auths are overturned on appeal, what does that tell you?",
+              "options": ["The appeal process works well", "Most initial denials are incorrect - the system creates unnecessary friction", "Payers are generous with appeals", "Oncologists are good at negotiating"],
+              "correct": 1,
+              "explanation": "A 60-80% appeal success rate means the majority of denials should never have been denied. The system is generating enormous administrative waste - practices spend time and money getting denials, then more time and money proving the denial was wrong. AI that gets it right the first time eliminates both the initial denial and the appeal."
+            }
+          ]
+        },
+        {
+          "id": "ftm-5",
+          "title": "Value-Based Care in Oncology",
+          "content": "The industry is shifting from 'pay for volume' to 'pay for value.' This fundamentally changes what cancer centers optimize for.\n\n**Fee-for-Service (current dominant model):**\n- More services = more revenue\n- No incentive to reduce costs\n- Every ER visit is revenue for the hospital\n- Drug margins incentivize higher-cost drugs\n\n**Value-Based Care (where it's heading):**\n- Fixed payment for an episode of care (e.g., 6 months of breast cancer treatment)\n- If total costs are below the target, practice keeps shared savings\n- If costs exceed target, practice may owe money back\n- Incentivizes efficiency, generic/biosimilar use, avoiding complications\n\n**EOM (Enhancing Oncology Model) - the key VBC program:**\n- CMS's current oncology value-based model (replaced OCM in 2023)\n- Voluntary - practices opt in\n- 6-month episodes triggered by chemo administration\n- Monthly Enhanced Services Payment ($70/patient/month for care coordination)\n- Performance-Based Payment if costs are below target AND quality metrics met\n- Quality measures: treatment plan documentation, patient navigation, advance care planning\n\n**What VBC means for technology:**\n- Need real-time cost tracking per patient\n- Need quality measure reporting automation\n- Need care coordination tools (reduce ER visits, manage symptoms at home)\n- Need predictive analytics (which patients are at risk of complications?)\n- This is a MASSIVE opportunity for AI - you can't manage value without data",
+          "hub_connection": "Our Market Map's 'Value-Based Care Programs' segment outlines EOM and related programs. In our workflows, the 'Quality' department handles measure reporting and care coordination. As cancer centers adopt VBC, their technology needs change from 'help me bill more' to 'help me manage costs while maintaining quality.'",
+          "key_insight": "Value-based care doesn't kill the need for RCM - it transforms it. Under FFS, RCM means 'capture every charge.' Under VBC, RCM means 'capture every charge AND manage total cost of care AND report quality measures AND coordinate care.' The complexity increases, not decreases. This is why VBC is a tailwind for RISA, not a headwind.",
+          "quiz": [
+            {
+              "question": "Under EOM, what happens if a practice's patient costs exceed the target for an episode?",
+              "options": ["Nothing - it's informational only", "The practice may owe money back to CMS", "The patient pays the difference", "CMS reduces future payments"],
+              "correct": 1,
+              "explanation": "EOM has both upside (shared savings) and downside (repayment) risk. If your costs exceed the target, you owe money back. This creates a real financial incentive to manage costs - use biosimilars when possible, reduce ER visits, coordinate care, and avoid unnecessary tests. Practices need data and analytics to manage this risk."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decision-makers",
+      "name": "The Decision Makers",
+      "icon": "🎯",
+      "description": "Know exactly who holds power at cancer centers, what they care about, and how to reach them. Built from our People directory.",
+      "estimated_minutes": 20,
+      "modules": [
+        {
+          "id": "dm-1",
+          "title": "The C-Suite Map",
+          "content": "Every cancer center has a leadership team. Understanding who does what helps you know who to talk to and in what order.\n\n**CEO / President:**\n- Overall strategy and vision\n- At cancer-specific orgs: Peter WT Pisters (MD Anderson), Selwyn Vickers (MSK), Robert Stone (City of Hope)\n- Cares about: growth, reputation, financial health, competitive positioning\n- Rarely your first call, but their priorities cascade down\n\n**CFO:**\n- Financial performance, budgets, margins\n- Linda Hoff at Stanford Health Care\n- Cares about: revenue optimization, cost reduction, ROI on technology investments\n- Will ask: 'What's the payback period? How many FTEs does this replace?'\n\n**CIO / CTO:**\n- Technology stack, integrations, security\n- Michael Pfeffer at Stanford Health Care\n- Cares about: EHR integration, data security, HITRUST/SOC2 compliance, IT team bandwidth\n- Will ask: 'Does it integrate with Epic? Is it HIPAA compliant? What's the implementation timeline?'\n\n**CMO:**\n- Clinical quality, physician satisfaction, patient outcomes\n- Cares about: Will physicians actually use this? Does it improve care quality?\n- Will ask: 'Show me clinical workflow impact. Will my doctors resist this?'\n\n**Chief Revenue Cycle Officer / VP Revenue Cycle:**\n- THIS IS YOUR PRIMARY BUYER\n- Jill Buathier at Stanford Health Care\n- Owns: prior auth teams, billing teams, coding teams, denial management\n- Cares about: denial rates, days in AR, clean claim rate, staff productivity\n- Will ask: 'How quickly can I see results? What's the denial reduction?'\n- Feels the pain daily. Has budget authority for RCM tools.",
+          "hub_connection": "Go to our People directory and filter by role_type 'C-Suite'. You'll see the leadership across our tracked organizations. Stanford's deep-dive gives you the most complete picture - 4 tiers of stakeholders, from C-suite to department directors. This is the depth of research we need for every target center.",
+          "key_insight": "In a large cancer center, the sale typically requires alignment across 3 people: the Revenue Cycle leader (wants it), the CIO (must approve it), and the CFO (must fund it). The CMO is a bonus ally. Smart selling means building a coalition, not just convincing one person.",
+          "quiz": [
+            {
+              "question": "Who is typically the PRIMARY buyer for an RCM AI tool like RISA at a large cancer center?",
+              "options": ["The CEO", "The CIO", "The Chief Revenue Cycle Officer / VP Revenue Cycle", "The CMO"],
+              "correct": 2,
+              "explanation": "The Revenue Cycle leader feels the pain most directly - they manage the prior auth teams, deal with denials daily, and are accountable for revenue performance. They're the most motivated buyer. The CIO and CFO need to approve, but the Revenue Cycle leader champions the purchase."
+            }
+          ]
+        },
+        {
+          "id": "dm-2",
+          "title": "The Operational Layer",
+          "content": "Below the C-suite, there's an operational layer that actually runs cancer center workflows day-to-day. These people are critical because they either champion or block new technology adoption.\n\n**Director of Patient Access:**\n- Manages scheduling, registration, insurance verification, prior authorization\n- First touchpoint in the revenue cycle\n- Pain: staff turnover, auth backlogs, coverage verification errors\n\n**Director of Cancer Services / Oncology Service Line:**\n- Timothy Seay-Morrison (SVP Cancer Services, Stanford)\n- Manages the oncology program operationally\n- Bridge between clinical and administrative\n\n**Coding Manager / HIM Director:**\n- Oversees medical coding team\n- Responsible for coding accuracy, compliance, audits\n- Terrified of: upcoding violations, audit findings, RAC audits\n\n**Revenue Cycle Directors (by function):**\n- Prior Auth Director - manages the auth team\n- Billing Director - manages claims submission\n- Collections Director - manages AR follow-up and appeals\n- Each has specific KPIs and pain points\n\n**Nurse Navigators:**\n- Coordinate patient care journey\n- Often overwhelmed with admin tasks that could be automated\n- Strong advocates for tools that reduce their administrative burden\n\n**IT/Integration Analysts:**\n- The people who actually implement new tools\n- Will test your Epic integration, configure workflows, train users\n- Their buy-in determines implementation success or failure",
+          "hub_connection": "Our People directory has stakeholders across multiple role types: C-Suite, VP, Director, Clinical, Division Chief. Look at the Stanford deep-dive - we mapped people across all 4 tiers. For other centers, we have primarily C-suite and division chiefs. Enriching the operational layer for top target centers would make this intelligence actionable.",
+          "key_insight": "C-suite signs the check, but the operational layer determines whether the tool actually works. The best sales approach involves engaging both: top-down sponsorship from the Revenue Cycle VP, and bottom-up validation from the auth team leads and coding managers who will use the tool daily.",
+          "quiz": [
+            {
+              "question": "Why should a Director of Patient Access care about RISA?",
+              "options": ["They don't - it's a billing tool", "Patient Access manages prior auth and insurance verification - the front end of the revenue cycle", "They only care about scheduling", "Patient Access is only relevant for emergency departments"],
+              "correct": 1,
+              "explanation": "Patient Access is where the revenue cycle begins - scheduling, registration, insurance verification, and often initial prior authorization. If coverage isn't verified upfront or auth isn't initiated early, it creates downstream problems (delayed treatment, denied claims). AI that catches coverage issues at registration prevents problems from flowing downstream."
+            }
+          ]
+        },
+        {
+          "id": "dm-3",
+          "title": "How Decisions Get Made",
+          "content": "Understanding the buying process at a cancer center is as important as understanding the people.\n\n**Small community practice (5-20 oncologists):**\n- Decision maker: Practice administrator or managing partner\n- Timeline: 2-4 weeks\n- Process: Demo, check references, negotiate price, done\n- Key concern: ROI, ease of implementation, will it work with our EHR?\n\n**Large community practice / MSO (Texas Oncology, OneOncology):**\n- Decision maker: Corporate leadership (not individual practice)\n- Timeline: 2-6 months\n- Process: RFP, evaluation committee, pilot at 2-3 sites, rollout\n- Key concern: Scalability, data aggregation across sites, corporate pricing\n\n**Academic Medical Center (Stanford, MSK):**\n- Decision maker: Committee (Revenue Cycle VP + CIO + CFO + compliance)\n- Timeline: 6-18 months\n- Process: Vendor evaluation, IT security review, legal/compliance review, pilot, ROI validation, full deployment\n- Key concern: Integration with Epic, HIPAA/HITRUST compliance, academic research use\n\n**Hospital system (HCA, Providence):**\n- Decision maker: System-level leadership (not individual hospital)\n- Timeline: 6-24 months\n- Process: Similar to AMC but with more layers of approval\n- Key concern: System-wide deployment, standardization, vendor management\n\n**The universal truth:** No matter the size, the person feeling the daily pain of manual prior auth and denials is your best internal champion. Find them. Arm them with data. Let them sell internally.",
+          "hub_connection": "Our Cancer Centers data categorizes centers by type - this directly maps to buying patterns. Filter by 'Large Community Oncology Practices' (69 centers) for faster sales cycles, or 'Academic Medical Center Cancer Programs' (42 centers) for larger, longer deals. The NCI-Designated centers (24) are the most complex buyers but the most prestigious references.",
+          "key_insight": "Match your sales approach to the center type. Don't run an 18-month enterprise sales process for a 10-person community practice. And don't expect a quick deal from Stanford. The hub's center categorization tells you which sales motion to use before you even make the first call.",
+          "quiz": [
+            {
+              "question": "What's the typical sales timeline for a new technology tool at an academic medical center?",
+              "options": ["2-4 weeks", "1-2 months", "6-18 months", "It depends entirely on the product"],
+              "correct": 2,
+              "explanation": "AMCs have extensive evaluation processes - IT security reviews, legal/compliance reviews, committee approvals, pilot programs, and ROI validation. 6-18 months is standard. This is why AMC deals are high-value but require patience and multi-stakeholder engagement."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "competitive-landscape",
+      "name": "The Competitive Landscape",
+      "icon": "⚔️",
+      "description": "Who else is playing in oncology AI and RCM? Know your competitors, potential partners, and where RISA fits.",
+      "estimated_minutes": 20,
+      "modules": [
+        {
+          "id": "cl-1",
+          "title": "Oncology AI Players",
+          "content": "The oncology AI landscape is crowded but fragmented. Most players focus on one piece of the puzzle. RISA's focus on oncology-specific RCM AI is relatively unique.\n\n**Clinical AI (not RISA's direct space, but adjacent):**\n- Tempus - genomics + clinical data + AI for treatment matching\n- Flatiron Health (Roche) - real-world data + OncoEMR\n- Paige AI - FDA-cleared AI pathology\n- Lunit - AI radiology for cancer detection\n\n**General RCM AI (competitors - but not oncology-specific):**\n- Waystar - claims management, prior auth, analytics (IPO 2024)\n- Olive AI (pivoted/acquired) - general healthcare RCM automation\n- Infinitus Health - AI for prior auth phone calls\n- Cohere Health - prior auth automation for payers\n- Notable Health - intelligent automation for health systems\n\n**Oncology-specific RCM (closest competitors):**\n- Very few pure-play oncology RCM AI companies\n- Oncology-specific EHRs (Flatiron OncoEMR, iKnowMed) have some RCM features built in\n- Large RCM companies (Waystar, Availity) serve oncology but aren't specialized\n\n**RISA's differentiation:**\n- Deep oncology domain expertise (understands regimens, J-codes, oncology-specific auth rules)\n- Not a general RCM tool applied to oncology - built from the ground up for cancer care\n- Understands the nuances: chemo waste billing, biosimilar substitution rules, 340B implications",
+          "hub_connection": "Our Market Map's 'AI Companies in Oncology' and 'RCM / Billing' segments map this landscape. Notice how the AI segment is split between Clinical AI and RCM AI - these are different markets with different buyers. RISA sits in the RCM AI space with oncology specificity.",
+          "key_insight": "The competitive moat in oncology RCM isn't the AI technology itself - it's the domain expertise. General RCM AI tools don't understand that a Keytruda prior auth for lung cancer has different requirements than for melanoma, or that biosimilar substitution rules vary by payer and state. This oncology-specific knowledge, encoded in AI, is what's hard to replicate.",
+          "quiz": [
+            {
+              "question": "Why is 'general RCM AI applied to oncology' not as effective as 'oncology-specific RCM AI'?",
+              "options": ["The technology is different", "Oncology has unique billing complexity (drug codes, regimen-specific auth rules, waste billing, 340B) that general tools don't understand", "General tools are too expensive", "Oncology is too small a market for general tools"],
+              "correct": 1,
+              "explanation": "Oncology RCM has layers of complexity that don't exist in general healthcare - J-code drug billing, chemo waste reporting, regimen-specific prior auth rules, 340B drug pricing, buy-and-bill reconciliation, biosimilar substitution policies. A general RCM tool treats these as edge cases. An oncology-specific tool treats them as the core use case."
+            }
+          ]
+        },
+        {
+          "id": "cl-2",
+          "title": "The EHR Ecosystem",
+          "content": "EHR vendors are both gatekeepers and potential partners. Understanding the EHR landscape is crucial for RISA's integration strategy.\n\n**Epic (dominant - 72/327 centers in our hub):**\n- Market share: ~38% of hospitals, much higher in large academic centers\n- Oncology module: Beacon\n- Integration: App Orchard marketplace, FHIR APIs, certified integrations\n- Strategy: Epic wants to be the platform. They prefer to build features in-house.\n- Threat level: Medium. Epic could build RCM automation, but it's not their core focus.\n- Opportunity: Epic integration is the #1 requirement from large customers.\n\n**Oracle Health / Cerner (12 centers):**\n- Acquired by Oracle in 2022\n- Oncology capabilities: weaker than Epic for oncology\n- Integration: Oracle Health Marketplace, APIs\n- In transition - Oracle is rebuilding the platform\n\n**iKnowMed / McKesson (9 centers):**\n- Oncology-specific EHR for US Oncology Network\n- Tightly integrated with McKesson's distribution and GPO\n- Integration: McKesson controls access\n- Opportunity: Partnership with McKesson/US Oncology unlocks hundreds of practices at once\n\n**Flatiron OncoEMR (6 centers):**\n- Purpose-built for community oncology\n- Roche-owned (pharma parent)\n- Strong real-world data capabilities\n- Potential partner or competitor depending on direction\n\n**MEDITECH (9 centers):**\n- Common in community hospitals\n- Less modern API capabilities than Epic\n- Integration can be more challenging",
+          "hub_connection": "Our Cancer Centers data has EHR vendor for many centers. Filter by ehr_vendor to see the distribution: Epic (72), Cerner (12), iKnowMed (9), MEDITECH (9), Flatiron OncoEMR (6). This tells you: build for Epic first, then iKnowMed (US Oncology access), then the rest.",
+          "key_insight": "Your EHR integration strategy IS your go-to-market strategy. Epic-first makes sense because it covers the largest and most valuable centers. But don't sleep on iKnowMed - one partnership with McKesson/US Oncology could be worth more than dozens of individual Epic integrations.",
+          "quiz": [
+            {
+              "question": "Based on our hub data, which EHR integration should RISA prioritize first and why?",
+              "options": ["Cerner because Oracle is investing heavily", "Epic because it covers the most centers (72) and dominates academic medical centers", "iKnowMed because McKesson gives access to hundreds of practices", "Build EHR-agnostic and don't prioritize"],
+              "correct": 1,
+              "explanation": "Epic is the clear first priority - it dominates large academic centers and health systems, which are the highest-value customers. However, iKnowMed should be a close second because the McKesson/US Oncology relationship can unlock hundreds of community practices through a single partnership. The optimal strategy is Epic first for marquee accounts, iKnowMed second for scale."
+            }
+          ]
+        },
+        {
+          "id": "cl-3",
+          "title": "Industry Trends Reshaping the Market",
+          "content": "Several macro trends are reshaping oncology - and each creates opportunities for RISA.\n\n**1. Consolidation:**\n- Independent oncology practices are disappearing (acquired by hospitals or PE)\n- 2015: ~60% of oncologists in independent practice. Now: ~40% and falling.\n- Creates larger, more complex organizations that need technology to scale\n\n**2. Oral oncolytics shift:**\n- More cancer drugs are pills instead of IV infusions\n- Shifts revenue from medical benefit (buy-and-bill at practice) to pharmacy benefit (PBM/specialty pharmacy)\n- Practices lose drug margin revenue\n- Creates new workflows: specialty pharmacy coordination, oral adherence monitoring\n\n**3. Biosimilar adoption:**\n- Cheaper versions of expensive biologics entering the market\n- Payers pushing biosimilar use (lower cost)\n- Practices resistant (lower margins than branded drugs)\n- Creates formulary management complexity and payer mandate workflows\n\n**4. AI/automation wave:**\n- Prior auth automation is the hottest area\n- CMS considering regulatory changes to streamline prior auth\n- Several states passing prior auth reform legislation\n- Regulatory tailwind: even if rules change, practices still need AI for the remaining auth burden\n\n**5. Value-based care expansion:**\n- EOM is growing; more practices joining\n- Commercial payers creating their own oncology VBC programs\n- Shift from revenue maximization to cost management\n- Data/analytics become essential\n\n**6. Rising drug costs:**\n- New cancer drugs launching at $200K+/year\n- Cell/gene therapies at $300K-$500K per treatment\n- Total oncology spend projected to hit $375B by 2030\n- Higher drug costs = higher stakes for billing accuracy = more RISA value",
+          "hub_connection": "Our Market Map captures each of these trends. The 'Private Equity in Oncology' segment tracks consolidation. 'Biosimilars' and 'Emerging Biotech' track the drug pipeline. 'Value-Based Care Programs' tracks the payment shift. Each trend is a tailwind for RISA if positioned correctly.",
+          "key_insight": "Every major trend in oncology - consolidation, drug cost growth, VBC shift, prior auth reform - increases the need for intelligent RCM automation. RISA isn't fighting headwinds; it's surfing tailwinds. The market is getting more complex, not simpler, and complexity is where AI thrives.",
+          "quiz": [
+            {
+              "question": "How does the shift from IV to oral cancer drugs affect an oncology practice's revenue?",
+              "options": ["Revenue increases because pills are more expensive", "Revenue decreases because oral drugs go through pharmacy benefit, removing buy-and-bill margins", "No impact - revenue is the same either way", "Practices make more money because oral drugs are cheaper to buy"],
+              "correct": 1,
+              "explanation": "When cancer drugs go from IV (medical benefit, buy-and-bill) to oral (pharmacy benefit, processed by PBMs), the practice loses the drug administration revenue AND the buy-and-bill margin. The patient fills the prescription at a specialty pharmacy instead of receiving treatment at the practice. This is a significant financial threat to community oncology practices."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "risa-positioning",
+      "name": "RISA in Context",
+      "icon": "⭐",
+      "description": "Bring it all together - how RISA fits into the oncology ecosystem and where the biggest opportunities live.",
+      "estimated_minutes": 15,
+      "modules": [
+        {
+          "id": "rp-1",
+          "title": "RISA's Position in the Ecosystem",
+          "content": "Now that you understand the market, let's place RISA precisely on the map.\n\n**What RISA does:**\nAI-powered Revenue Cycle Management specifically for oncology. This means automating the most painful, error-prone, and costly administrative workflows in cancer care.\n\n**Where RISA sits in the value chain:**\n- Between the clinical workflow (EHR) and the financial workflow (payers)\n- Takes clinical data (treatment plans, orders, documentation)\n- Translates it into financial actions (prior auth, claims, coding, appeals)\n- The 'translation layer' between clinical intent and payer requirements\n\n**RISA's addressable market:**\n- ~2,000 cancer centers/programs in the U.S.\n- ~3,000 oncology practices (including small groups)\n- RCM spend per center: $500K-$5M+ annually (staff, outsourced billing, technology)\n- If RISA can capture 5-10% of RCM spend through automation savings, the opportunity per customer is $50K-$500K/year\n\n**The wedge strategy:**\n1. **Start with prior auth automation** - highest pain, clearest ROI, fastest time to value\n2. **Expand to denial management** - natural next step, leverages same data\n3. **Add charge capture and coding** - deeper into the revenue cycle\n4. **Layer in analytics and VBC support** - strategic value, not just operational",
+          "hub_connection": "Our entire hub is built to support this strategy. Cancer Centers data = target list. People directory = contacts at each target. Workflows = understanding of what you're automating. Market Map = competitive and partner landscape. The hub isn't just intelligence - it's a sales enablement platform.",
+          "key_insight": "RISA's strongest positioning is: 'We don't just do RCM. We do ONCOLOGY RCM.' This specificity is the moat. A general RCM tool can't understand that a Keytruda + Lenvima combination for endometrial cancer has different auth requirements than Keytruda monotherapy for melanoma. RISA can. That domain depth is the entire value proposition.",
+          "quiz": [
+            {
+              "question": "Why should RISA lead with prior authorization automation as its wedge?",
+              "options": ["It's the easiest to build", "It's the highest-pain, clearest-ROI workflow with the fastest time to value for the customer", "Prior auth is the only RCM function in oncology", "Competitors haven't thought of it"],
+              "correct": 1,
+              "explanation": "Prior auth is the #1 pain point cited by oncology practices. It has clear, measurable ROI (time saved per auth x auth volume), quick time to value (results visible in weeks), and creates a foundation for expanding into denial management, coding, and broader RCM automation."
+            }
+          ]
+        },
+        {
+          "id": "rp-2",
+          "title": "Connecting the Dots - A Case Study",
+          "content": "Let's put everything together with a real scenario using our hub data.\n\n**Scenario: RISA is targeting Stanford Health Care's cancer program.**\n\n**What we know from our hub:**\n- Stanford Cancer Institute - NCI-Designated Comprehensive Cancer Center\n- Academic Medical Center, EHR: Epic (Beacon)\n- Part of Stanford Health Care system\n- 340B eligible (significant drug margin revenue)\n- 45 stakeholders mapped across 4 tiers\n\n**The key people (from our deep dive):**\n- Jill Buathier, Chief Revenue Cycle Officer - PRIMARY buyer, owns auth teams\n- Michael Pfeffer, CIO - must approve Epic integration and security\n- Linda Hoff, CFO - must approve budget\n- Timothy Seay-Morrison, SVP Cancer Services - oncology service line leader\n- Rondeep Brar, Associate Director Clinical Care - operational champion potential\n\n**The approach:**\n1. Lead with Jill Buathier - she feels the prior auth pain daily\n2. Quantify: 'Your auth team handles X auths/month at 45 min each. RISA reduces that to 10 min. That's Y FTE hours saved.'\n3. Get Jill to champion internally - she brings in Michael Pfeffer for technical review\n4. RISA passes Epic integration and HITRUST review with Michael's team\n5. Linda Hoff approves budget based on ROI model Jill presents\n6. Pilot in one department (e.g., medical oncology)\n7. Prove results, expand to radiation oncology and surgical oncology\n\n**The timeline:** 8-14 months from first conversation to full deployment (typical for AMC)\n\n**The revenue:** Stanford is a top-5 U.S. cancer program. The deal value could be $500K-$2M annually.\n\nThis is exactly why the hub exists - to give you this level of preparation before the first conversation.",
+          "hub_connection": "Everything in this case study comes directly from our hub: center data, people directory, workflow intelligence, EHR information, and 340B status. This is the model for every target center. The more centers we deep-dive (like we did with Stanford), the more prepared we are.",
+          "key_insight": "Intelligence wins deals. Walking into Stanford knowing Jill Buathier's title, her team structure, their EHR, their 340B status, and their workflow pain points is the difference between a cold pitch and a warm, informed conversation. The hub transforms every sales call from 'let me tell you about RISA' to 'we understand your challenges, here's how we solve them.'",
+          "quiz": [
+            {
+              "question": "In the Stanford scenario, why is Jill Buathier the first person to approach, not the CEO or CIO?",
+              "options": ["She's the most senior person", "She owns the revenue cycle teams that feel the daily pain of manual prior auth and denials - she's the most motivated buyer", "The CEO and CIO don't care about RCM", "She controls the entire hospital budget"],
+              "correct": 1,
+              "explanation": "Jill Buathier lives the prior auth problem every day. Her teams are overwhelmed, her denial rates affect her KPIs, and she has budget authority for RCM tools. She's the natural internal champion. The CEO is too high-level for an initial RCM tool conversation, and the CIO needs to be brought in for technical review but isn't the business buyer."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
