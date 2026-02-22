@@ -304,7 +304,7 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
     </div>
     <div style="overflow-x:auto;">
       <table class="data-table">
-        <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+        <thead><tr><th>Name</th><th>Type</th><th>Description</th><th>People</th></tr></thead>
         <tbody id="orgsBody"></tbody>
       </table>
     </div>
@@ -543,6 +543,20 @@ body { font-family: 'Inter','SF Pro',system-ui,sans-serif; background:var(--bg);
   </div>
 </div>
 
+<!-- Organization Detail Modal -->
+<div class="modal-overlay hidden" id="orgModal" onclick="if(event.target===this)closeOrgModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="orgModalName"></h2>
+        <div class="sub" id="orgModalSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeOrgModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="orgModalBody"></div>
+  </div>
+</div>
+
 <!-- Person Form Modal -->
 <div class="modal-overlay hidden" id="personFormModal" onclick="if(event.target===this)closePersonForm()">
   <div class="modal" style="max-width:700px;">
@@ -720,20 +734,49 @@ function collapseAll() {
 }
 
 // Load Organizations
+var ORG_TYPE_COLORS = {
+  'Pharma':'#fd79a8','Technology':'#0984e3','Payer':'#00cec9',
+  'Diagnostics':'#00b894','Distributor':'#fdcb6e','Regulatory/Guidelines':'#636e72','Regulatory':'#636e72'
+};
+function orgTypeBadge(type) {
+  if (!type) return '';
+  var color = ORG_TYPE_COLORS[type] || '#636e72';
+  return '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:' + color + '22;color:' + color + ';">' + esc(type) + '</span>';
+}
+
 async function loadOrgs() {
-  const type = document.getElementById('orgType').value;
-  const search = document.getElementById('orgSearch').value;
-  const params = new URLSearchParams();
+  var type = document.getElementById('orgType').value;
+  var search = document.getElementById('orgSearch').value;
+  var params = new URLSearchParams();
   if (type) params.set('type', type);
   if (search) params.set('search', search);
-  const res = await fetch(API + '/api/organizations?' + params);
-  const data = await res.json();
-  const tbody = document.getElementById('orgsBody');
-  tbody.innerHTML = data.organizations.map(o => `<tr>
-    <td><strong>${esc(o.name)}</strong></td>
-    <td><span class="tag">${esc(o.type)}</span></td>
-    <td>${esc(o.description)}</td>
-  </tr>`).join('');
+  var res = await fetch(API + '/api/organizations?' + params);
+  var data = await res.json();
+  // Get people counts per org
+  var orgs = data.organizations;
+  var tbody = document.getElementById('orgsBody');
+  // Fetch people to count per org (use cached approach)
+  var pplRes = await fetch(API + '/api/people');
+  var pplData = await pplRes.json();
+  var orgPeopleCounts = {};
+  pplData.people.forEach(function(p) {
+    if (p.organization) {
+      orgs.forEach(function(o) {
+        if (p.organization.toLowerCase().indexOf(o.name.toLowerCase()) >= 0 || o.name.toLowerCase().indexOf(p.organization.toLowerCase()) >= 0) {
+          orgPeopleCounts[o.id] = (orgPeopleCounts[o.id] || 0) + 1;
+        }
+      });
+    }
+  });
+  tbody.innerHTML = orgs.map(function(o) {
+    var cnt = orgPeopleCounts[o.id] || 0;
+    return '<tr onclick="openOrg(' + o.id + ')">' +
+      '<td><strong style="color:var(--accent2)">' + esc(o.name) + '</strong></td>' +
+      '<td>' + orgTypeBadge(o.type) + '</td>' +
+      '<td style="max-width:400px;">' + esc((o.description || '').substring(0, 120)) + (o.description && o.description.length > 120 ? '...' : '') + '</td>' +
+      '<td style="text-align:center;">' + (cnt > 0 ? '<span style="color:var(--accent2);font-weight:600;">' + cnt + '</span>' : '<span style="color:var(--text2);">0</span>') + '</td>' +
+    '</tr>';
+  }).join('');
 }
 
 // Full Search
@@ -809,11 +852,11 @@ async function openCenter(id) {
     <div class="detail-grid">
       <div class="detail-item">
         <div class="label">Parent Organization</div>
-        <div class="value">${v(c.parent_org)}</div>
+        <div class="value">${c.parent_org ? '<a href="#" onclick="closeModal();openOrgByName(\'' + esc(c.parent_org).replace(/'/g, "\\'") + '\');return false;" style="color:var(--accent2)">' + esc(c.parent_org) + '</a>' : '<span class="empty">Not available</span>'}</div>
       </div>
       <div class="detail-item">
         <div class="label">Health System</div>
-        <div class="value">${v(c.health_system)}</div>
+        <div class="value">${c.health_system ? '<a href="#" onclick="closeModal();openOrgByName(\'' + esc(c.health_system).replace(/'/g, "\\'") + '\');return false;" style="color:var(--accent2)">' + esc(c.health_system) + '</a>' : '<span class="empty">Not available</span>'}</div>
       </div>
       <div class="detail-item">
         <div class="label">NCI Designation</div>
@@ -1160,7 +1203,7 @@ async function openPerson(id) {
     '<div class="detail-grid">' +
       '<div class="detail-item"><div class="label">Role Type</div><div class="value">' + v(p.role_type) + '</div></div>' +
       '<div class="detail-item"><div class="label">Department</div><div class="value">' + v(p.department) + '</div></div>' +
-      '<div class="detail-item"><div class="label">Organization</div><div class="value">' + v(p.organization) + '</div></div>' +
+      '<div class="detail-item"><div class="label">Organization</div><div class="value">' + (p.organization ? '<a href="#" onclick="closePersonModal();openOrgByName(\'' + esc(p.organization).replace(/'/g, "\\'") + '\');return false;" style="color:var(--accent2)">' + esc(p.organization) + '</a>' : '<span class="empty">Not available</span>') + '</div></div>' +
       '<div class="detail-item"><div class="label">Relevance</div><div class="value">' + relevanceBadge(p.relevance_to_risa) + '</div></div>' +
       '<div class="detail-item"><div class="label">Email</div><div class="value">' + (p.email ? '<a href="mailto:' + esc(p.email) + '" style="color:var(--accent2)">' + esc(p.email) + '</a>' : '<span class="empty">Not available</span>') + '</div></div>' +
       '<div class="detail-item"><div class="label">Phone</div><div class="value">' + v(p.phone) + '</div></div>' +
@@ -1306,6 +1349,97 @@ function openPersonFormForCenter(centerId, centerName) {
   openPersonForm();
   document.getElementById('pf_center_id').value = centerId;
   document.getElementById('pf_organization').value = centerName;
+}
+
+// ========== ORGANIZATIONS DETAIL ==========
+function closeOrgModal() {
+  document.getElementById('orgModal').classList.add('hidden');
+}
+
+async function openOrg(id) {
+  var res = await fetch(API + '/api/organizations/' + id);
+  var o = await res.json();
+  document.getElementById('orgModalName').textContent = o.name;
+  document.getElementById('orgModalSub').innerHTML = orgTypeBadge(o.type);
+
+  var html = '<div class="detail-grid">' +
+    '<div class="detail-item"><div class="label">Type</div><div class="value">' + orgTypeBadge(o.type) + '</div></div>' +
+    '<div class="detail-item"><div class="label">Relevance to RISA</div><div class="value">' + (o.relevance_to_risa ? esc(o.relevance_to_risa) : '<span class="empty">Not available</span>') + '</div></div>' +
+    '<div class="detail-item full"><div class="label">Description</div><div class="value">' + (o.description ? esc(o.description) : '<span class="empty">Not available</span>') + '</div></div>' +
+  '</div>';
+
+  // Linked People
+  html += '<div class="detail-section"><h3>👥 Linked People</h3><div id="orgPeopleSection">Loading...</div></div>';
+
+  // Linked Centers
+  html += '<div class="detail-section"><h3>🏥 Linked Centers</h3><div id="orgCentersSection">Loading...</div></div>';
+
+  // Notes
+  html += '<div class="detail-section"><h3>📝 Notes</h3>' +
+    '<textarea class="notes-textarea" id="orgNotesArea" placeholder="Add notes about this organization...">' + esc(o.notes || '') + '</textarea>' +
+    '<div class="notes-actions">' +
+      '<button class="btn-save" onclick="saveOrgNotes(' + o.id + ')">Save Notes</button>' +
+      '<span class="notes-status" id="orgNotesStatus"></span>' +
+    '</div></div>';
+
+  document.getElementById('orgModalBody').innerHTML = html;
+  document.getElementById('orgModal').classList.remove('hidden');
+
+  // Load linked people
+  fetch(API + '/api/people?organization=' + encodeURIComponent(o.name)).then(function(r) { return r.json(); }).then(function(data) {
+    var el = document.getElementById('orgPeopleSection');
+    if (!el) return;
+    if (data.count === 0) {
+      el.innerHTML = '<p style="color:var(--text2);font-size:13px;">No people linked to this organization.</p>';
+      return;
+    }
+    el.innerHTML = '<table class="center-people-table"><thead><tr><th>Name</th><th>Title</th><th>Role Type</th><th>Relevance</th></tr></thead><tbody>' +
+      data.people.map(function(p) {
+        return '<tr style="cursor:pointer" onclick="closeOrgModal();openPerson(' + p.id + ')">' +
+          '<td style="color:var(--accent2)">' + esc(p.name) + '</td><td>' + esc(p.title) + '</td><td>' + esc(p.role_type) + '</td>' +
+          '<td>' + relevanceBadge(p.relevance_to_risa) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  });
+
+  // Load linked centers
+  fetch(API + '/api/centers?search=' + encodeURIComponent(o.name)).then(function(r) { return r.json(); }).then(function(data) {
+    var el = document.getElementById('orgCentersSection');
+    if (!el) return;
+    if (data.count === 0) {
+      el.innerHTML = '<p style="color:var(--text2);font-size:13px;">No centers linked to this organization.</p>';
+      return;
+    }
+    el.innerHTML = '<table class="center-people-table"><thead><tr><th>Name</th><th>City</th><th>State</th><th>Category</th></tr></thead><tbody>' +
+      data.centers.map(function(c) {
+        return '<tr style="cursor:pointer" onclick="closeOrgModal();openCenter(' + c.id + ')">' +
+          '<td style="color:var(--accent2)">' + esc(c.name) + '</td><td>' + esc(c.city) + '</td><td>' + esc(c.state) + '</td><td>' + esc(c.category) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  });
+}
+
+async function saveOrgNotes(id) {
+  var notes = document.getElementById('orgNotesArea').value;
+  var status = document.getElementById('orgNotesStatus');
+  var res = await fetch(API + '/api/organizations/' + id + '/notes', {
+    method: 'PUT', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({notes: notes})
+  });
+  var data = await res.json();
+  if (data.ok) { status.textContent = '✓ Saved'; status.style.color = 'var(--green)'; }
+  else { status.textContent = 'Error'; status.style.color = 'var(--red)'; }
+  setTimeout(function() { status.textContent = ''; }, 3000);
+}
+
+// Cross-navigation helpers
+async function openOrgByName(name) {
+  if (!name) return;
+  var res = await fetch(API + '/api/organizations?search=' + encodeURIComponent(name));
+  var data = await res.json();
+  if (data.organizations.length === 0) {
+    alert('Organization not found in directory');
+    return;
+  }
+  openOrg(data.organizations[0].id);
 }
 
 // ========== WORKFLOWS ==========

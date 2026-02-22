@@ -128,6 +128,40 @@ def get_organizations(type: Optional[str] = Query(None), search: Optional[str] =
     return {"count": len(rows), "organizations": rows}
 
 
+@app.get("/api/organizations/{org_id}")
+def get_organization(org_id: int):
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("SELECT * FROM key_organizations WHERE id = ?", [org_id])
+    row = c.fetchone()
+    if not row:
+        conn.close()
+        return JSONResponse({"error": "Not found"}, 404)
+    org = dict(row)
+    # Get linked people count
+    c.execute("SELECT COUNT(*) FROM stakeholders WHERE LOWER(organization) LIKE LOWER(?)", ["%{}%".format(org["name"])])
+    org["people_count"] = c.fetchone()[0]
+    # Get linked centers count
+    c.execute("SELECT COUNT(*) FROM cancer_centers WHERE LOWER(parent_org) LIKE LOWER(?) OR LOWER(health_system) LIKE LOWER(?)",
+              ["%{}%".format(org["name"]), "%{}%".format(org["name"])])
+    org["centers_count"] = c.fetchone()[0]
+    conn.close()
+    return org
+
+
+@app.put("/api/organizations/{org_id}/notes")
+def update_org_notes(org_id: int, req: NotesUpdate):
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("UPDATE key_organizations SET notes = ? WHERE id = ?", [req.notes, org_id])
+    conn.commit()
+    if c.rowcount == 0:
+        conn.close()
+        return JSONResponse({"error": "Not found"}, 404)
+    conn.close()
+    return {"ok": True, "id": org_id}
+
+
 @app.get("/api/search")
 def search_content(q: str = Query(...)):
     conn = get_db()
